@@ -47,6 +47,8 @@ namespace XnaGameClient
 
         protected override void Update(GameTime gameTime)
         {
+            //un commentaire inutile.
+
             //
             // Collect input
             //
