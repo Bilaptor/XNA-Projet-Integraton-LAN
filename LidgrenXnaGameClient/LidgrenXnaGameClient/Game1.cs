@@ -16,7 +16,7 @@ namespace XnaGameClient
         SpriteBatch spriteBatch;
 
         Texture2D[] textures;
-        Dictionary<long, Vector2> positions = new Dictionary<long, Vector2>();
+        Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
         NetClient client;
 
         public Game1()
@@ -94,7 +94,7 @@ namespace XnaGameClient
                         long who = msg.ReadInt64();
                         int x = msg.ReadInt32();
                         int y = msg.ReadInt32();
-                        positions[who] = new Vector2(x, y);
+                        Positions[who] = new Vector2(x, y);
                         break;
                 }
             }
@@ -109,7 +109,7 @@ namespace XnaGameClient
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
 
             // draw all players
-            foreach (var kvp in positions)
+            foreach (var kvp in Positions)
             {
                 // use player unique identifier to choose an image
                 int num = Math.Abs((int)kvp.Key) % textures.Length;
