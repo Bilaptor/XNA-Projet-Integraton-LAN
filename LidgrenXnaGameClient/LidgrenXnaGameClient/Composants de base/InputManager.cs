@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 
 
-namespace AtelierXNA
+namespace XnaGameClient
 {
     public class InputManager : Microsoft.Xna.Framework.GameComponent
     {
