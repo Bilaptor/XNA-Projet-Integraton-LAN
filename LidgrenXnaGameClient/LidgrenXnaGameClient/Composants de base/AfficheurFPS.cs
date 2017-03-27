@@ -69,7 +69,6 @@ namespace XnaGameClient
                 ChaîneFPS = ValFPS.ToString("0");
                 Dimension = ArialFont.MeasureString(ChaîneFPS);
                 PositionChaîne = PositionDroiteBas - Dimension;
-                Game.Window.Title = ChaîneFPS;
             }
             CptFrames = 0;
         }
