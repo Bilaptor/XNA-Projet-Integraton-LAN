@@ -45,11 +45,13 @@ namespace XnaGameClient
         protected override void Initialize()
         {
             client.DiscoverLocalPeers(14242);
-
-            GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "texture");
-            Components.Add(GestionInput);
             GestionSprites = new SpriteBatch(GraphicsDevice);
+            GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "texture");
+
+            Components.Add(GestionInput);
+            Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
             Components.Add(new AfficheurFPS(this, "Arial", Color.Tomato, INTERVALLE_CALCUL_FPS));
+
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
 
@@ -133,6 +135,10 @@ namespace XnaGameClient
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            GestionSprites.Begin();
+            base.Draw(gameTime);
+            GestionSprites.End();
+
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
 
             // draw all players
@@ -146,9 +152,6 @@ namespace XnaGameClient
             }
 
             spriteBatch.End();
-            GestionSprites.Begin();
-            base.Draw(gameTime);
-            GestionSprites.End();
         }
 
         protected override void OnExiting(object sender, EventArgs args)
