@@ -25,13 +25,17 @@ namespace XnaGameClient
         
         SpriteBatch GestionSprites { get; set; }
         InputManager GestionInput { get; set; }
+        Caméra CaméraJeu { get; set; }
+        RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
+        RessourcesManager<Model> GestionnaireDeModèles { get; set; }
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
+            IsMouseVisible = true;
 
             Content.RootDirectory = "Content";
 
@@ -44,15 +48,36 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
+            Vector3 positionCaméra = new Vector3(1, 1, 10);
+            Vector3 positionTuileDragon = new Vector3(-2, -2, -10);
+            Vector3 positionTuileChartreuse = new Vector3(-2, -2, -2);
+            Vector3 positionTuileDrapeau = new Vector3(-2, -2, -20);
+
             client.DiscoverLocalPeers(14242);
-            GestionSprites = new SpriteBatch(GraphicsDevice);
-            GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "texture");
+            GestionnaireDeFonts = new RessourcesManager<SpriteFont>(this, "Fonts");
+            GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "Textures");
+            GestionnaireDeModèles = new RessourcesManager<Model>(this, "Models");
+            GestionInput = new InputManager(this);
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
+            CaméraJeu = new CaméraSubjective(this, positionCaméra, positionTuileDragon, Vector3.Up, INTERVALLE_UPDATE);
+            Components.Add(CaméraJeu);
+            
+            Components.Add(new Afficheur3D(this));
             Components.Add(new AfficheurFPS(this, "Arial", Color.Tomato, INTERVALLE_CALCUL_FPS));
+            Components.Add(new TuileColorée(this, 1f, Vector3.Zero, positionTuileChartreuse, new Vector2(2, 2), Color.Gold, INTERVALLE_UPDATE));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDrapeau, new Vector2(6, 4), "DrapeauQuébec", INTERVALLE_UPDATE));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_UPDATE));
+            //Components.Add(new AfficheurFPS(this, "Arial", Color.Tomato, INTERVALLE_CALCUL_FPS));
+
 
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
+
+            Services.AddService(typeof(RessourcesManager<Model>), GestionnaireDeModèles);
+            Services.AddService(typeof(InputManager), GestionInput);
+            Services.AddService(typeof(Caméra), CaméraJeu);
+            GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
 
             base.Initialize();
@@ -150,7 +175,7 @@ namespace XnaGameClient
                 // draw player
                 spriteBatch.Draw(textures[num], kvp.Value, Color.White);
             }
-
+            
             spriteBatch.End();
         }
 

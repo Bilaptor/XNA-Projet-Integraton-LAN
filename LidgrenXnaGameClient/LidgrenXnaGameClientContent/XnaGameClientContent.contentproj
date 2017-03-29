@@ -76,8 +76,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="texture\murderoche.jpg">
+    <Compile Include="Textures\murderoche.jpg">
       <Name>murderoche</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Dragon.png">
+      <Name>Dragon</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\DrapeauQuébec.png">
+      <Name>DrapeauQuébec</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
