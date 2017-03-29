@@ -64,8 +64,10 @@ namespace XnaGameClient
         
         public override void Draw(GameTime gameTime)
         {
+            GestionSprites.Begin();
             GestionSprites.Draw(ImageDeFond, ZoneAffichage1, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, 0);
             GestionSprites.Draw(ImageDeFond, ZoneAffichage2, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, 0);
+            GestionSprites.End();
         }
 
         private void DéplacerBackground()

@@ -12,31 +12,30 @@ namespace XnaGameClient
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        const float INTERVALLE_UPDATE = 1f / 60f;
         const float INTERVALLE_CALCUL_FPS = 1f;
-        GraphicsDeviceManager graphics { get; set; }
-        SpriteBatch spriteBatch;
+        const float INTERVALLE_UPDATE = 1f / 60f;
         float TempsÉcouléDepuisMAJ { get; set; }
         int CptFrames { get; set; }
-
-        Texture2D[] textures;
-        Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
-        NetClient client;
-        
+        GraphicsDeviceManager PériphériqueGraphique { get; set; }
+        SpriteBatch spriteBatch;
         SpriteBatch GestionSprites { get; set; }
         InputManager GestionInput { get; set; }
         Caméra CaméraJeu { get; set; }
+
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
-
+        
+        Texture2D[] Textures;
+        Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
+        NetClient client;
+        
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.SynchronizeWithVerticalRetrace = false;
+            PériphériqueGraphique = new GraphicsDeviceManager(this);
+            PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
             IsMouseVisible = true;
-
             Content.RootDirectory = "Content";
 
             NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
@@ -63,17 +62,14 @@ namespace XnaGameClient
             Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
             CaméraJeu = new CaméraSubjective(this, positionCaméra, positionTuileDragon, Vector3.Up, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
-            
             Components.Add(new Afficheur3D(this));
-            Components.Add(new AfficheurFPS(this, "Arial", Color.Tomato, INTERVALLE_CALCUL_FPS));
             Components.Add(new TuileColorée(this, 1f, Vector3.Zero, positionTuileChartreuse, new Vector2(2, 2), Color.Gold, INTERVALLE_UPDATE));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDrapeau, new Vector2(6, 4), "DrapeauQuébec", INTERVALLE_UPDATE));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_UPDATE));
-            //Components.Add(new AfficheurFPS(this, "Arial", Color.Tomato, INTERVALLE_CALCUL_FPS));
+            Components.Add(new AfficheurFPS(this, "Arial", Color.Tomato, INTERVALLE_CALCUL_FPS));
 
-
+            Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
-
             Services.AddService(typeof(RessourcesManager<Model>), GestionnaireDeModèles);
             Services.AddService(typeof(InputManager), GestionInput);
             Services.AddService(typeof(Caméra), CaméraJeu);
@@ -86,9 +82,9 @@ namespace XnaGameClient
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            textures = new Texture2D[5];
+            Textures = new Texture2D[5];
             for (int i = 0; i < 5; i++)
-                textures[i] = Content.Load<Texture2D>("c" + (i + 1));
+                Textures[i] = Content.Load<Texture2D>("c" + (i + 1));
         }
 
         protected override void Update(GameTime gameTime)
@@ -99,7 +95,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= INTERVALLE_UPDATE)
             {
                 TempsÉcouléDepuisMAJ = 0;
-                
+
                 //
                 // Collect input
                 //
@@ -160,9 +156,9 @@ namespace XnaGameClient
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            GestionSprites.Begin();
+            //GestionSprites.Begin();
             base.Draw(gameTime);
-            GestionSprites.End();
+            //GestionSprites.End();
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
 
@@ -170,12 +166,12 @@ namespace XnaGameClient
             foreach (var kvp in Positions)
             {
                 // use player unique identifier to choose an image
-                int num = Math.Abs((int)kvp.Key) % textures.Length;
+                int num = Math.Abs((int)kvp.Key) % Textures.Length;
 
                 // draw player
-                spriteBatch.Draw(textures[num], kvp.Value, Color.White);
+                spriteBatch.Draw(Textures[num], kvp.Value, Color.White);
             }
-            
+
             spriteBatch.End();
         }
 

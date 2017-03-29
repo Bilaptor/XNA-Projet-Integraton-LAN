@@ -75,8 +75,10 @@ namespace XnaGameClient
 
         public override void Draw(GameTime gameTime)
         {
+            GestionSprites.Begin();
             GestionSprites.DrawString(ArialFont, ChaîneFPS, PositionChaîne, Color.Chartreuse, AUCUNE_ROTATION,
                                       Vector2.Zero, AUCUNE_HOMOTHÉTIE, SpriteEffects.None, AVANT_PLAN);
+            GestionSprites.End();
         }
     }
 }
