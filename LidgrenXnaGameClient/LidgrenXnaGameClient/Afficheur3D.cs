@@ -21,7 +21,7 @@ namespace XnaGameClient
          {
             JeuRasterizerState = new RasterizerState();
             estAffichéEnWireframe = value;
-            JeuRasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+            JeuRasterizerState.CullMode = CullMode.CullClockwiseFace;
             JeuRasterizerState.FillMode = estAffichéEnWireframe ? FillMode.WireFrame : FillMode.Solid;
             Game.GraphicsDevice.RasterizerState = JeuRasterizerState;
          }

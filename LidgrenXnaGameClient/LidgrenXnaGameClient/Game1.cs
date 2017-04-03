@@ -53,23 +53,23 @@ namespace XnaGameClient
             Vector3[] tuile1 = new Vector3[4];
             tuile1[0] = new Vector3(0, 0, 0);
             tuile1[1] = new Vector3(250, 0, 0);
-            tuile1[2] = new Vector3(0, 250, 0);
-            tuile1[3] = new Vector3(250, 250, 0);
+            tuile1[2] = new Vector3(0, 75, 0);
+            tuile1[3] = new Vector3(250, 75, 0);
             Vector3[] tuile2 = new Vector3[4];
             tuile2[0] = new Vector3(250, 0, 0);
             tuile2[1] = new Vector3(250, 0, -250);
-            tuile2[2] = new Vector3(250, 250, 0);
-            tuile2[3] = new Vector3(250, 250, -250);
+            tuile2[2] = new Vector3(250, 75, 0);
+            tuile2[3] = new Vector3(250, 75, -250);
             Vector3[] tuile3 = new Vector3[4];
             tuile3[0] = new Vector3(0, 0, -250);
             tuile3[1] = new Vector3(0, 0, 0);
-            tuile3[2] = new Vector3(0, 250, -250);
-            tuile3[3] = new Vector3(0, 250, 0);
+            tuile3[2] = new Vector3(0, 75, -250);
+            tuile3[3] = new Vector3(0, 75, 0);
             Vector3[] tuile4 = new Vector3[4];
             tuile4[0] = new Vector3(250, 0, -250);
             tuile4[1] = new Vector3(0, 0, -250);
-            tuile4[2] = new Vector3(250, 250, -250);
-            tuile4[3] = new Vector3(0, 250, -250);
+            tuile4[2] = new Vector3(250, 75, -250);
+            tuile4[3] = new Vector3(0, 75, -250);
 
             Vector3 positionCaméra = new Vector3(50, 0, 5);
             Vector3 positionDragon = new Vector3(0, 0, 0);
@@ -97,6 +97,7 @@ namespace XnaGameClient
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile3));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile4));
             Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionDrapeau, new Vector2(300, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
