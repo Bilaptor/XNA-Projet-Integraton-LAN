@@ -71,7 +71,7 @@ namespace XnaGameClient
             tuile4[2] = new Vector3(250, 250, -250);
             tuile4[3] = new Vector3(0, 250, -250);
 
-            Vector3 positionCaméra = new Vector3(0, 0, 5);
+            Vector3 positionCaméra = new Vector3(50, 0, 5);
             Vector3 positionDragon = new Vector3(0, 0, 0);
             Vector3 positionDragon2 = new Vector3(2, 0, 0);
             Vector3 positionDrapeau = new Vector3(125, 25, -125);
