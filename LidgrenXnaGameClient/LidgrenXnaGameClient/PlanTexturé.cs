@@ -5,43 +5,49 @@ using Microsoft.Xna.Framework;
 
 namespace XnaGameClient
 {
-    class TuileTexturée : Tuile
-    {
-        const int NB_TRIANGLES = 2;
+   class PlanTexturé : Plan
+   {
+        // à compléter
+
         RessourcesManager<Texture2D> gestionnaireDeTextures;
-        Texture2D textureTuile;
-        VertexPositionTexture[] Sommets { get; set; }
+        Texture2D texturePlan { get; set; }
+        protected VertexPositionTexture[] Sommets { get; set; }
         Vector2[,] PtsTexture { get; set; }
-        string NomTextureTuile { get; set; }
+        string NomTexturePlan { get; set; }
         BlendState GestionAlpha { get; set; }
 
-        public TuileTexturée(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Vector2 étendue, string nomTextureTuile, float intervalleMAJ, Vector3[] créerTableauP)
-           : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, étendue, intervalleMAJ, créerTableauP)
-        {
-            NomTextureTuile = nomTextureTuile;
+        public PlanTexturé(Game jeu, float homothétieInitiale, Vector3 rotationInitiale,Vector3 positionInitiale, Vector2 étendue, Vector2 charpente,string nomTexture, float intervalleMAJ)
+         : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, étendue, charpente, intervalleMAJ)
+      {
+            NomTexturePlan = nomTexture;
         }
 
         protected override void CréerTableauSommets()
         {
-            PtsTexture = new Vector2[2, 2];
+            PtsTexture = new Vector2[NbColonnes + 1, NbRangées + 1];
             Sommets = new VertexPositionTexture[NbSommets];
             CréerTableauPointsTexture();
         }
 
         private void CréerTableauPointsTexture()
         {
-            PtsTexture[0, 0] = new Vector2(0, 1);
-            PtsTexture[1, 0] = new Vector2(1, 1);
-            PtsTexture[0, 1] = new Vector2(0, 0);
-            PtsTexture[1, 1] = new Vector2(1, 0);
+
+            for (int j = 0; j <= NbRangées; j++)
+            {
+                for (int i = 0; i <= NbColonnes; i++)
+                {
+                    PtsTexture[i,j] = new Vector2((float)i/NbColonnes, (float)(NbRangées-j)/NbRangées);
+                }
+            }
+          
         }
 
         protected override void InitialiserSommets() // Est appelée par base.Initialize()
         {
             int NoSommet = -1;
-            for (int j = 0; j < 1; ++j)
+            for (int j = 0; j < NbRangées; ++j)
             {
-                for (int i = 0; i < 2; ++i)
+                for (int i = 0; i < NbColonnes+1; ++i)
                 {
                     Sommets[++NoSommet] = new VertexPositionTexture(PtsSommets[i, j], PtsTexture[i, j]);
                     Sommets[++NoSommet] = new VertexPositionTexture(PtsSommets[i, j + 1], PtsTexture[i, j + 1]);
@@ -53,14 +59,14 @@ namespace XnaGameClient
         {
 
             gestionnaireDeTextures = Game.Services.GetService(typeof(RessourcesManager<Texture2D>)) as RessourcesManager<Texture2D>;
-            textureTuile = gestionnaireDeTextures.Find(NomTextureTuile);
+            texturePlan = gestionnaireDeTextures.Find(NomTexturePlan);
             base.LoadContent();
         }
 
         protected override void InitialiserParamètresEffetDeBase()
         {
             EffetDeBase.TextureEnabled = true;
-            EffetDeBase.Texture = textureTuile;
+            EffetDeBase.Texture = texturePlan;
             GestionAlpha = BlendState.AlphaBlend;
         }
 
@@ -72,9 +78,9 @@ namespace XnaGameClient
             GraphicsDevice.BlendState = oldBlendState;
         }
 
-        protected override void DessinerTriangleStrip()
+        protected override void DessinerTriangleStrip(int noStrip)
         {
-            GraphicsDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleStrip, Sommets, 0, NB_TRIANGLES);
+            GraphicsDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleStrip, Sommets, noStrip * (NbTrianglesParStrip + 2), NbTrianglesParStrip);
         }
     }
 }

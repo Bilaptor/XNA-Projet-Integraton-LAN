@@ -36,7 +36,7 @@ namespace XnaGameClient
          JeuDepthBufferState = new DepthStencilState();
          JeuDepthBufferState.DepthBufferEnable = true;
          JeuRasterizerState = new RasterizerState();
-         JeuRasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+         JeuRasterizerState.CullMode = CullMode.CullClockwiseFace;
          JeuBlendState = BlendState.Opaque;
          base.Initialize();
       }
