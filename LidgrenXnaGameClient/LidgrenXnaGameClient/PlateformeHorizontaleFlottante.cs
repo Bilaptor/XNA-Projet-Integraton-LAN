@@ -11,12 +11,10 @@ namespace XnaGameClient
         const float LIMITE_ANGLE_FLOTTAISON = MathHelper.Pi / 180;
 
         float TempsÉcouléDepuisMAJ { get; set; }
-        float AngleFlottaison { get; set; }
 
-
-        public PlateformeHorizontaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, string nomTextureCube,
-                                   Vector3 dimension, float intervalleMAJ)
-            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, nomTextureCube, dimension, intervalleMAJ)
+        public PlateformeHorizontaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color Couleur,
+                                   Vector3 dimension, float angleDeFlottaison,float intervalleMAJ)
+            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, Couleur, dimension, angleDeFlottaison,intervalleMAJ)
         {
 
         }
@@ -24,7 +22,6 @@ namespace XnaGameClient
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
-            AngleFlottaison = MathHelper.Pi / 360;
             base.Initialize();
         }
 
@@ -32,15 +29,15 @@ namespace XnaGameClient
         {
             Translation = true;
             
-            if (AngleFlottaison < LIMITE_ANGLE_FLOTTAISON)
+            if (AngleDeFlottaison < LIMITE_ANGLE_FLOTTAISON)
             {
-                Position += Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleFlottaison), 0, 0));
-                AngleFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+                Position += Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
+                AngleDeFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
             }
             else
             {
-                Position -= Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleFlottaison), 0, 0));
-                AngleFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+                Position -= Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
+                AngleDeFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
             }
         }
 

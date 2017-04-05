@@ -15,9 +15,9 @@ namespace XnaGameClient
 
 
 
-        public PlateformeVerticaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, string nomTextureCube,
-                                   Vector3 dimension, float intervalleMAJ)
-            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, nomTextureCube, dimension, intervalleMAJ)
+        public PlateformeVerticaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
+                                   Vector3 dimension,float angleDeFlottaison ,float intervalleMAJ)
+            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension,angleDeFlottaison ,intervalleMAJ)
         {
 
         }
@@ -26,7 +26,6 @@ namespace XnaGameClient
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
-            AngleFlottaison = MathHelper.Pi / 360;
             base.Initialize();
         }
 

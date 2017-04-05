@@ -16,6 +16,9 @@ namespace XnaGameClient
         const float INTERVALLE_UPDATE = 1f / 60f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
 
+        const float LIMITE_ANGLE_DE_FLOTTAISON_MAX = MathHelper.Pi / 360;
+        const float LIMITE_ANGLE_DE_FLOTTAISON_MIN = MathHelper.Pi / 180;
+
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
         const int NB_DE_PLATEFORMES = 25;
@@ -23,9 +26,12 @@ namespace XnaGameClient
         const int LIMITE_POSITION_X_PLATEFORMES_DROITE = 50;
         const int LIMITE_POSITION_X_PLATEFORMES_GAUCHE = 200;
         const int LIMITE_POSITION_Z_PLATEFORMES = 200;
+        
 
-        protected int Position_X_plateformes { get; set; }
-        protected int Position_Z_plateformes { get; set; }
+        int Position_X_plateformes { get; set; }
+        int Position_Z_plateformes { get; set; }
+        float AngleDeFlottaison { get; set; }
+
 
         float TempsÉcouléDepuisMAJ { get; set; }
         int CptFrames { get; set; }
@@ -203,8 +209,9 @@ namespace XnaGameClient
             {
                 Position_X_plateformes = GénérateurAléatoire.Next(LIMITE_POSITION_X_PLATEFORMES_DROITE, LIMITE_POSITION_X_PLATEFORMES_GAUCHE);
                 Position_Z_plateformes = GénérateurAléatoire.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
+                AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
-                Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), "rocher", new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD));
+                Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison ,INTERVALLE_MAJ_STANDARD));
             }
         }
 
