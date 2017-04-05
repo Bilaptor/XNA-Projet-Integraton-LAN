@@ -110,6 +110,7 @@
     <Compile Include="Afficheur3D.cs" />
     <Compile Include="Caméra.cs" />
     <Compile Include="CaméraSubjective.cs" />
+    <Compile Include="Commentaires.cs" />
     <Compile Include="Composants de base\AfficheurFPS.cs" />
     <Compile Include="Composants de base\ArrièrePlan.cs" />
     <Compile Include="Composants de base\ArrièrePlanDéroulant.cs" />
