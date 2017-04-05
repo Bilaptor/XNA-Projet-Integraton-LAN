@@ -73,13 +73,9 @@ namespace XnaGameClient
 
             Vector3 positionCaméra = new Vector3(0, 0, 0);
             Vector3 positionCibleCaméra = new Vector3(0, 0, -1);
-            Vector3 positionDragon = new Vector3(0, 0, 0);
-            Vector3 positionDragon2 = new Vector3(2, 0, 0);
-            Vector3 positionDrapeau = new Vector3(125, 25, -125);
+            Vector3 positionOrigineMurRoche = new Vector3(0, 0, 0);
+            Vector3 positionOrigineLave = new Vector3(125, 25, -125);
 
-            Vector3 positionTuileDragon = new Vector3(0, 0, 0);
-            Vector3 positionTuileChartreuse = new Vector3(-2, -2, -2);
-            Vector3 positionTuileDrapeau = new Vector3(-2, -2, -20);
 
             client.DiscoverLocalPeers(14242);
             GestionnaireDeFonts = new RessourcesManager<SpriteFont>(this, "Fonts");
@@ -93,11 +89,11 @@ namespace XnaGameClient
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
             
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile1));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile2));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile3));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile4));
-            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionDrapeau, new Vector2(250, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile1));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile2));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile3));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile4));
+            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
