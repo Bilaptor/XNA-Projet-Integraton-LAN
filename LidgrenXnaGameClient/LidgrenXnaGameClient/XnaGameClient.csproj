@@ -117,10 +117,16 @@
     <Compile Include="Composants de base\RessourceDeBase.cs" />
     <Compile Include="Composants de base\RessourcesManager.cs" />
     <Compile Include="Drapeau.cs" />
+    <Compile Include="ICollisionable.cs" />
+    <Compile Include="IDestructible.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="PlanTexturé.cs" />
+    <Compile Include="Plateforme.cs" />
+    <Compile Include="PlateformeHorizontaleFlottante.cs" />
+    <Compile Include="PlateformeVerticaleFlottante.cs" />
     <Compile Include="PrimitiveDeBase.cs" />
     <Compile Include="PrimitiveDeBaseAnimée.cs" />
+    <Compile Include="PrimitiveDeBaseAniméePourPlateforme.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

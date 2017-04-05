@@ -15,6 +15,17 @@ namespace XnaGameClient
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_UPDATE = 1f / 60f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+
+        const int LARGEUR_PLATEFORME = 6;
+        const int ÉPAISSEUR_PLATEFORME = 1;
+        const int NB_DE_PLATEFORMES = 5;
+        const int POSITION_Y_PLATEFORMES = 45;
+        const int LIMITE_POSITION_X_PLATEFORMES = 200;
+        const int LIMITE_POSITION_Z_PLATEFORMES = 200;
+
+        protected int Position_X_plateformes { get; set; }
+        protected int Position_Z_plateformes { get; set; }
+
         float TempsÉcouléDepuisMAJ { get; set; }
         int CptFrames { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
@@ -24,6 +35,8 @@ namespace XnaGameClient
         Caméra CaméraJeu { get; set; }
         
         Vector3[] Ptsommets { get; set; }
+
+        Random GénérateurAléatoire { get; set; }
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
@@ -85,6 +98,7 @@ namespace XnaGameClient
             GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "Textures");
             GestionnaireDeModèles = new RessourcesManager<Model>(this, "Models");
             GestionInput = new InputManager(this);
+            GénérateurAléatoire = new Random();
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
@@ -99,6 +113,8 @@ namespace XnaGameClient
             Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionDrapeau, new Vector2(300, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
+            CréerPlateformesAvecPositionsAléatoires();
+           
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
             Services.AddService(typeof(RessourcesManager<Model>), GestionnaireDeModèles);
@@ -181,6 +197,17 @@ namespace XnaGameClient
             }
 
             base.Update(gameTime);
+        }
+
+        void CréerPlateformesAvecPositionsAléatoires()
+        {
+            for (int cpt = 0; cpt < NB_DE_PLATEFORMES; ++cpt)
+            {
+                Position_X_plateformes = GénérateurAléatoire.Next(0, LIMITE_POSITION_X_PLATEFORMES);
+                Position_Z_plateformes = GénérateurAléatoire.Next(0, LIMITE_POSITION_Z_PLATEFORMES);
+
+                Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), "rocher", new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD));
+            }
         }
 
         protected override void Draw(GameTime gameTime)
