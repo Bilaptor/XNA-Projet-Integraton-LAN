@@ -201,7 +201,7 @@ namespace XnaGameClient
             for (int cpt = 0; cpt < NB_DE_PLATEFORMES; ++cpt)
             {
                 Position_X_plateformes = GénérateurAléatoire.Next(0, LIMITE_POSITION_X_PLATEFORMES);
-                Position_Z_plateformes = GénérateurAléatoire.Next(0, LIMITE_POSITION_Z_PLATEFORMES);
+                Position_Z_plateformes = GénérateurAléatoire.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
 
                 Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), "rocher", new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD));
             }
