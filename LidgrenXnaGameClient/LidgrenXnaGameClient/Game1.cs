@@ -71,12 +71,13 @@ namespace XnaGameClient
             tuile4[2] = new Vector3(250, 75, -250);
             tuile4[3] = new Vector3(0, 75, -250);
 
-            Vector3 positionCaméra = new Vector3(50, 0, 5);
+            Vector3 positionCaméra = new Vector3(0, 0, 0);
+            Vector3 positionCibleCaméra = new Vector3(0, 0, -1);
             Vector3 positionDragon = new Vector3(0, 0, 0);
             Vector3 positionDragon2 = new Vector3(2, 0, 0);
             Vector3 positionDrapeau = new Vector3(125, 25, -125);
 
-            Vector3 positionTuileDragon = new Vector3(-2, -2, -10);
+            Vector3 positionTuileDragon = new Vector3(0, 0, 0);
             Vector3 positionTuileChartreuse = new Vector3(-2, -2, -2);
             Vector3 positionTuileDrapeau = new Vector3(-2, -2, -20);
 
@@ -88,7 +89,7 @@ namespace XnaGameClient
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
-            CaméraJeu = new CaméraSubjective(this, positionCaméra, positionTuileDragon, Vector3.Up, INTERVALLE_UPDATE);
+            CaméraJeu = new CaméraSubjective(this, positionCaméra, positionCibleCaméra, Vector3.Up, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
             
@@ -96,7 +97,7 @@ namespace XnaGameClient
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile2));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile3));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionTuileDragon, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile4));
-            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionDrapeau, new Vector2(300, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionDrapeau, new Vector2(250, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
