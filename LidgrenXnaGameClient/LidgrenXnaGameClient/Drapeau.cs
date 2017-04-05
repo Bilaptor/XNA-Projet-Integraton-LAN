@@ -36,7 +36,7 @@ namespace XnaGameClient
         {
             RasterizerState premier = GraphicsDevice.RasterizerState;
             RasterizerState nouveau = new RasterizerState();
-            nouveau.CullMode = CullMode.None;
+            nouveau.CullMode = CullMode.CullClockwiseFace;
             nouveau.FillMode = premier.FillMode;
             GraphicsDevice.RasterizerState = nouveau;
             base.Draw(gameTime);
