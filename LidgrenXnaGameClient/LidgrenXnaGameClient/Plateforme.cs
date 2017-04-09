@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XnaGameClient
 {
-    public class Plateforme : PrimitiveDeBaseAniméePourPlateforme, ICollisionable
+    public class Plateforme : PrimitiveDeBaseAniméePourPlateforme
     {
         const int NB_SOMMETS = 14;
         const int NB_TRIANGLES = 12;
@@ -17,35 +17,34 @@ namespace XnaGameClient
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
 
+        BoundingBox ZoneDeCollisionPlateforme { get; set; }
+        Vector3 DimensionPlateforme { get; set; }
 
-        
-     
-        BoundingSphere ICollisionable.SphèreDeCollision { get;}
-       
-        
+
         protected float IntervalleMAJ { get; set; }
         string NomTextureCube { get; set; }
 
         protected float AngleDeFlottaison { get; set; }
-        
 
 
-        public Plateforme(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur, 
-                           Vector3 dimension,float angleDeFlottaison, float intervalleMAJ)
-         : base(game, homothétieInitiale, rotationInitiale, positionInitiale,angleDeFlottaison, intervalleMAJ)
+        public Plateforme(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
+                           Vector3 dimension, float angleDeFlottaison, float intervalleMAJ)
+         : base(game, homothétieInitiale, rotationInitiale, positionInitiale, angleDeFlottaison, intervalleMAJ)
         {
             DeltaX = dimension.X;
-            DeltaY = dimension.Y; 
+            DeltaY = dimension.Y;
             DeltaZ = dimension.Z;
             Origine = new Vector3(DeltaX / 2, DeltaY / 2, DeltaZ / 2);
             Couleur = couleur;
             AngleDeFlottaison = angleDeFlottaison;
             IntervalleMAJ = intervalleMAJ;
+            DimensionPlateforme = dimension;
         }
 
         public override void Initialize()
         {
             Sommets = new VertexPositionColor[NB_SOMMETS];
+            ZoneDeCollisionPlateforme = new BoundingBox(Vector3.Zero, DimensionPlateforme);
             base.Initialize();
         }
 
@@ -102,10 +101,16 @@ namespace XnaGameClient
             }
         }
 
-        public virtual bool EstEnCollision(object autreObjet)
+        /// <summary>
+        /// méthode qui reconnaît les collisions entre les bounding box des plateformes et les bounding sphere
+        /// des personnages.
+        /// </summary>
+        /// <param name="autreZoneCollison"></param>
+        /// <returns></returns>
+        bool EstEnCollision(BoundingSphere autreZoneCollison)
         {
-            return false;
+            return ZoneDeCollisionPlateforme.Intersects(autreZoneCollison);
         }
-        
+
     }
 }
