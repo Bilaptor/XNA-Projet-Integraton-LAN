@@ -21,12 +21,15 @@ namespace XnaGameClient
 
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
-        const int NB_DE_PLATEFORMES = 25;
+        const int NB_DE_PLATEFORMES_AlÉATOIRE = 15;
+        const int NB_DE_PLATEFORMES_POUR_PARCOURS_POSSIBLES = 12;
         const int POSITION_Y_PLATEFORMES = 45;
         const int LIMITE_POSITION_X_PLATEFORMES_DROITE = 50;
         const int LIMITE_POSITION_X_PLATEFORMES_GAUCHE = 200;
         const int LIMITE_POSITION_Z_PLATEFORMES = 200;
-        
+
+        const int CHANGEMENT_POSITION = 6;
+
 
         int Position_X_plateformes { get; set; }
         int Position_Z_plateformes { get; set; }
@@ -40,10 +43,17 @@ namespace XnaGameClient
         SpriteBatch GestionSprites { get; set; }
         InputManager GestionInput { get; set; }
         Caméra CaméraJeu { get; set; }
-        
+
         Vector3[] Ptsommets { get; set; }
 
-        Random GénérateurAléatoire { get; set; }
+        Random GénérateurAléatoirePourPlateformesAléatoire { get; set; }
+        Random GénérateurAléatoirePourParcoursPossibles { get; set; }
+
+        int[] IncrémentEnXPourCheminsPossibles { get; set; }
+        int[] IncrémentEnZPourCheminsPossibles { get; set; }
+        int Incrément_X_Aléatoire { get; set; }
+        int Incrément_Z_Aléatoire { get; set; }
+
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
@@ -70,6 +80,8 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
+            InitialiserTableauxIncrémentationPourCheminsPossibles();
+
             Vector3[] tuile1 = new Vector3[4];
             tuile1[0] = new Vector3(0, 0, 0);
             tuile1[1] = new Vector3(250, 0, 0);
@@ -102,7 +114,8 @@ namespace XnaGameClient
             GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "Textures");
             GestionnaireDeModèles = new RessourcesManager<Model>(this, "Models");
             GestionInput = new InputManager(this);
-            GénérateurAléatoire = new Random();
+            GénérateurAléatoirePourPlateformesAléatoire = new Random();
+            GénérateurAléatoirePourParcoursPossibles = new Random();
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
@@ -118,6 +131,7 @@ namespace XnaGameClient
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             CréerPlateformesAvecPositionsAléatoires();
+            CréerParcoursPossibles();
            
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
@@ -129,6 +143,13 @@ namespace XnaGameClient
 
             base.Initialize();
         }
+
+        void InitialiserTableauxIncrémentationPourCheminsPossibles()
+        {
+            IncrémentEnXPourCheminsPossibles = new int[CHANGEMENT_POSITION] { 8, 9, 10, -8, -9, -10 };
+            IncrémentEnZPourCheminsPossibles = new int[CHANGEMENT_POSITION] { -8, -9, -10, 5, 6, 7 };
+        }
+        
 
         protected override void LoadContent()
         {
@@ -205,13 +226,36 @@ namespace XnaGameClient
 
         void CréerPlateformesAvecPositionsAléatoires()
         {
-            for (int cpt = 0; cpt < NB_DE_PLATEFORMES; ++cpt)
+            for (int cpt = 0; cpt < NB_DE_PLATEFORMES_AlÉATOIRE; ++cpt)
             {
-                Position_X_plateformes = GénérateurAléatoire.Next(LIMITE_POSITION_X_PLATEFORMES_DROITE, LIMITE_POSITION_X_PLATEFORMES_GAUCHE);
-                Position_Z_plateformes = GénérateurAléatoire.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
+                Position_X_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(LIMITE_POSITION_X_PLATEFORMES_DROITE, LIMITE_POSITION_X_PLATEFORMES_GAUCHE);
+                Position_Z_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
                 AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
                 Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison ,INTERVALLE_MAJ_STANDARD));
+            }
+        }
+
+        void CréerParcoursPossibles()
+        {
+            Position_X_plateformes = GénérateurAléatoirePourParcoursPossibles.Next(LIMITE_POSITION_X_PLATEFORMES_DROITE, LIMITE_POSITION_X_PLATEFORMES_GAUCHE);
+            Position_Z_plateformes = GénérateurAléatoirePourParcoursPossibles.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
+
+            for (int cpt = 0; cpt < NB_DE_PLATEFORMES_POUR_PARCOURS_POSSIBLES; ++cpt)
+            {
+
+                Incrément_X_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
+                Incrément_Z_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
+                Position_X_plateformes += IncrémentEnXPourCheminsPossibles[Incrément_X_Aléatoire];
+                Position_Z_plateformes += IncrémentEnZPourCheminsPossibles[Incrément_Z_Aléatoire];
+                AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
+
+                if (Position_X_plateformes != Position_Z_plateformes)
+                {
+                    Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
+                }
+
+                   
             }
         }
 
