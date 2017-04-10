@@ -62,6 +62,17 @@ namespace XnaGameClient
         int Incrément_X_Aléatoire { get; set; }
         int Incrément_Z_Aléatoire { get; set; }
 
+        Vector3 PositionCaméra { get; set; }
+        Vector3 PositionCibleCaméra { get; set;}
+        Vector3 PositionOrigineMurRoche { get; set; }
+        Vector3 PositionOrigineLave { get; set; }
+
+        Vector3[] Tuile1 { get; set; }
+        Vector3[] Tuile2 { get; set; }
+        Vector3[] Tuile3 { get; set; }
+        Vector3[] Tuile4 { get; set; }
+
+
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
@@ -91,31 +102,10 @@ namespace XnaGameClient
         {
             InitialiserTableauxIncrémentationPourCheminsPossibles();
 
-            Vector3[] tuile1 = new Vector3[4];
-            tuile1[0] = new Vector3(0, 0, 0);
-            tuile1[1] = new Vector3(250, 0, 0);
-            tuile1[2] = new Vector3(0, 75, 0);
-            tuile1[3] = new Vector3(250, 75, 0);
-            Vector3[] tuile2 = new Vector3[4];
-            tuile2[0] = new Vector3(250, 0, 0);
-            tuile2[1] = new Vector3(250, 0, -250);
-            tuile2[2] = new Vector3(250, 75, 0);
-            tuile2[3] = new Vector3(250, 75, -250);
-            Vector3[] tuile3 = new Vector3[4];
-            tuile3[0] = new Vector3(0, 0, -250);
-            tuile3[1] = new Vector3(0, 0, 0);
-            tuile3[2] = new Vector3(0, 75, -250);
-            tuile3[3] = new Vector3(0, 75, 0);
-            Vector3[] tuile4 = new Vector3[4];
-            tuile4[0] = new Vector3(250, 0, -250);
-            tuile4[1] = new Vector3(0, 0, -250);
-            tuile4[2] = new Vector3(250, 75, -250);
-            tuile4[3] = new Vector3(0, 75, -250);
-
-            Vector3 positionCaméra = new Vector3(125, 250, -125);
-            Vector3 positionCibleCaméra = new Vector3(125, 0, -125);
-            Vector3 positionOrigineMurRoche = new Vector3(0, 0, 0);
-            Vector3 positionOrigineLave = new Vector3(125, 25, -125);
+            PositionCaméra = new Vector3(125, 250, -125);
+            PositionCibleCaméra = new Vector3(125, 0, -125);
+            PositionOrigineMurRoche = new Vector3(0, 0, 0);
+            PositionOrigineLave = new Vector3(125, 25, -125);
 
 
             client.DiscoverLocalPeers(14242);
@@ -127,16 +117,14 @@ namespace XnaGameClient
             GénérateurAléatoirePourParcoursPossibles = new Random();
 
             Components.Add(GestionInput);
-            Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
-            CaméraJeu = new CaméraSubjective(this, positionCaméra, positionCibleCaméra, new Vector3(0,0,-126), INTERVALLE_UPDATE);
+            Components.Add(new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE));
+            CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0,0,-126), INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
 
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile1));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile2));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile3));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile4));
-            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), positionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "DrapeauQuébec", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
+            CréerMursAireDeJeu();
+
+            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             CréerPlateformesAvecPositionsAléatoires();
@@ -206,7 +194,7 @@ namespace XnaGameClient
                     NetOutgoingMessage om = client.CreateMessage();
                     om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
                     om.Write(yinput);
-                    client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced);
+                    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
                 }
 
                 // read messages
@@ -231,6 +219,55 @@ namespace XnaGameClient
             }
 
             base.Update(gameTime);
+        }
+
+        void CréerMur1()
+        {
+            Tuile1 = new Vector3[4];
+            Tuile1[0] = new Vector3(0, 0, 0);
+            Tuile1[1] = new Vector3(250, 0, 0);
+            Tuile1[2] = new Vector3(0, 75, 0);
+            Tuile1[3] = new Vector3(250, 75, 0);
+        }
+
+        void CréerMur2()
+        {
+            Tuile2 = new Vector3[4];
+            Tuile2[0] = new Vector3(250, 0, 0);
+            Tuile2[1] = new Vector3(250, 0, -250);
+            Tuile2[2] = new Vector3(250, 75, 0);
+            Tuile2[3] = new Vector3(250, 75, -250);
+        }
+
+        void CréerMur3()
+        {
+            Tuile3 = new Vector3[4];
+            Tuile3[0] = new Vector3(0, 0, -250);
+            Tuile3[1] = new Vector3(0, 0, 0);
+            Tuile3[2] = new Vector3(0, 75, -250);
+            Tuile3[3] = new Vector3(0, 75, 0);
+        }
+
+        void CréerMur4()
+        {
+            Tuile4 = new Vector3[4];
+            Tuile4[0] = new Vector3(250, 0, -250);
+            Tuile4[1] = new Vector3(0, 0, -250);
+            Tuile4[2] = new Vector3(250, 75, -250);
+            Tuile4[3] = new Vector3(0, 75, -250);
+        }
+
+        void CréerMursAireDeJeu()
+        {
+            CréerMur1();
+            CréerMur2();
+            CréerMur3();
+            CréerMur4();
+
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile1));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile2));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile3));
+            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile4));
         }
 
         void CréerPlateformesAvecPositionsAléatoires()
