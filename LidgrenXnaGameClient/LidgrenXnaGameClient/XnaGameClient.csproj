@@ -118,6 +118,8 @@
     <Compile Include="Composants de base\RessourceDeBase.cs" />
     <Compile Include="Composants de base\RessourcesManager.cs" />
     <Compile Include="Drapeau.cs" />
+    <Compile Include="ObjetDeBase.cs" />
+    <Compile Include="ObjetDeDémo.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="PlanTexturé.cs" />
     <Compile Include="Plateforme.cs" />
