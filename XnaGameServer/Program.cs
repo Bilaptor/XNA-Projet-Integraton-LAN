@@ -99,7 +99,9 @@ namespace XnaGameServer
                                 om.Write(otherPlayer.RemoteUniqueIdentifier);
 
                                 if (otherPlayer.Tag == null)
+                                {
                                     otherPlayer.Tag = new int[2];
+                                }
 
                                 int[] pos = otherPlayer.Tag as int[];
                                 om.Write(pos[0]);
@@ -111,7 +113,7 @@ namespace XnaGameServer
                         }
 
                         // schedule next update
-                        nextSendUpdates += (1.0 / 30.0);
+                        nextSendUpdates += (1.0 / 60.0);
                     }
                 }
 

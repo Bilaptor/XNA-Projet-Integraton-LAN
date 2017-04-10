@@ -201,20 +201,20 @@ namespace XnaGameClient
                 }
 
                 // read messages
-                NetIncomingMessage msg;
-                while ((msg = client.ReadMessage()) != null)
+                NetIncomingMessage incomingMessage;
+                while ((incomingMessage = client.ReadMessage()) != null)
                 {
-                    switch (msg.MessageType)
+                    switch (incomingMessage.MessageType)
                     {
                         case NetIncomingMessageType.DiscoveryResponse:
                             // just connect to first server discovered
-                            client.Connect(msg.SenderEndPoint);
+                            client.Connect(incomingMessage.SenderEndPoint);
                             break;
                         case NetIncomingMessageType.Data:
                             // server sent a position update
-                            long who = msg.ReadInt64();
-                            int x = msg.ReadInt32();
-                            int y = msg.ReadInt32();
+                            long who = incomingMessage.ReadInt64();
+                            int x = incomingMessage.ReadInt32();
+                            int y = incomingMessage.ReadInt32();
                             Positions[who] = new Vector2(x, y);
                             break;
                     }
