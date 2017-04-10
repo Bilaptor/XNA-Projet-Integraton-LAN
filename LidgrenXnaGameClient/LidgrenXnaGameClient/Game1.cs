@@ -206,7 +206,7 @@ namespace XnaGameClient
                     NetOutgoingMessage om = client.CreateMessage();
                     om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
                     om.Write(yinput);
-                    client.SendMessage(om, NetDeliveryMethod.Unreliable);
+                    client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced);
                 }
 
                 // read messages
