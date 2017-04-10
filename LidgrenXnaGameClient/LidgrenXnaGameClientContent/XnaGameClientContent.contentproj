@@ -95,8 +95,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\bonhomme123.fbx">
-      <Name>bonhomme123</Name>
+    <Compile Include="Models\bonhomme123456.fbx">
+      <Name>bonhomme123456</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
