@@ -210,7 +210,6 @@ namespace XnaGameClient
                 }
 
                 // read messages
-                // commentaire read messages
                 NetIncomingMessage incomingMessage;
                 while ((incomingMessage = client.ReadMessage()) != null)
                 {
