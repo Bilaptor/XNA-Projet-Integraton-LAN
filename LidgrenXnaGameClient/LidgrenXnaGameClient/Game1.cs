@@ -16,6 +16,7 @@ namespace XnaGameClient
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_UPDATE = 1f / 60f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+        const float INTERVALLE_CALCUL_STANDARD = 1f / 60f;
 
         const float LIMITE_ANGLE_DE_FLOTTAISON_MAX = MathHelper.Pi / 360;
         const float LIMITE_ANGLE_DE_FLOTTAISON_MIN = MathHelper.Pi / 180;
@@ -107,6 +108,10 @@ namespace XnaGameClient
             PositionOrigineMurRoche = new Vector3(0, 0, 0);
             PositionOrigineLave = new Vector3(125, 25, -125);
 
+            const float ÉCHELLE_OBJET = 0.01f;
+            Vector3 positionObjet = new Vector3(125, 45, -125);
+            Vector3 rotationObjet = new Vector3(0, MathHelper.PiOver2, 0);
+
 
             client.DiscoverLocalPeers(14242);
             GestionnaireDeFonts = new RessourcesManager<SpriteFont>(this, "Fonts");
@@ -126,6 +131,8 @@ namespace XnaGameClient
 
             Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
+
+            Components.Add(new ObjetDeDémo(this, "bonhomme123", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
 
             CréerPlateformesAvecPositionsAléatoires();
             //CréerParcoursPossibles();
