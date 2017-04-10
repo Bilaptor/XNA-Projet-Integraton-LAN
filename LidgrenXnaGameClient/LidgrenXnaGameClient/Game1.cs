@@ -1,5 +1,6 @@
 using System;
 using Lidgren.Network;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,9 +25,16 @@ namespace XnaGameClient
         const int NB_DE_PLATEFORMES_AlÉATOIRE = 15;
         const int NB_DE_PLATEFORMES_POUR_PARCOURS_POSSIBLES = 12;
         const int POSITION_Y_PLATEFORMES = 45;
-        const int LIMITE_POSITION_X_PLATEFORMES_DROITE = 50;
-        const int LIMITE_POSITION_X_PLATEFORMES_GAUCHE = 200;
-        const int LIMITE_POSITION_Z_PLATEFORMES = 200;
+        const int LIMITE_POSITION_X__DROITE_POUR_PLATEFORMES_PARCOURS_POSSIBLES = 150;
+        const int LIMITE_POSITION_X_GAUCHE_POUR_PLATEFORMES_PARCOURS_POSSIBLES = 100;
+        const int LIMITE_POSITION_Z_AVANT_POUR_PLATEFORMES_PARCOURS_POSSIBLES = 50;
+        const int LIMITE_POSITION_Z_ARRIÈRE_POUR_PLATEFORMES_PARCOURS_POSSIBLES = 100;
+
+        const int LIMITE_POSITION_X_DROITE_POUR_PLATEFORMES_ALÉATOIRES = 221;
+        const int LIMITE_POSITION_X_GAUCHE_POUR_PLATEFORMES_ALÉATOIRES = 20;
+        const int LIMITE_POSITION_Z_ARRIÈRE_POUR_PLATEFORMES_ALÉATOIRES = 230;
+        const int LIMITE_POSITION_Z_AVANT_POUR_PLATEFORMES_ALÉATOIRES = 29;
+
 
         const int CHANGEMENT_POSITION = 6;
 
@@ -58,11 +66,12 @@ namespace XnaGameClient
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
-        
+
+
         Texture2D[] Textures;
         Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
         NetClient client;
-        
+
         public Game1()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
@@ -103,8 +112,8 @@ namespace XnaGameClient
             tuile4[2] = new Vector3(250, 75, -250);
             tuile4[3] = new Vector3(0, 75, -250);
 
-            Vector3 positionCaméra = new Vector3(0, 0, 0);
-            Vector3 positionCibleCaméra = new Vector3(0, 0, -1);
+            Vector3 positionCaméra = new Vector3(125, 250, -125);
+            Vector3 positionCibleCaméra = new Vector3(125, 0, -125);
             Vector3 positionOrigineMurRoche = new Vector3(0, 0, 0);
             Vector3 positionOrigineLave = new Vector3(125, 25, -125);
 
@@ -119,10 +128,10 @@ namespace XnaGameClient
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "murderoche", INTERVALLE_UPDATE));
-            CaméraJeu = new CaméraSubjective(this, positionCaméra, positionCibleCaméra, Vector3.Up, INTERVALLE_UPDATE);
+            CaméraJeu = new CaméraSubjective(this, positionCaméra, positionCibleCaméra, new Vector3(0,0,-126), INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
-            
+
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile1));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile2));
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, positionOrigineMurRoche, new Vector2(2, 2), "Dragon", INTERVALLE_MAJ_STANDARD, tuile3));
@@ -131,8 +140,8 @@ namespace XnaGameClient
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             CréerPlateformesAvecPositionsAléatoires();
-            CréerParcoursPossibles();
-           
+            //CréerParcoursPossibles();
+
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
             Services.AddService(typeof(RessourcesManager<Model>), GestionnaireDeModèles);
@@ -149,7 +158,7 @@ namespace XnaGameClient
             IncrémentEnXPourCheminsPossibles = new int[CHANGEMENT_POSITION] { 8, 9, 10, -8, -9, -10 };
             IncrémentEnZPourCheminsPossibles = new int[CHANGEMENT_POSITION] { -8, -9, -10, 5, 6, 7 };
         }
-        
+
 
         protected override void LoadContent()
         {
@@ -228,35 +237,36 @@ namespace XnaGameClient
         {
             for (int cpt = 0; cpt < NB_DE_PLATEFORMES_AlÉATOIRE; ++cpt)
             {
-                Position_X_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(LIMITE_POSITION_X_PLATEFORMES_DROITE, LIMITE_POSITION_X_PLATEFORMES_GAUCHE);
-                Position_Z_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
+                Position_X_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(LIMITE_POSITION_X_GAUCHE_POUR_PLATEFORMES_ALÉATOIRES, LIMITE_POSITION_X_DROITE_POUR_PLATEFORMES_ALÉATOIRES);
+                Position_Z_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(-LIMITE_POSITION_Z_ARRIÈRE_POUR_PLATEFORMES_ALÉATOIRES, -LIMITE_POSITION_Z_AVANT_POUR_PLATEFORMES_ALÉATOIRES);
                 AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
-                Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison ,INTERVALLE_MAJ_STANDARD));
+                Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
             }
         }
 
         void CréerParcoursPossibles()
         {
-            Position_X_plateformes = GénérateurAléatoirePourParcoursPossibles.Next(LIMITE_POSITION_X_PLATEFORMES_DROITE, LIMITE_POSITION_X_PLATEFORMES_GAUCHE);
-            Position_Z_plateformes = GénérateurAléatoirePourParcoursPossibles.Next(-LIMITE_POSITION_Z_PLATEFORMES, 0);
+            Position_X_plateformes = GénérateurAléatoirePourParcoursPossibles.Next(LIMITE_POSITION_X_GAUCHE_POUR_PLATEFORMES_PARCOURS_POSSIBLES, LIMITE_POSITION_X__DROITE_POUR_PLATEFORMES_PARCOURS_POSSIBLES);
+            Position_Z_plateformes = GénérateurAléatoirePourParcoursPossibles.Next(-LIMITE_POSITION_Z_ARRIÈRE_POUR_PLATEFORMES_PARCOURS_POSSIBLES, 0);
 
             for (int cpt = 0; cpt < NB_DE_PLATEFORMES_POUR_PARCOURS_POSSIBLES; ++cpt)
             {
+                //foreach (Plateforme plateforme in Components.Where(c => c is Plateforme))
+                //{
+                //    if ()
+                //    {
+                        Incrément_X_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
+                        Incrément_Z_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
+                        Position_X_plateformes += IncrémentEnXPourCheminsPossibles[Incrément_X_Aléatoire];
+                        Position_Z_plateformes += IncrémentEnZPourCheminsPossibles[Incrément_Z_Aléatoire];
+                        AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
-                Incrément_X_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
-                Incrément_Z_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
-                Position_X_plateformes += IncrémentEnXPourCheminsPossibles[Incrément_X_Aléatoire];
-                Position_Z_plateformes += IncrémentEnZPourCheminsPossibles[Incrément_Z_Aléatoire];
-                AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
-
-                if (Position_X_plateformes != Position_Z_plateformes)
-                {
-                    Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
-                }
-
-                   
+                        Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
+                //    }
+                //}
             }
+
         }
 
         protected override void Draw(GameTime gameTime)
