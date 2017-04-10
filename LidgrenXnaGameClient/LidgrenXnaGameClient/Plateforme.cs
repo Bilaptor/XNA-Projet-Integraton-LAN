@@ -17,7 +17,7 @@ namespace XnaGameClient
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
 
-        BoundingBox ZoneDeCollisionPlateforme { get; set; }
+        public BoundingBox ZoneDeCollisionPlateforme { get; set; }
         Vector3 DimensionPlateforme { get; set; }
 
 
@@ -107,7 +107,7 @@ namespace XnaGameClient
         /// </summary>
         /// <param name="autreZoneCollison"></param>
         /// <returns></returns>
-        bool EstEnCollision(BoundingSphere autreZoneCollison)
+        public bool EstEnCollision(BoundingSphere autreZoneCollison)
         {
             return ZoneDeCollisionPlateforme.Intersects(autreZoneCollison);
         }
