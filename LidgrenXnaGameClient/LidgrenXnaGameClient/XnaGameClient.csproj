@@ -117,7 +117,7 @@
     <Compile Include="Composants de base\InputManager.cs" />
     <Compile Include="Composants de base\RessourceDeBase.cs" />
     <Compile Include="Composants de base\RessourcesManager.cs" />
-    <Compile Include="Drapeau.cs" />
+    <Compile Include="Lave.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="ObjetDeDémo.cs" />
     <Compile Include="Plan.cs" />

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace XnaGameClient
 {
-    class Drapeau : PlanTexturé
+    class Lave : PlanTexturé
     {
         //à compléter
         double TempsÉcouléDepuisMAJ { get; set; }
@@ -15,7 +15,7 @@ namespace XnaGameClient
         float IntervalleVariation{ get; set; }
         float Angle { get; set; }
 
-        public Drapeau(Game jeu, float homothétieInitiale, Vector3 rotationInitiale,Vector3 positionInitiale, Vector2 étendue, Vector2 charpente,string nomTexture, float maxVariation, float intervalleVariation,float intervalleMAJ)
+        public Lave(Game jeu, float homothétieInitiale, Vector3 rotationInitiale,Vector3 positionInitiale, Vector2 étendue, Vector2 charpente,string nomTexture, float maxVariation, float intervalleVariation,float intervalleMAJ)
             :base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, étendue, charpente, nomTexture, intervalleMAJ)
         {
             MaxVariation = maxVariation;

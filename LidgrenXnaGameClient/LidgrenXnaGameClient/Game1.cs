@@ -64,7 +64,7 @@ namespace XnaGameClient
         int Incrément_Z_Aléatoire { get; set; }
 
         Vector3 PositionCaméra { get; set; }
-        Vector3 PositionCibleCaméra { get; set;}
+        Vector3 PositionCibleCaméra { get; set; }
         Vector3 PositionOrigineMurRoche { get; set; }
         Vector3 PositionOrigineLave { get; set; }
 
@@ -123,19 +123,20 @@ namespace XnaGameClient
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE));
-            CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0,0,-126), INTERVALLE_UPDATE);
+            CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
 
             CréerMursAireDeJeu();
 
-            Components.Add(new Drapeau(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
-            Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
 
             CréerPlateformesAvecPositionsAléatoires();
             //CréerParcoursPossibles();
+
+            Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
@@ -300,13 +301,13 @@ namespace XnaGameClient
                 //{
                 //    if ()
                 //    {
-                        Incrément_X_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
-                        Incrément_Z_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
-                        Position_X_plateformes += IncrémentEnXPourCheminsPossibles[Incrément_X_Aléatoire];
-                        Position_Z_plateformes += IncrémentEnZPourCheminsPossibles[Incrément_Z_Aléatoire];
-                        AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
+                Incrément_X_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
+                Incrément_Z_Aléatoire = GénérateurAléatoirePourParcoursPossibles.Next(0, CHANGEMENT_POSITION);
+                Position_X_plateformes += IncrémentEnXPourCheminsPossibles[Incrément_X_Aléatoire];
+                Position_Z_plateformes += IncrémentEnZPourCheminsPossibles[Incrément_Z_Aléatoire];
+                AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
-                        Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
+                Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
                 //    }
                 //}
             }
