@@ -143,3 +143,6 @@ namespace XnaGameClient
       }
    }
 }
+
+//graphicsDevice.BlendState = BlendState.Opaque;
+//        graphicsDevice.DepthStencilState = DepthStencilState.Default;

@@ -23,7 +23,7 @@ namespace XnaGameClient
       float TempsÉcouléDepuisMAJ { get; set; }
       InputManager GestionInput { get; set; }
 
-      bool estEnZoom;
+        bool estEnZoom;
       bool EstEnZoom
       {
          get { return estEnZoom; }

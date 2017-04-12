@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adversaire.cs" />
     <Compile Include="Afficheur3D.cs" />
     <Compile Include="Caméra.cs" />
     <Compile Include="CaméraSubjective.cs" />

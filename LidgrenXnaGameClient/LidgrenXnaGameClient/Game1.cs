@@ -63,7 +63,7 @@ namespace XnaGameClient
         int Incrément_X_Aléatoire { get; set; }
         int Incrément_Z_Aléatoire { get; set; }
 
-        Vector3 PositionCaméra { get; set; }
+        public Vector3 PositionCaméra { get; set; }
         Vector3 PositionCibleCaméra { get; set;}
         Vector3 PositionOrigineMurRoche { get; set; }
         Vector3 PositionOrigineLave { get; set; }
@@ -108,7 +108,7 @@ namespace XnaGameClient
             PositionOrigineMurRoche = new Vector3(0, 0, 0);
             PositionOrigineLave = new Vector3(125, 25, -125);
 
-            const float ÉCHELLE_OBJET = 0.01f;
+            const float ÉCHELLE_OBJET = 0.0000001f;
             Vector3 positionObjet = new Vector3(125, 45, -125);
             Vector3 rotationObjet = new Vector3(0, MathHelper.PiOver2, 0);
 
@@ -125,6 +125,7 @@ namespace XnaGameClient
             Components.Add(new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE));
             CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0,0,-126), INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
+            Services.AddService(typeof(CaméraSubjective), CaméraJeu);
             Components.Add(new Afficheur3D(this));
 
             CréerMursAireDeJeu();
@@ -133,7 +134,10 @@ namespace XnaGameClient
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
+            Components.Add(new Adversaire(this, "bonhommeFinal",0.01F,Vector3.Zero,PositionCaméra,1f/60));
 
+
+ // public Adversaire(Game jeu, String nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, string nomTexture)
             CréerPlateformesAvecPositionsAléatoires();
             //CréerParcoursPossibles();
 
