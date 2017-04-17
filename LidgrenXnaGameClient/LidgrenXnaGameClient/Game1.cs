@@ -43,6 +43,17 @@ namespace XnaGameClient
         const int LIMITE_ZONES_1_2_3_Z_AVANT = -170;
         const int LIMITE_ZONES_4_5_6_Z_AVANT = -100;
 
+        int[][] LimitesAireDeJeu { get; set; }
+        int[] Limites_Zone_1 { get; set; }
+        int[] Limites_Zone_2 { get; set; }
+        int[] Limites_Zone_3 { get; set; }
+        int[] Limites_Zone_4 { get; set; }
+        int[] Limites_Zone_5 { get; set; }
+        int[] Limites_Zone_6 { get; set; }
+        int[] Limites_Zone_7 { get; set; }
+        int[] Limites_Zone_8 { get; set; }
+        int[] Limites_Zone_9 { get; set; }
+
 
         int Position_X_plateformes { get; set; }
         int Position_Z_plateformes { get; set; }
@@ -59,9 +70,7 @@ namespace XnaGameClient
 
         Vector3[] Ptsommets { get; set; }
 
-        Random GénérateurAléatoirePourPlateformesAléatoire { get; set; }
-        Random GénérateurAléatoirePourParcoursPossibles { get; set; }
-
+        Random GénérateurAléatoire { get; set; }
         
 
         Vector3 PositionCaméra { get; set; }
@@ -102,6 +111,8 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
+            InitialiserTableauxLimitesAireJeu();
+
             PositionCaméra = new Vector3(125, 250, -125);
             PositionCibleCaméra = new Vector3(125, 0, -125);
             PositionOrigineMurRoche = new Vector3(0, 0, 0);
@@ -117,8 +128,7 @@ namespace XnaGameClient
             GestionnaireDeTextures = new RessourcesManager<Texture2D>(this, "Textures");
             GestionnaireDeModèles = new RessourcesManager<Model>(this, "Models");
             GestionInput = new InputManager(this);
-            GénérateurAléatoirePourPlateformesAléatoire = new Random();
-            GénérateurAléatoirePourParcoursPossibles = new Random();
+            GénérateurAléatoire = new Random();
 
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE));
@@ -131,9 +141,7 @@ namespace XnaGameClient
             Components.Add(new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
-
-            CréerPlateformesAvecPositionsAléatoires();
-            //CréerParcoursPossibles();
+            GérerPositionsPlateformes();
 
             Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
 
@@ -222,6 +230,21 @@ namespace XnaGameClient
             base.Update(gameTime);
         }
 
+        void InitialiserTableauxLimitesAireJeu()
+        {
+            Limites_Zone_1 = new int[] { LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_ZONES_1_2_3_Z_AVANT };
+            Limites_Zone_2 = new int[] { LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_ZONES_1_2_3_Z_AVANT };
+            Limites_Zone_3 = new int[] { LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_POSITION_X_DROITE_PLATEFORMES, LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_ZONES_1_2_3_Z_AVANT };
+            Limites_Zone_4 = new int[] { LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_ZONES_1_2_3_Z_AVANT, LIMITE_ZONES_4_5_6_Z_AVANT };
+            Limites_Zone_5 = new int[] { LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_ZONES_1_2_3_Z_AVANT, LIMITE_ZONES_4_5_6_Z_AVANT };
+            Limites_Zone_6 = new int[] { LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_POSITION_X_DROITE_PLATEFORMES, LIMITE_ZONES_1_2_3_Z_AVANT, LIMITE_ZONES_4_5_6_Z_AVANT };
+            Limites_Zone_7 = new int[] { LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_ZONES_4_5_6_Z_AVANT, LIMITE_POSITION_Z_AVANT_PLATEFORMES };
+            Limites_Zone_8 = new int[] { LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_ZONES_4_5_6_Z_AVANT, LIMITE_POSITION_Z_AVANT_PLATEFORMES };
+            Limites_Zone_9 = new int[] { LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_POSITION_X_DROITE_PLATEFORMES, LIMITE_ZONES_4_5_6_Z_AVANT, LIMITE_POSITION_Z_AVANT_PLATEFORMES };
+
+            LimitesAireDeJeu = new int[][] {Limites_Zone_1, Limites_Zone_2,Limites_Zone_3,Limites_Zone_4,Limites_Zone_5,Limites_Zone_6,Limites_Zone_7,Limites_Zone_8,Limites_Zone_9 };
+        }
+
         void CréerMur1()
         {
             Tuile1 = new Vector3[4];
@@ -271,12 +294,17 @@ namespace XnaGameClient
             Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile4));
         }
 
+        void GérerPositionsPlateformes()
+        {
+
+        }
+
         void CréerPlateformesAvecPositionsAléatoires()
         {
             for (int cpt = 0; cpt < NB_DE_PLATEFORMES_AlÉATOIRE; ++cpt)
             {
-                Position_X_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_POSITION_X_DROITE_PLATEFORMES);
-                Position_Z_plateformes = GénérateurAléatoirePourPlateformesAléatoire.Next(LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_POSITION_Z_AVANT_PLATEFORMES);
+                Position_X_plateformes = GénérateurAléatoire.Next(LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_POSITION_X_DROITE_PLATEFORMES);
+                Position_Z_plateformes = GénérateurAléatoire.Next(LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_POSITION_Z_AVANT_PLATEFORMES);
                 AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
                 Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
