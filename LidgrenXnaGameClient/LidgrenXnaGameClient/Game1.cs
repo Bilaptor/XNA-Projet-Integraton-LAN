@@ -27,7 +27,7 @@ namespace XnaGameClient
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
 
-        const int NB_DE_PLATEFORMES_AlÉATOIRE = 15;
+        const int NB_DE_PLATEFORMES_AlÉATOIRE = 45;
         const int NB_DE_PLATEFORMES_POUR_PARCOURS_POSSIBLES = 12;
         const int POSITION_Y_PLATEFORMES = 45;
 
@@ -53,6 +53,8 @@ namespace XnaGameClient
         int[] Limites_Zone_7 { get; set; }
         int[] Limites_Zone_8 { get; set; }
         int[] Limites_Zone_9 { get; set; }
+
+        int IndiceTableauLimitesAireJeu { get; set; }
 
 
         int Position_X_plateformes { get; set; }
@@ -296,22 +298,18 @@ namespace XnaGameClient
 
         void GérerPositionsPlateformes()
         {
-
-        }
-
-        void CréerPlateformesAvecPositionsAléatoires()
-        {
-            for (int cpt = 0; cpt < NB_DE_PLATEFORMES_AlÉATOIRE; ++cpt)
+            for( int cpt = 0; cpt < NB_DE_PLATEFORMES_AlÉATOIRE; ++cpt)
             {
-                Position_X_plateformes = GénérateurAléatoire.Next(LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_POSITION_X_DROITE_PLATEFORMES);
-                Position_Z_plateformes = GénérateurAléatoire.Next(LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_POSITION_Z_AVANT_PLATEFORMES);
+                IndiceTableauLimitesAireJeu = GénérateurAléatoire.Next(0, LimitesAireDeJeu.Length);
+                Position_X_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
+                Position_Z_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
+
                 AngleDeFlottaison = LIMITE_ANGLE_DE_FLOTTAISON_MAX;
 
                 Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), AngleDeFlottaison, INTERVALLE_MAJ_STANDARD));
             }
         }
 
-       
 
         protected override void Draw(GameTime gameTime)
         {
