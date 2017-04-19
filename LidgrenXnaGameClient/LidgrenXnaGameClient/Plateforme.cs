@@ -25,10 +25,11 @@ namespace XnaGameClient
         string NomTextureCube { get; set; }
 
         protected float AngleDeFlottaison { get; set; }
+        protected float IncrémentAngleDeFlottaison { get; set; }
 
 
         public Plateforme(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
-                           Vector3 dimension, float angleDeFlottaison, float intervalleMAJ)
+                           Vector3 dimension, float angleDeFlottaison, float incrémentAngleDeFlottaison,float intervalleMAJ)
          : base(game, homothétieInitiale, rotationInitiale, positionInitiale, angleDeFlottaison, intervalleMAJ)
         {
             DeltaX = dimension.X;
@@ -37,6 +38,7 @@ namespace XnaGameClient
             Origine = new Vector3(DeltaX / 2, DeltaY / 2, DeltaZ / 2);
             Couleur = couleur;
             AngleDeFlottaison = angleDeFlottaison;
+            IncrémentAngleDeFlottaison = incrémentAngleDeFlottaison;
             IntervalleMAJ = intervalleMAJ;
             DimensionPlateforme = dimension;
         }

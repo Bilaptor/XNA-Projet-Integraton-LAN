@@ -101,6 +101,16 @@
       <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="SplineX.txt">
+      <Name>SplineX</Name>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SplineZ.txt">
+      <Name>SplineZ</Name>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

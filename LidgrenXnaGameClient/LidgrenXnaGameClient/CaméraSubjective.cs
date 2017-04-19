@@ -3,179 +3,177 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XnaGameClient
 {
-   public class CaméraSubjective : Caméra
-   {
-      const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
-      const float ACCÉLÉRATION = 0.001f;
-      const float VITESSE_INITIALE_ROTATION = 5f;
-      const float VITESSE_INITIALE_TRANSLATION = 0.5f;
-      const float DELTA_LACET = MathHelper.Pi / 180; // 1 degré à la fois
-      const float DELTA_TANGAGE = MathHelper.Pi / 180; // 1 degré à la fois
-      const float DELTA_ROULIS = MathHelper.Pi / 180; // 1 degré à la fois
-      const float RAYON_COLLISION = 1f;
+    public class CaméraSubjective : Caméra
+    {
+        const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+        const float ACCÉLÉRATION = 0.001f;
+        const float VITESSE_INITIALE_ROTATION = 5f;
+        const float VITESSE_INITIALE_TRANSLATION = 0.5f;
+        const float DELTA_LACET = MathHelper.Pi / 180; // 1 degré à la fois
+        const float DELTA_TANGAGE = MathHelper.Pi / 180; // 1 degré à la fois
+        const float DELTA_ROULIS = MathHelper.Pi / 180; // 1 degré à la fois
+        const float RAYON_COLLISION = 1f;
 
-      Vector3 Direction { get; set; }
-      Vector3 Latéral { get; set; }
-      float VitesseTranslation { get; set; }
-      float VitesseRotation { get; set; }
+        Vector3 Direction { get; set; }
+        Vector3 Latéral { get; set; }
+        float VitesseTranslation { get; set; }
+        float VitesseRotation { get; set; }
 
-      float IntervalleMAJ { get; set; }
-      float TempsÉcouléDepuisMAJ { get; set; }
-      InputManager GestionInput { get; set; }
+        float IntervalleMAJ { get; set; }
+        float TempsÉcouléDepuisMAJ { get; set; }
+        InputManager GestionInput { get; set; }
 
         bool estEnZoom;
-      bool EstEnZoom
-      {
-         get { return estEnZoom; }
-         set
-         {
-            float ratioAffichage = Game.GraphicsDevice.Viewport.AspectRatio;
-            estEnZoom = value;
-            if (estEnZoom)
+        bool EstEnZoom
+        {
+            get { return estEnZoom; }
+            set
             {
-               CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF / 2, ratioAffichage, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
+                float ratioAffichage = Game.GraphicsDevice.Viewport.AspectRatio;
+                estEnZoom = value;
+                if (estEnZoom)
+                {
+                    CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF / 2, ratioAffichage, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
+                }
+                else
+                {
+                    CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, ratioAffichage, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
+                }
             }
-            else
-            {
-               CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, ratioAffichage, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
-            }
-         }
-      }
+        }
 
-      public CaméraSubjective(Game jeu, Vector3 positionCaméra, Vector3 cible, Vector3 orientation, float intervalleMAJ)
-         : base(jeu)
-      {
-         IntervalleMAJ = intervalleMAJ;
-         CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
-         CréerPointDeVue(positionCaméra, cible, orientation);
-         EstEnZoom = false;
-      }
+        public CaméraSubjective(Game jeu, Vector3 positionCaméra, Vector3 cible, Vector3 orientation, float intervalleMAJ)
+           : base(jeu)
+        {
+            IntervalleMAJ = intervalleMAJ;
+            CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
+            CréerPointDeVue(positionCaméra, cible, orientation);
+            EstEnZoom = false;
+        }
 
-      public override void Initialize()
-      {
-         VitesseRotation = VITESSE_INITIALE_ROTATION;
-         VitesseTranslation = VITESSE_INITIALE_TRANSLATION;
-         TempsÉcouléDepuisMAJ = 0;
-         base.Initialize();
-         GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
-      }
-
-      protected override void CréerPointDeVue()
-      {
-         // Méthode appelée s'il est nécessaire de recalculer la matrice de vue.
-         // Calcul et normalisation de certains vecteurs
-         // (à compléter)
-         Direction = Vector3.Normalize(Direction);
-         OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-         Latéral = Vector3.Normalize(Latéral);
-
-         Vue = Matrix.CreateLookAt(Position, Position + Direction, OrientationVerticale);
-         GénérerFrustum();
-      }
-
-      protected override void CréerPointDeVue(Vector3 position, Vector3 cible, Vector3 orientation)
-      {
-         Position = position;
-         Cible = cible;
-         Direction = Cible - Position;
-
-         Latéral = Vector3.Cross(Direction, orientation);
-         OrientationVerticale = Vector3.Cross(Latéral, Direction);
-
-         //Création de la matrice de vue (point de vue)
-         CréerPointDeVue();
-      }
-
-      public override void Update(GameTime gameTime)
-      {
-         float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
-         TempsÉcouléDepuisMAJ += TempsÉcoulé;
-         GestionClavier();
-         if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
-         {
-            if (GestionInput.EstEnfoncée(Keys.LeftShift) || GestionInput.EstEnfoncée(Keys.RightShift))
-            {
-               GérerAccélération();
-               GérerDéplacement();
-               GérerRotation();
-               CréerPointDeVue();
-            }
+        public override void Initialize()
+        {
+            VitesseRotation = VITESSE_INITIALE_ROTATION;
+            VitesseTranslation = VITESSE_INITIALE_TRANSLATION;
             TempsÉcouléDepuisMAJ = 0;
-         }
-         base.Update(gameTime);
-      }
+            base.Initialize();
+            GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
+        }
 
-      private int GérerTouche(Keys touche)
-      {
-         return GestionInput.EstEnfoncée(touche) ? 1 : 0;
-      }
+        protected override void CréerPointDeVue()
+        {
+            // Méthode appelée s'il est nécessaire de recalculer la matrice de vue.
+            // Calcul et normalisation de certains vecteurs
+            // (à compléter)
+            Direction = Vector3.Normalize(Direction);
+            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+            Latéral = Vector3.Normalize(Latéral);
 
-      private void GérerAccélération()
-      {
-         int valAccélération = (GérerTouche(Keys.Subtract) + GérerTouche(Keys.OemMinus)) - (GérerTouche(Keys.Add)+GérerTouche(Keys.OemPlus));
-         if (valAccélération != 0)
-         {
-            IntervalleMAJ += ACCÉLÉRATION * valAccélération;
-            IntervalleMAJ = MathHelper.Max(INTERVALLE_MAJ_STANDARD, IntervalleMAJ);
-         }
-      }
+            Vue = Matrix.CreateLookAt(Position, Position + Direction, OrientationVerticale);
+            GénérerFrustum();
+        }
 
-      private void GérerDéplacement()
-      {
-         Vector3 nouvellePosition = Position;
-         float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
-         float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
+        protected override void CréerPointDeVue(Vector3 position, Vector3 cible, Vector3 orientation)
+        {
+            Position = position;
+            Cible = cible;
+            Direction = Cible - Position;
 
-         Position = Position + déplacementDirection * Direction;
-         Position = Position - déplacementLatéral * Latéral;
-      }
+            Latéral = Vector3.Cross(Direction, orientation);
+            OrientationVerticale = Vector3.Cross(Latéral, Direction);
 
-      private void GérerRotation()
-      {
-         GérerLacet();
-         GérerTangage();
-         GérerRoulis();
-      }
+            //Création de la matrice de vue (point de vue)
+            CréerPointDeVue();
+        }
 
-      private void GérerLacet()
-      {
-         float lacet = (GérerTouche(Keys.Left) - GérerTouche(Keys.Right)) * VitesseRotation*DELTA_LACET;
-         
-         Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
-         Direction = Vector3.Transform(Direction, mLacet);
-         Direction = Vector3.Normalize(Direction);
-         Latéral = Vector3.Cross(Direction, OrientationVerticale);
-      }
+        public override void Update(GameTime gameTime)
+        {
+            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TempsÉcouléDepuisMAJ += TempsÉcoulé;
+            GestionClavier();
+            if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
+            {
+                GérerAccélération();
+                GérerDéplacement();
+                GérerRotation();
+                CréerPointDeVue();
 
-      private void GérerTangage()
-      {
-         float tangage =  (GérerTouche(Keys.Down)- GérerTouche(Keys.Up)) * VitesseRotation * DELTA_TANGAGE;
+                TempsÉcouléDepuisMAJ = 0;
+            }
+            base.Update(gameTime);
+        }
 
-         Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
-         Direction = Vector3.Transform(Direction, mTangageDirection);
-         Direction = Vector3.Normalize(Direction);
-         Latéral = Vector3.Cross(Direction, OrientationVerticale);
+        private int GérerTouche(Keys touche)
+        {
+            return GestionInput.EstEnfoncée(touche) ? 1 : 0;
+        }
 
-         Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
-         OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
-         OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-      }
+        private void GérerAccélération()
+        {
+            int valAccélération = (GérerTouche(Keys.Subtract) + GérerTouche(Keys.OemMinus)) - (GérerTouche(Keys.Add) + GérerTouche(Keys.OemPlus));
+            if (valAccélération != 0)
+            {
+                IntervalleMAJ += ACCÉLÉRATION * valAccélération;
+                IntervalleMAJ = MathHelper.Max(INTERVALLE_MAJ_STANDARD, IntervalleMAJ);
+            }
+        }
 
-      private void GérerRoulis()
-      {
-         float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotation * DELTA_ROULIS;
+        private void GérerDéplacement()
+        {
+            Vector3 nouvellePosition = Position;
+            float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
+            float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
-         Matrix mRoulis = Matrix.CreateFromAxisAngle(Direction, roulis);
-         OrientationVerticale = Vector3.Transform(OrientationVerticale, mRoulis);
-         OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-      }
+            Position = Position + déplacementDirection * Direction;
+            Position = Position - déplacementLatéral * Latéral;
+        }
 
-      private void GestionClavier()
-      {
-         if (GestionInput.EstNouvelleTouche(Keys.Z))
-         {
-            EstEnZoom = !EstEnZoom;
-         }
-      }
-   }
+        private void GérerRotation()
+        {
+            GérerLacet();
+            GérerTangage();
+            GérerRoulis();
+        }
+
+        private void GérerLacet()
+        {
+            float lacet = (GérerTouche(Keys.Left) - GérerTouche(Keys.Right)) * VitesseRotation * DELTA_LACET;
+
+            Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
+            Direction = Vector3.Transform(Direction, mLacet);
+            Direction = Vector3.Normalize(Direction);
+            Latéral = Vector3.Cross(Direction, OrientationVerticale);
+        }
+
+        private void GérerTangage()
+        {
+            float tangage = (GérerTouche(Keys.Down) - GérerTouche(Keys.Up)) * VitesseRotation * DELTA_TANGAGE;
+
+            Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
+            Direction = Vector3.Transform(Direction, mTangageDirection);
+            Direction = Vector3.Normalize(Direction);
+            Latéral = Vector3.Cross(Direction, OrientationVerticale);
+
+            Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
+            OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
+            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+        }
+
+        private void GérerRoulis()
+        {
+            float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotation * DELTA_ROULIS;
+
+            Matrix mRoulis = Matrix.CreateFromAxisAngle(Direction, roulis);
+            OrientationVerticale = Vector3.Transform(OrientationVerticale, mRoulis);
+            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+        }
+
+        private void GestionClavier()
+        {
+            if (GestionInput.EstNouvelleTouche(Keys.Z))
+            {
+                EstEnZoom = !EstEnZoom;
+            }
+        }
+    }
 }

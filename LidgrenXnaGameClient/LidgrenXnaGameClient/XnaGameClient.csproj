@@ -126,6 +126,7 @@
     <Compile Include="PlanTexturé.cs" />
     <Compile Include="Plateforme.cs" />
     <Compile Include="PlateformeHorizontaleFlottante.cs" />
+    <Compile Include="PlateformeSuivantUneSpline.cs" />
     <Compile Include="PlateformeVerticaleFlottante.cs" />
     <Compile Include="PrimitiveDeBase.cs" />
     <Compile Include="PrimitiveDeBaseAnimée.cs" />
