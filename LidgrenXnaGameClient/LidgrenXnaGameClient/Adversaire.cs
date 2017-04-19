@@ -48,7 +48,7 @@ namespace XnaGameClient
         protected override void LoadContent()
         {
             base.LoadContent();
-            CaméraJeu = Game.Services.GetService(typeof(CaméraSubjective)) as CaméraSubjective;
+            CaméraJeu = Game.Services.GetService(typeof(Caméra)) as Caméra;
         }
 
         public override void Update(GameTime gameTime)
@@ -57,7 +57,7 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleVariation)
             {
-                Position  = CaméraJeu.Position + new Vector3(0,-1 ,-1);
+                Position  = CaméraJeu.Position + new Vector3(0,0,0);
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
             }

@@ -136,7 +136,7 @@ namespace XnaGameClient
             CréerPlateformesAvecPositionsAléatoires();
             //CréerParcoursPossibles();
 
-            Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
+        
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
@@ -145,6 +145,8 @@ namespace XnaGameClient
             Services.AddService(typeof(Caméra), CaméraJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
+            Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
+            Components.Add(new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
 
             base.Initialize();
         }
