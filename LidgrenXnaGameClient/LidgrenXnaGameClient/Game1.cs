@@ -334,10 +334,8 @@ namespace XnaGameClient
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            //GestionSprites.Begin();
+            
             base.Draw(gameTime);
-            //GestionSprites.End();
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
 
@@ -350,7 +348,6 @@ namespace XnaGameClient
                 // draw player
                 spriteBatch.Draw(Textures[num], kvp.Value, Color.White);
             }
-
             spriteBatch.End();
         }
 
