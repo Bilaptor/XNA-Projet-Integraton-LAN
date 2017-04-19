@@ -16,8 +16,8 @@ namespace XnaGameClient
 
 
         public PlateformeVerticaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
-                                   Vector3 dimension,float angleDeFlottaison ,float intervalleMAJ)
-            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension,angleDeFlottaison ,intervalleMAJ)
+                                   Vector3 dimension,float angleDeFlottaison , float incrémentAngleDeFlottaison, float intervalleMAJ)
+            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison , incrémentAngleDeFlottaison, intervalleMAJ)
         {
 
         }

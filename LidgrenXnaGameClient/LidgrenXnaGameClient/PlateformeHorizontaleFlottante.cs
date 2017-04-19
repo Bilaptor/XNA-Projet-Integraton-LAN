@@ -7,14 +7,14 @@ namespace XnaGameClient
 {
     public class PlateformeHorizontaleFlottante : Plateforme
     {
-        const float INCRÉMENT_ANGLE_FLOTTAISON = MathHelper.Pi / 360;
         const float LIMITE_ANGLE_FLOTTAISON = MathHelper.Pi / 180;
 
         float TempsÉcouléDepuisMAJ { get; set; }
+       
 
         public PlateformeHorizontaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color Couleur,
-                                   Vector3 dimension, float angleDeFlottaison,float intervalleMAJ)
-            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, Couleur, dimension, angleDeFlottaison,intervalleMAJ)
+                                   Vector3 dimension, float angleDeFlottaison,float incrémentAngleDeFlottaison,float intervalleMAJ)
+            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, Couleur, dimension, angleDeFlottaison, incrémentAngleDeFlottaison, intervalleMAJ)
         {
 
         }
@@ -32,12 +32,12 @@ namespace XnaGameClient
             if (AngleDeFlottaison < LIMITE_ANGLE_FLOTTAISON)
             {
                 Position += Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
-                AngleDeFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+                AngleDeFlottaison += IncrémentAngleDeFlottaison;
             }
             else
             {
                 Position -= Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
-                AngleDeFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+                AngleDeFlottaison += IncrémentAngleDeFlottaison;
             }
         }
 
