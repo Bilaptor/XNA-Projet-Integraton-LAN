@@ -9,16 +9,19 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+
 namespace XnaGameClient
 {
     /// <summary>
-    /// This is the main type for your game
+    /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Menu1 : Microsoft.Xna.Framework.Game
+    public class Menu2 : Microsoft.Xna.Framework.DrawableGameComponent
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputManager GestionInput { get; set; }
+        Game Jeu { get; set; }
+        bool accepte = true;
 
         enum GameStat
         {
@@ -42,12 +45,13 @@ namespace XnaGameClient
         cButton btnCommandes;
 
 
-        public Menu1()
+        public Menu2(Game game, GraphicsDeviceManager pere)
+            : base(game)
         {
-            graphics = new GraphicsDeviceManager(this);
+            Jeu = game;
+            graphics = pere;
             graphics.IsFullScreen = false;
-            Content.RootDirectory = "Content";
-            
+            Jeu.Content.RootDirectory = "Content";
 
 
         }
@@ -58,11 +62,11 @@ namespace XnaGameClient
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize()
+        public override void Initialize()
         {
             // TODO: Add your initialization logic here
             //Services.AddService(typeof(InputManager), GestionInput);
-            
+
             base.Initialize();
         }
 
@@ -80,24 +84,25 @@ namespace XnaGameClient
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
             graphics.ApplyChanges();
-            IsMouseVisible = true;
+            Jeu.IsMouseVisible = true;
+            
 
-            btnHost = new cButton(Content.Load<Texture2D>("button model host"), graphics.GraphicsDevice);
-            btnHost.setPosition(new Vector2((screenWidth/2)-(screenWidth/ 10), 100));
+            btnHost = new cButton(Jeu.Content.Load<Texture2D>("button model host"), graphics.GraphicsDevice);
+            btnHost.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 100));
 
             //btnOptions = new cButton(Content.Load<Texture2D>("button model OPTIONS"), graphics.GraphicsDevice);
             //btnOptions.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 300));
 
-            btnExit = new cButton(Content.Load<Texture2D>("button model EXIT"), graphics.GraphicsDevice);
+            btnExit = new cButton(Jeu.Content.Load<Texture2D>("button model EXIT"), graphics.GraphicsDevice);
             btnExit.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 400));
 
-            btnJoin = new cButton(Content.Load<Texture2D>("button model JOIN"), graphics.GraphicsDevice);
+            btnJoin = new cButton(Jeu.Content.Load<Texture2D>("button model JOIN"), graphics.GraphicsDevice);
             btnJoin.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 200));
 
-            btnAnnuler = new cButton(Content.Load<Texture2D>("button model ANNULER"), graphics.GraphicsDevice);
+            btnAnnuler = new cButton(Jeu.Content.Load<Texture2D>("button model ANNULER"), graphics.GraphicsDevice);
             btnAnnuler.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 500));
 
-            btnCommandes = new cButton(Content.Load<Texture2D>("button model COMMANDES"), graphics.GraphicsDevice);
+            btnCommandes = new cButton(Jeu.Content.Load<Texture2D>("button model COMMANDES"), graphics.GraphicsDevice);
             btnCommandes.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 300));
             ///350,300 center
         }
@@ -116,7 +121,7 @@ namespace XnaGameClient
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
             MouseState mouse = Mouse.GetState();
@@ -127,8 +132,8 @@ namespace XnaGameClient
                     btnHost.Update(mouse);
                     if (btnHost.isClicked)
                     {
-                        
-                       
+                        accepte = false;
+
                     }
 
                     //btnOptions.Update(mouse);
@@ -140,7 +145,7 @@ namespace XnaGameClient
                     btnExit.Update(mouse);
                     if (btnExit.isClicked == true)
                     {
-                        Exit();
+                        Jeu.Exit();
                     }
 
                     btnJoin.Update(mouse);
@@ -203,51 +208,55 @@ namespace XnaGameClient
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-
-            spriteBatch.Begin();
-            
-            switch (CurrentGameStat)
+            if(accepte == true)
             {
-                case GameStat.Mainmenu:
-                    spriteBatch.Draw(Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
-                    btnHost.Draw(spriteBatch);
-                    //btnOptions.Draw(spriteBatch);
-                    btnExit.Draw(spriteBatch);
-                    btnJoin.Draw(spriteBatch);
-                    btnCommandes.Draw(spriteBatch);
+                GraphicsDevice.Clear(Color.CornflowerBlue);
 
-                    break;
 
-                //case GameStat.Options:
-                //    spriteBatch.Draw(Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
-                //    btnAnnuler.Draw(spriteBatch);
+                spriteBatch.Begin();
 
-                //    break;
+                switch (CurrentGameStat)
+                {
+                    case GameStat.Mainmenu:
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        btnHost.Draw(spriteBatch);
+                        //btnOptions.Draw(spriteBatch);
+                        btnExit.Draw(spriteBatch);
+                        btnJoin.Draw(spriteBatch);
+                        btnCommandes.Draw(spriteBatch);
 
-                case GameStat.Host:
-                    spriteBatch.Draw(Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
-                    btnAnnuler.Draw(spriteBatch);
+                        break;
 
-                    break;
+                    //case GameStat.Options:
+                    //    spriteBatch.Draw(Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                    //    btnAnnuler.Draw(spriteBatch);
 
-                case GameStat.Join:
-                    spriteBatch.Draw(Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
-                    btnAnnuler.Draw(spriteBatch);
+                    //    break;
 
-                    break;
+                    case GameStat.Host:
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        btnAnnuler.Draw(spriteBatch);
 
-                case GameStat.Commandes:
-                    spriteBatch.Draw(Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
-                    btnAnnuler.Draw(spriteBatch);
+                        break;
 
-                    break;
+                    case GameStat.Join:
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        btnAnnuler.Draw(spriteBatch);
+
+                        break;
+
+                    case GameStat.Commandes:
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        btnAnnuler.Draw(spriteBatch);
+
+                        break;
+                }
+                spriteBatch.End();
+                base.Draw(gameTime);
             }
-            spriteBatch.End();
-            base.Draw(gameTime);
         }
+            
     }
 }
