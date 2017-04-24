@@ -149,6 +149,7 @@ namespace XnaGameClient
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
 
+            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, POSITION_Y_PLATEFORMES, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0,"SplineX.txt", "SplineZ.txt"));
         
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
