@@ -86,6 +86,7 @@ namespace XnaGameClient
         Vector3[] Tuile2 { get; set; }
         Vector3[] Tuile3 { get; set; }
         Vector3[] Tuile4 { get; set; }
+        Vector3[] TableauPositionPlateforme { get; set; }
 
 
 
@@ -117,6 +118,7 @@ namespace XnaGameClient
         {
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
+            TableauPositionPlateforme = new Vector3[] { };
 
             PositionCaméra = new Vector3(125, 250, -125);
             PositionCibleCaméra = new Vector3(125, 0, -125);
@@ -161,6 +163,7 @@ namespace XnaGameClient
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
             Components.Add(new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
+            Components.Add(new Menu2(this, PériphériqueGraphique));
 
             base.Initialize();
         }
@@ -310,13 +313,14 @@ namespace XnaGameClient
 
         void GérerPositionsPlateformesHorizontales()
         {
+            
             for( int cpt = 0; cpt < NB_DE_PLATEFORMES_HORIZONTALES; ++cpt)
             {
                 IndiceTableauLimitesAireJeu = GénérateurAléatoire.Next(0, LimitesAireDeJeu.Length);
                 IndiceTableauAngleFlottaison = GénérateurAléatoire.Next(0, IncrémementAngleDeFlottaison.Length);
                 Position_X_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
                 Position_Z_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
-
+                //TableauPositionPlateforme[cpt] = new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes);
                 Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD));
             }
         }
