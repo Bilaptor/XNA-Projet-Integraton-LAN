@@ -111,6 +111,7 @@
     <Compile Include="Afficheur3D.cs" />
     <Compile Include="Caméra.cs" />
     <Compile Include="CaméraSubjective.cs" />
+    <Compile Include="cButton.cs" />
     <Compile Include="Commentaires.cs" />
     <Compile Include="Composants de base\AfficheurFPS.cs" />
     <Compile Include="Composants de base\ArrièrePlan.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Composants de base\RessourcesManager.cs" />
     <Compile Include="Joueur.cs" />
     <Compile Include="Lave.cs" />
+    <Compile Include="Menu1.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="ObjetDeDémo.cs" />
     <Compile Include="Plan.cs" />

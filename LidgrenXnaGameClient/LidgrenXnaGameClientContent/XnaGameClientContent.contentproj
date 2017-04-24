@@ -102,6 +102,41 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="background 1.jpg">
+      <Name>background 1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="button model ANNULER.png">
+      <Name>button model ANNULER</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="button model COMMANDES.png">
+      <Name>button model COMMANDES</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="button model EXIT.png">
+      <Name>button model EXIT</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="button model host.png">
+      <Name>button model host</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="button model JOIN.png">
+      <Name>button model JOIN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="button model OPTIONS.png">
+      <Name>button model OPTIONS</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="SplineX.txt">
       <Name>SplineX</Name>
     </Content>

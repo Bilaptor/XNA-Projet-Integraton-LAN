@@ -9,6 +9,10 @@ namespace XnaGameClient
         /// </summary>
         static void Main(string[] args)
         {
+            using (Menu1 menu = new Menu1())
+            {
+                menu.Run();
+            }
             using (Game1 game = new Game1())
             {
                 game.Run();
