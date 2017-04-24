@@ -36,6 +36,8 @@ namespace XnaGameClient
         // Screen size ajustement
         int screenWidth = 800;
         int screenHeight = 600;
+        //int screenWidth = 1600;
+        //int screenHeight = 900;
 
         cButton btnHost;
         cButton btnJoin;
@@ -52,6 +54,7 @@ namespace XnaGameClient
             graphics = pere;
             graphics.IsFullScreen = false;
             Jeu.Content.RootDirectory = "Content";
+    
 
 
         }

@@ -163,7 +163,7 @@ namespace XnaGameClient
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
             Components.Add(new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
-            Components.Add(new Menu2(this, PériphériqueGraphique));
+            //Components.Add(new Menu2(this, PériphériqueGraphique));
 
             base.Initialize();
         }
