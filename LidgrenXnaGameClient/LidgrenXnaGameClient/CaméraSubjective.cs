@@ -124,8 +124,15 @@ namespace XnaGameClient
             float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
             float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
-            déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
-            déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
+            if(déplacementDirection == 0)
+            {
+                déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
+            }
+            
+            if(déplacementLatéral == 0)
+            {
+                déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
+            }
 
             Position = Position + déplacementDirection * Direction;
             Position = Position - déplacementLatéral * Latéral;
@@ -140,9 +147,11 @@ namespace XnaGameClient
 
         private void GérerLacet()
         {
-            float lacet = (GérerTouche(Keys.Left) - GérerTouche(Keys.Right)) * VitesseRotation * DELTA_LACET;
-
-            lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotation * DELTA_LACET;
+            float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotation * DELTA_LACET;
+            if (lacet == 0)
+            {
+                lacet = (GérerTouche(Keys.Left) - GérerTouche(Keys.Right)) * VitesseRotation * DELTA_LACET;
+            }
 
             Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
             Direction = Vector3.Transform(Direction, mLacet);
@@ -153,8 +162,11 @@ namespace XnaGameClient
         private void GérerTangage()
         {
             float tangage = (GérerTouche(Keys.Down) - GérerTouche(Keys.Up)) * VitesseRotation * DELTA_TANGAGE;
+            if (tangage == 0)
+            {
+                tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotation * DELTA_LACET;
+            }
 
-            tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotation * DELTA_LACET;
 
             Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
             Direction = Vector3.Transform(Direction, mTangageDirection);
