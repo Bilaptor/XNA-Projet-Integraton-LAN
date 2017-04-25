@@ -71,11 +71,12 @@ namespace XnaGameClient
         SpriteBatch GestionSprites { get; set; }
         InputManager GestionInput { get; set; }
         Caméra CaméraJeu { get; set; }
+        public MouseState OriginalMouseState;
 
         Vector3[] Ptsommets { get; set; }
 
         Random GénérateurAléatoire { get; set; }
-        
+
 
         Vector3 PositionCaméra { get; set; }
         Vector3 PositionCibleCaméra { get; set; }
@@ -104,8 +105,10 @@ namespace XnaGameClient
             PériphériqueGraphique = new GraphicsDeviceManager(this);
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
-            IsMouseVisible = true;
             Content.RootDirectory = "Content";
+
+            //enlever le commentaire pour mettre le jeu en fullscreen
+            //this.PériphériqueGraphique.IsFullScreen = true;
 
             NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
@@ -125,7 +128,7 @@ namespace XnaGameClient
             PositionOrigineMurRoche = new Vector3(0, 0, 0);
             PositionOrigineLave = new Vector3(125, 25, -125);
 
-            
+
             Vector3 positionObjet = new Vector3(125, 45, -125);
             Vector3 rotationObjet = new Vector3(0, MathHelper.PiOver2, 0);
 
@@ -137,9 +140,14 @@ namespace XnaGameClient
             GestionInput = new InputManager(this);
             GénérateurAléatoire = new Random();
 
+            //IsMouseVisible = true;
+            //fait en sorte que la souris reste au milieu de l'écran
+            Mouse.SetPosition(this.Window.ClientBounds.Width / 2, this.Window.ClientBounds.Height / 2);
+            OriginalMouseState = Mouse.GetState();
+
             Components.Add(GestionInput);
             Components.Add(new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE));
-            CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), INTERVALLE_UPDATE);
+            CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), OriginalMouseState, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
 
@@ -151,8 +159,8 @@ namespace XnaGameClient
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
 
-            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, POSITION_Y_PLATEFORMES, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0,"SplineX.txt", "SplineZ.txt"));
-        
+            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, POSITION_Y_PLATEFORMES, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt"));
+
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
@@ -175,6 +183,8 @@ namespace XnaGameClient
             Textures = new Texture2D[5];
             for (int i = 0; i < 5; i++)
                 Textures[i] = Content.Load<Texture2D>("c" + (i + 1));
+
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -254,12 +264,12 @@ namespace XnaGameClient
             Limites_Zone_8 = new int[] { LIMITE_ZONES_1_4_7_X_DROITE, LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_ZONES_4_5_6_Z_AVANT, LIMITE_POSITION_Z_AVANT_PLATEFORMES };
             Limites_Zone_9 = new int[] { LIMITE_ZONES_2_5_8_X_DROITE, LIMITE_POSITION_X_DROITE_PLATEFORMES, LIMITE_ZONES_4_5_6_Z_AVANT, LIMITE_POSITION_Z_AVANT_PLATEFORMES };
 
-            LimitesAireDeJeu = new int[][] {Limites_Zone_1, Limites_Zone_2,Limites_Zone_3,Limites_Zone_4,Limites_Zone_5,Limites_Zone_6,Limites_Zone_7,Limites_Zone_8,Limites_Zone_9 };
+            LimitesAireDeJeu = new int[][] { Limites_Zone_1, Limites_Zone_2, Limites_Zone_3, Limites_Zone_4, Limites_Zone_5, Limites_Zone_6, Limites_Zone_7, Limites_Zone_8, Limites_Zone_9 };
         }
 
         void InitialiserTableauIncrémentationAngleFlottaison()
         {
-            IncrémementAngleDeFlottaison = new float[] { MathHelper.Pi / 90, MathHelper.Pi / 105, MathHelper.Pi / 120, MathHelper.Pi / 135 ,MathHelper.Pi / 150, MathHelper.Pi / 165 ,MathHelper.Pi / 180 };
+            IncrémementAngleDeFlottaison = new float[] { MathHelper.Pi / 90, MathHelper.Pi / 105, MathHelper.Pi / 120, MathHelper.Pi / 135, MathHelper.Pi / 150, MathHelper.Pi / 165, MathHelper.Pi / 180 };
         }
 
         void CréerMur1()
@@ -313,8 +323,8 @@ namespace XnaGameClient
 
         void GérerPositionsPlateformesHorizontales()
         {
-            
-            for( int cpt = 0; cpt < NB_DE_PLATEFORMES_HORIZONTALES; ++cpt)
+
+            for (int cpt = 0; cpt < NB_DE_PLATEFORMES_HORIZONTALES; ++cpt)
             {
                 IndiceTableauLimitesAireJeu = GénérateurAléatoire.Next(0, LimitesAireDeJeu.Length);
                 IndiceTableauAngleFlottaison = GénérateurAléatoire.Next(0, IncrémementAngleDeFlottaison.Length);
@@ -341,7 +351,7 @@ namespace XnaGameClient
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
+
             base.Draw(gameTime);
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);

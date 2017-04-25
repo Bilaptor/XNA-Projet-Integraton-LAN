@@ -7,7 +7,8 @@ namespace XnaGameClient
     {
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         const float ACCÉLÉRATION = 0.001f;
-        const float VITESSE_INITIALE_ROTATION = 5f;
+        const float VITESSE_INITIALE_ROTATION = 0.1f;
+        const float VITESSE_INITIALE_ROTATION_MANETTE = 4f;
         const float VITESSE_INITIALE_TRANSLATION = 0.5f;
         const float DELTA_LACET = MathHelper.Pi / 180; // 1 degré à la fois
         const float DELTA_TANGAGE = MathHelper.Pi / 180; // 1 degré à la fois
@@ -18,10 +19,12 @@ namespace XnaGameClient
         Vector3 Latéral { get; set; }
         float VitesseTranslation { get; set; }
         float VitesseRotation { get; set; }
+        float VitesseRotationManette { get; set; }
 
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         InputManager GestionInput { get; set; }
+        MouseState OriginalMouseState { get; set; }
 
         bool estEnZoom;
         bool EstEnZoom
@@ -42,9 +45,10 @@ namespace XnaGameClient
             }
         }
 
-        public CaméraSubjective(Game jeu, Vector3 positionCaméra, Vector3 cible, Vector3 orientation, float intervalleMAJ)
+        public CaméraSubjective(Game jeu, Vector3 positionCaméra, Vector3 cible, Vector3 orientation, MouseState originalMouseState, float intervalleMAJ)
            : base(jeu)
         {
+            OriginalMouseState = originalMouseState;
             IntervalleMAJ = intervalleMAJ;
             CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
             CréerPointDeVue(positionCaméra, cible, orientation);
@@ -53,6 +57,7 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
+            VitesseRotationManette = VITESSE_INITIALE_ROTATION_MANETTE;
             VitesseRotation = VITESSE_INITIALE_ROTATION;
             VitesseTranslation = VITESSE_INITIALE_TRANSLATION;
             TempsÉcouléDepuisMAJ = 0;
@@ -124,12 +129,12 @@ namespace XnaGameClient
             float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
             float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
-            if(déplacementDirection == 0)
+            if (déplacementDirection == 0)
             {
                 déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
             }
-            
-            if(déplacementLatéral == 0)
+
+            if (déplacementLatéral == 0)
             {
                 déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
             }
@@ -143,14 +148,20 @@ namespace XnaGameClient
             GérerLacet();
             GérerTangage();
             GérerRoulis();
+            Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
         }
 
         private void GérerLacet()
         {
-            float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotation * DELTA_LACET;
+            float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotationManette * DELTA_LACET;
             if (lacet == 0)
             {
-                lacet = (GérerTouche(Keys.Left) - GérerTouche(Keys.Right)) * VitesseRotation * DELTA_LACET;
+                MouseState currentMouseState = Mouse.GetState();
+                if (currentMouseState != OriginalMouseState)
+                {
+                    float déplacementX = currentMouseState.X - OriginalMouseState.X;
+                    lacet = VitesseRotation * -déplacementX * DELTA_LACET;
+                }
             }
 
             Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
@@ -161,26 +172,30 @@ namespace XnaGameClient
 
         private void GérerTangage()
         {
-            float tangage = (GérerTouche(Keys.Down) - GérerTouche(Keys.Up)) * VitesseRotation * DELTA_TANGAGE;
+            float tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotationManette * DELTA_TANGAGE;
             if (tangage == 0)
             {
-                tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotation * DELTA_LACET;
+                MouseState currentMouseState = Mouse.GetState();
+                if (currentMouseState != OriginalMouseState)
+                {
+                    float déplacementY = currentMouseState.Y - OriginalMouseState.Y;
+                    tangage = -déplacementY * VitesseRotation * DELTA_TANGAGE;
+                }
             }
 
+            Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
+            OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
+            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
 
             Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
             Direction = Vector3.Transform(Direction, mTangageDirection);
             Direction = Vector3.Normalize(Direction);
             Latéral = Vector3.Cross(Direction, OrientationVerticale);
-
-            Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
-            OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
-            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
         }
 
         private void GérerRoulis()
         {
-            float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotation * DELTA_ROULIS;
+            float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotationManette * DELTA_ROULIS;
 
             Matrix mRoulis = Matrix.CreateFromAxisAngle(Direction, roulis);
             OrientationVerticale = Vector3.Transform(OrientationVerticale, mRoulis);
