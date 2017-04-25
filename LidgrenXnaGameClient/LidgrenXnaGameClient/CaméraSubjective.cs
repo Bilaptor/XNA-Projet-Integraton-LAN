@@ -9,7 +9,7 @@ namespace XnaGameClient
         const float ACCÉLÉRATION = 0.001f;
         const float VITESSE_INITIALE_ROTATION = 0.1f;
         const float VITESSE_INITIALE_ROTATION_MANETTE = 4f;
-        const float VITESSE_INITIALE_TRANSLATION = 0.5f;
+        const float VITESSE_INITIALE_TRANSLATION = 1.5f;
         const float DELTA_LACET = MathHelper.Pi / 180; // 1 degré à la fois
         const float DELTA_TANGAGE = MathHelper.Pi / 180; // 1 degré à la fois
         const float DELTA_ROULIS = MathHelper.Pi / 180; // 1 degré à la fois
