@@ -124,6 +124,9 @@ namespace XnaGameClient
             float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
             float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
+            déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
+            déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
+
             Position = Position + déplacementDirection * Direction;
             Position = Position - déplacementLatéral * Latéral;
         }
@@ -139,6 +142,8 @@ namespace XnaGameClient
         {
             float lacet = (GérerTouche(Keys.Left) - GérerTouche(Keys.Right)) * VitesseRotation * DELTA_LACET;
 
+            lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotation * DELTA_LACET;
+
             Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
             Direction = Vector3.Transform(Direction, mLacet);
             Direction = Vector3.Normalize(Direction);
@@ -148,6 +153,8 @@ namespace XnaGameClient
         private void GérerTangage()
         {
             float tangage = (GérerTouche(Keys.Down) - GérerTouche(Keys.Up)) * VitesseRotation * DELTA_TANGAGE;
+
+            tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotation * DELTA_LACET;
 
             Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
             Direction = Vector3.Transform(Direction, mTangageDirection);
