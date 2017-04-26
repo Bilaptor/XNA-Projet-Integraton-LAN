@@ -54,6 +54,22 @@ namespace XnaGameClient
         int[] Limites_Zone_8 { get; set; }
         int[] Limites_Zone_9 { get; set; }
 
+        bool pause = true;
+
+
+        Adversaire Adversaire { get; set; }
+        ArrièrePlanDéroulant ArrièrePlan { get; set; }
+        Lave Lave { get; set; }
+        ObjetDeDémo ObjDemo { get; set; }
+        PlateformeHorizontaleFlottante PlateHori { get; set; }
+        PlateformeSuivantUneSpline PlateSpline { get; set; }
+        PlateformeVerticaleFlottante Plateverti { get; set; }
+        TuileTexturée TuileTex1 { get; set; }
+        TuileTexturée TuileTex2 { get; set; }
+        TuileTexturée TuileTex3 { get; set; }
+        TuileTexturée TuileTex4 { get; set; }
+
+
         int IndiceTableauLimitesAireJeu { get; set; }
         int IndiceTableauAngleFlottaison { get; set; }
 
@@ -88,6 +104,8 @@ namespace XnaGameClient
         Vector3[] Tuile4 { get; set; }
         Vector3[] TableauPositionPlateforme { get; set; }
 
+     
+
 
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
@@ -98,6 +116,10 @@ namespace XnaGameClient
         Texture2D[] Textures;
         Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
         NetClient client;
+        bool Pause { get; set; }
+
+
+
 
         public Game1()
         {
@@ -118,6 +140,7 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
+            Pause = false;
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
             TableauPositionPlateforme = new Vector3[] { };
@@ -145,20 +168,21 @@ namespace XnaGameClient
             OriginalMouseState = Mouse.GetState();
 
             Components.Add(GestionInput);
-            Components.Add(new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE));
+            ArrièrePlan = new ArrièrePlanDéroulant(this, "MurDeRoche", INTERVALLE_UPDATE);
+            Components.Add(ArrièrePlan);
             CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), OriginalMouseState, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
             Components.Add(new Afficheur3D(this));
-
             CréerMursAireDeJeu();
-
-            Components.Add(new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD));
+            Lave = new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD);
+            Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
 
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
 
-            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, 23, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt"));
+            PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, 23, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt");
+            Components.Add(PlateSpline);
 
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
@@ -168,10 +192,13 @@ namespace XnaGameClient
             Services.AddService(typeof(Caméra), CaméraJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
-            Components.Add(new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
-            Components.Add(new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD));
-            //Components.Add(new Menu2(this, PériphériqueGraphique));
-
+            ObjDemo = new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
+            Components.Add(ObjDemo);
+            Adversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
+            Components.Add(Adversaire);
+           
+            //Components.Add(new Menu2(this, PériphériqueGraphique, Pause));
+            
             base.Initialize();
         }
 
@@ -194,6 +221,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= INTERVALLE_UPDATE)
             {
                 TempsÉcouléDepuisMAJ = 0;
+                MettreEnPause();
 
                 //
                 // Collect input
@@ -249,7 +277,7 @@ namespace XnaGameClient
                     }
                 }
             }
-
+            
             base.Update(gameTime);
         }
 
@@ -316,10 +344,14 @@ namespace XnaGameClient
             CréerMur3();
             CréerMur4();
 
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile1));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile2));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile3));
-            Components.Add(new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile4));
+            TuileTex1 = new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile1);
+            Components.Add(TuileTex1);
+            TuileTex2 = new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile2);
+            Components.Add(TuileTex2);
+            TuileTex3 = new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile3);
+            Components.Add(TuileTex3);
+            TuileTex4 = new TuileTexturée(this, 1f, Vector3.Zero, PositionOrigineMurRoche, new Vector2(2, 2), "MurAireDeJeu", INTERVALLE_MAJ_STANDARD, Tuile4);
+            Components.Add(TuileTex4);
         }
 
         void GérerPositionsPlateformesHorizontales()
@@ -332,7 +364,8 @@ namespace XnaGameClient
                 Position_X_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
                 Position_Z_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
                 //TableauPositionPlateforme[cpt] = new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes);
-                Components.Add(new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD));
+                PlateHori = new PlateformeHorizontaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD);
+                Components.Add(PlateHori);
             }
         }
 
@@ -345,14 +378,15 @@ namespace XnaGameClient
                 Position_X_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
                 Position_Z_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
 
-                Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD));
+                Plateverti = new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD);
+                Components.Add(Plateverti);
             }
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+          
             base.Draw(gameTime);
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
@@ -374,6 +408,22 @@ namespace XnaGameClient
             client.Shutdown("bye");
 
             base.OnExiting(sender, args);
+        }
+        protected void MettreEnPause()
+        {
+            Adversaire.Enabled = !Pause;
+            ArrièrePlan.Enabled = !Pause;
+            Lave.Enabled = !Pause;
+            ObjDemo.Enabled = !Pause;
+            CaméraJeu.Enabled = !Pause;
+            PlateHori.Enabled = !Pause;
+            PlateSpline.Enabled = !Pause;
+            Plateverti.Enabled = !Pause;
+            TuileTex1.Enabled = !Pause;
+            TuileTex2.Enabled = !Pause;
+            TuileTex3.Enabled = !Pause;
+            TuileTex4.Enabled = !Pause;
+
         }
     }
 }
