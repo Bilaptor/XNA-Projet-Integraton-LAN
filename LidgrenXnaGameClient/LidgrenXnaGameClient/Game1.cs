@@ -217,8 +217,8 @@ namespace XnaGameClient
                 if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed || keyState.IsKeyDown(Keys.Down))
                     yinput = 1;
 
-                if (xinput != 0 || yinput != 0)
-                {
+                //if (xinput != 0 || yinput != 0)
+                // {
                     //
                     // If there's input; send it to server
                     //
@@ -227,7 +227,7 @@ namespace XnaGameClient
                     om.Write(yinput);
                     om.Write('@');
                     client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-                }
+                //}
 
                 // read messages
                 NetIncomingMessage incomingMessage;

@@ -12,7 +12,7 @@ namespace XnaGameServer
     {
         static void Main(string[] args)
         {
-            char c = 'a';
+            char c = ' ';
 
 
             NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
@@ -60,9 +60,9 @@ namespace XnaGameServer
 
                                 // randomize his position and store in connection tag
                                 msg.SenderConnection.Tag = new int[] {
-									NetRandom.Instance.Next(10, 100),
-									NetRandom.Instance.Next(10, 100)
-								};
+                                    NetRandom.Instance.Next(10, 100),
+                                    NetRandom.Instance.Next(10, 100)
+                                };
                             }
 
                             break;
@@ -83,7 +83,7 @@ namespace XnaGameServer
                     }
 
                     //
-                    // send position updates 30 times per second
+                    // send position updates 60 times per second
                     //
                     double now = NetTime.Now;
                     if (now > nextSendUpdates)
@@ -113,7 +113,7 @@ namespace XnaGameServer
                                 om.Write(c);
 
                                 // send message
-                                server.SendMessage(om, player, NetDeliveryMethod.Unreliable);
+                                server.SendMessage(om, player, NetDeliveryMethod.ReliableOrdered);
                             }
                         }
 
