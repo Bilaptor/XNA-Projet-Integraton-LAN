@@ -137,6 +137,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="SplineX.txt">
       <Name>SplineX</Name>
     </Content>

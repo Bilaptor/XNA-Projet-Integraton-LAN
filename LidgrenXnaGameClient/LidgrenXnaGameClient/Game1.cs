@@ -54,6 +54,9 @@ namespace XnaGameClient
         int[] Limites_Zone_8 { get; set; }
         int[] Limites_Zone_9 { get; set; }
 
+        int[] TableauCoordonnéesX_Spline { get; set; }
+        int[] TableauCoordonnéesZ_Spline { get; set; }
+
         int IndiceTableauLimitesAireJeu { get; set; }
         int IndiceTableauAngleFlottaison { get; set; }
 
@@ -76,7 +79,6 @@ namespace XnaGameClient
 
         Random GénérateurAléatoire { get; set; }
 
-
         Vector3 PositionCaméra { get; set; }
         Vector3 PositionCibleCaméra { get; set; }
         Vector3 PositionOrigineMurRoche { get; set; }
@@ -88,12 +90,9 @@ namespace XnaGameClient
         Vector3[] Tuile4 { get; set; }
         Vector3[] TableauPositionPlateforme { get; set; }
 
-
-
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
-
 
         Texture2D[] Textures;
         Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
@@ -120,6 +119,7 @@ namespace XnaGameClient
         {
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
+            InitialierTableauxCoordonnéesSpline();
             TableauPositionPlateforme = new Vector3[] { };
 
             PositionCaméra = new Vector3(125, 250, -125);
@@ -157,8 +157,8 @@ namespace XnaGameClient
 
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
-
-            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, 23, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt"));
+            GérerPositionsPlateformesSuivantSpline();
+            
 
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
@@ -273,6 +273,12 @@ namespace XnaGameClient
             IncrémementAngleDeFlottaison = new float[] { MathHelper.Pi / 90, MathHelper.Pi / 105, MathHelper.Pi / 120, MathHelper.Pi / 135, MathHelper.Pi / 150, MathHelper.Pi / 165, MathHelper.Pi / 180 };
         }
 
+        void InitialierTableauxCoordonnéesSpline()
+        {
+            TableauCoordonnéesX_Spline = new int[] { 20, 35, 50, 60, 55, 65, 80, 95, 105, 115, 105, 110, 110, 105, 90, 75, 55, 35 };
+            TableauCoordonnéesZ_Spline = new int[] { -25, -45, -55, -80, -105, -120, -115, -100, -85, -65, -50, -35, -20, -15, -20, -15, -10, -15 };
+        }
+
         void CréerMur1()
         {
             Tuile1 = new Vector3[4];
@@ -346,6 +352,14 @@ namespace XnaGameClient
                 Position_Z_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
 
                 Components.Add(new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD));
+            }
+        }
+
+        void GérerPositionsPlateformesSuivantSpline()
+        {
+            for(int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
+            {
+                Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt"));
             }
         }
 
