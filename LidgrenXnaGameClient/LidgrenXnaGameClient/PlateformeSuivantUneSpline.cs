@@ -19,12 +19,12 @@ namespace XnaGameClient
 
         float TempsÉcouléDepuisMAJ { get; set; }
 
-        string NomSplineX { get; set; }
-        string NomSplineZ { get; set; }
+        string NomFichierSplineX { get; set; }
+        string NomFichierSplineZ { get; set; }
 
         string LigneLueSplineX { get; set; }
         string LigneLueSplineZ { get; set; }
-        char[] séparateur = new char[] { ';' };
+
         string[] SplineX_Lue { get; set; }
         string[] SplineZ_Lue { get; set; }
 
@@ -44,8 +44,8 @@ namespace XnaGameClient
                            Vector3 dimension, float angleDeFlottaison, float incrémentAngleDeFlottaison, float intervalleMAJ, string nomSplineX, string nomSplineZ)
             : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison, incrémentAngleDeFlottaison, intervalleMAJ)
         {
-            NomSplineX = nomSplineX;
-            NomSplineZ = nomSplineZ;
+            NomFichierSplineX = nomSplineX;
+            NomFichierSplineZ = nomSplineZ;
             Position_X = positionInitiale.X;
             Position_Z = positionInitiale.Z;
         }
@@ -53,6 +53,7 @@ namespace XnaGameClient
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
+
             SplineX_Lue = new string[] { };
             SplineZ_Lue = new string[] { };
             Liste_SplineX = new List<int>();
@@ -63,11 +64,13 @@ namespace XnaGameClient
             base.Initialize();
         }
 
-        void LireFichiersSplinesX()
+
+        void LireFichiersSplineX()
         {
-            if (File.Exists(NomSplineX))
+            if (File.Exists(NomFichierSplineX))
             {
-                StreamReader fichierLectureSplineX = new StreamReader(NomSplineX, System.Text.Encoding.UTF7);
+                char[] séparateur = new char[] { ';' };
+                StreamReader fichierLectureSplineX = new StreamReader(NomFichierSplineX, System.Text.Encoding.UTF7);
 
                 while (!fichierLectureSplineX.EndOfStream)
                 {
@@ -82,11 +85,12 @@ namespace XnaGameClient
             }
         }
 
-        void LireFichiersSplinesZ()
+        void LireFichiersSplineZ()
         {
-            if (File.Exists(NomSplineZ))
+            if (File.Exists(NomFichierSplineZ))
             {
-                StreamReader fichierLectureSplineZ = new StreamReader(NomSplineZ, System.Text.Encoding.UTF7);
+                char[] séparateur = new char[] { ';' };
+                StreamReader fichierLectureSplineZ = new StreamReader(NomFichierSplineZ, System.Text.Encoding.UTF7);
 
                 while (!fichierLectureSplineZ.EndOfStream)
                 {
@@ -111,7 +115,7 @@ namespace XnaGameClient
             Liste_SplineZ.Add(valeur);
         }
 
-        void CréerTableauxSplines()
+        void CréerTableauxSpline()
         {
             Tableau_SplineX = Liste_SplineX.ToArray();
             Tableau_SplineZ = Liste_SplineZ.ToArray();
@@ -121,9 +125,9 @@ namespace XnaGameClient
         {
             for(int cpt = 0; cpt < Liste_SplineX.Count; ++cpt)
             {
-                Position_X = Tableau_SplineX[cpt] + Tableau_SplineX[cpt + 1] * Position_X + Tableau_SplineX[cpt + 2] * (Math.Pow(Position_X, 2)) + Tableau_SplineX[cpt + 3] * (Math.Pow(Position_X, 3));
-                Position_Z = Tableau_SplineZ[cpt] + Tableau_SplineZ[cpt + 1] * Position_Z + Tableau_SplineZ[cpt + 2] * (Math.Pow(Position_Z, 2)) + Tableau_SplineZ[cpt + 3] * (Math.Pow(Position_Z, 3));
-                Position += Vector3.Transform(Position, Matrix.CreateTranslation(new Vector3((float)Position_X, 0, (float)Position_Z)));
+                //Position_X = Tableau_SplineX[cpt] + Tableau_SplineX[cpt + 1] * Position_X + Tableau_SplineX[cpt + 2] * (Math.Pow(Position_X, 2)) + Tableau_SplineX[cpt + 3] * (Math.Pow(Position_X, 3));
+                //Position_Z = Tableau_SplineZ[cpt] + Tableau_SplineZ[cpt + 1] * Position_Z + Tableau_SplineZ[cpt + 2] * (Math.Pow(Position_Z, 2)) + Tableau_SplineZ[cpt + 3] * (Math.Pow(Position_Z, 3));
+                //Position += Vector3.Transform(Position, Matrix.CreateTranslation(new Vector3((float)Position_X, 0, (float)Position_Z)));
             }
         }
 

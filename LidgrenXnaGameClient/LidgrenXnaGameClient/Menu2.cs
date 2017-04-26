@@ -21,6 +21,9 @@ namespace XnaGameClient
         SpriteBatch spriteBatch;
         InputManager GestionInput { get; set; }
         Game Jeu { get; set; }
+        bool Pause { get; set; }
+
+
         bool accepte = true;
 
         enum GameStat
@@ -35,9 +38,10 @@ namespace XnaGameClient
 
         // Screen size ajustement
         int screenWidth = 800;
-        int screenHeight = 600;
+        int screenHeight = 480;
         //int screenWidth = 1600;
         //int screenHeight = 900;
+      
 
         cButton btnHost;
         cButton btnJoin;
@@ -47,13 +51,14 @@ namespace XnaGameClient
         cButton btnCommandes;
 
 
-        public Menu2(Game game, GraphicsDeviceManager pere)
+        public Menu2(Game game, GraphicsDeviceManager pere, bool pause)
             : base(game)
         {
             Jeu = game;
             graphics = pere;
             graphics.IsFullScreen = false;
             Jeu.Content.RootDirectory = "Content";
+            Pause = pause;
     
 
 
@@ -126,7 +131,7 @@ namespace XnaGameClient
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-
+            
             MouseState mouse = Mouse.GetState();
 
             switch (CurrentGameStat)
@@ -136,6 +141,7 @@ namespace XnaGameClient
                     if (btnHost.isClicked)
                     {
                         accepte = false;
+                        Pause = false;
 
                     }
 
@@ -260,6 +266,8 @@ namespace XnaGameClient
                 base.Draw(gameTime);
             }
         }
+
+        
             
     }
 }

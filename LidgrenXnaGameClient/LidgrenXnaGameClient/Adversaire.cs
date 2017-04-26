@@ -18,6 +18,7 @@ namespace XnaGameClient
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
         Caméra CaméraJeu { get; set; }
         Game Jeu { get; set; }
+       
 
         public Adversaire(Game jeu, String nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
              
