@@ -30,7 +30,7 @@ namespace XnaGameClient
 
         public Plateforme(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
                            Vector3 dimension, float angleDeFlottaison, float incrémentAngleDeFlottaison,float intervalleMAJ)
-         : base(game, homothétieInitiale, rotationInitiale, positionInitiale, angleDeFlottaison, intervalleMAJ)
+         : base(game, homothétieInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             DeltaX = dimension.X;
             DeltaY = dimension.Y;

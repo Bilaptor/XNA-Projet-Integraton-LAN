@@ -40,10 +40,6 @@ namespace XnaGameClient
             IntervalleMAJ = intervalleMAJ;
         }
 
-        public PrimitiveDeBaseAniméePourPlateforme(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, float intervalleMAJ1) : this(jeu, homothétieInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
-        {
-            this.intervalleMAJ1 = intervalleMAJ1;
-        }
 
         public override void Initialize()
         {

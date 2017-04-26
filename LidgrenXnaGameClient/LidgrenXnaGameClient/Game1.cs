@@ -27,9 +27,8 @@ namespace XnaGameClient
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
 
-        const int NB_DE_PLATEFORMES_HORIZONTALES = 22;
-        const int NB_DE_PLATEFORMES_VERTICALES = 22;
-        const int NB_DE_PLATEFORMES_POUR_PARCOURS_POSSIBLES = 12;
+        const int NB_DE_PLATEFORMES_HORIZONTALES = 25;
+        const int NB_DE_PLATEFORMES_VERTICALES = 25;
         const int POSITION_Y_PLATEFORMES = 45;
 
         //limites qui définissent où tous les types de plateformes peuvent apparaître
@@ -159,7 +158,7 @@ namespace XnaGameClient
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
 
-            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, POSITION_Y_PLATEFORMES, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt"));
+            Components.Add(new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(40, 23, -50), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt"));
 
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
