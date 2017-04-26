@@ -150,6 +150,7 @@ namespace XnaGameClient
             Position = Position + déplacementDirection * Direction;
             Position = Position - déplacementLatéral * Latéral;
 
+            // envoie la position au serveur
             NetOutgoingMessage om = client.CreateMessage();
             om.Write((byte)PacketTypes.POSITION);
             om.Write(Position.X);
