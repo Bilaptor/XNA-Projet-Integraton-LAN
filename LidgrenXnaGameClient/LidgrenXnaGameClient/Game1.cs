@@ -272,22 +272,26 @@ namespace XnaGameClient
                             break;
 
                         case NetIncomingMessageType.Data:
-                            bool asBeenRead = false;
-                            if (!asBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
+                            bool hasBeenRead = false;
+                            if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
                             {
                                 // server sent a position update
                                 long who = incomingMessage.ReadInt64();
                                 int x = incomingMessage.ReadInt32();
                                 int y = incomingMessage.ReadInt32();
                                 Positions[who] = new Vector2(x, y);
-                                asBeenRead = true;
+                                hasBeenRead = true;
                             }
-                            if (!asBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITION)
+                            if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITION)
                             {
                                 float positionX = incomingMessage.ReadInt32();
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
-                                asBeenRead = true;
+                                if(positionY > 400)
+                                {
+
+                                }
+                                hasBeenRead = true;
                             }
                             break;
 

@@ -70,8 +70,8 @@ namespace XnaGameServer
 
                             break;
                         case NetIncomingMessageType.Data:
-                            bool asBeenRead = false;
-                            if (!asBeenRead && msg.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
+                            bool hasBeenRead = false;
+                            if (!hasBeenRead && msg.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
                             {
                                 // server sent a position update
                                 //long who = msg.ReadInt64();
@@ -84,7 +84,7 @@ namespace XnaGameServer
                                 pos[0] += xInput2D;
                                 pos[1] += yInput2D;
                             }
-                            if (!asBeenRead && msg.ReadByte() == (byte)PacketTypes.POSITION)
+                            if (!hasBeenRead && msg.ReadByte() == (byte)PacketTypes.POSITION)
                             {
 
                                 XInput = msg.ReadInt32();
