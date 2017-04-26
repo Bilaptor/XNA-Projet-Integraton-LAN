@@ -12,6 +12,9 @@ namespace XnaGameServer
     {
         static void Main(string[] args)
         {
+            char c = 'a';
+
+
             NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = 14242;
@@ -69,6 +72,7 @@ namespace XnaGameServer
                             //
                             int xinput = msg.ReadInt32();
                             int yinput = msg.ReadInt32();
+                            c = (char)msg.ReadInt16();
 
                             int[] pos = msg.SenderConnection.Tag as int[];
 
@@ -106,6 +110,7 @@ namespace XnaGameServer
                                 int[] pos = otherPlayer.Tag as int[];
                                 om.Write(pos[0]);
                                 om.Write(pos[1]);
+                                om.Write(c);
 
                                 // send message
                                 server.SendMessage(om, player, NetDeliveryMethod.Unreliable);

@@ -225,6 +225,7 @@ namespace XnaGameClient
                     NetOutgoingMessage om = client.CreateMessage();
                     om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
                     om.Write(yinput);
+                    om.Write('@');
                     client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
                 }
 
@@ -243,6 +244,7 @@ namespace XnaGameClient
                             long who = incomingMessage.ReadInt64();
                             int x = incomingMessage.ReadInt32();
                             int y = incomingMessage.ReadInt32();
+                            char c = (char)incomingMessage.ReadInt16();
                             Positions[who] = new Vector2(x, y);
                             break;
                     }
