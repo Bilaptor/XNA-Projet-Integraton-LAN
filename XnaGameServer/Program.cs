@@ -12,12 +12,12 @@ namespace XnaGameServer
     {
         static void Main(string[] args)
         {
-            char c = ' ';
-
-
             NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = 14242;
+            config.MaximumConnections = 2;
+            //int xInput = 0;
+            //int YInput = 0;
 
             // create and start server
             NetServer server = new NetServer(config);
@@ -67,18 +67,37 @@ namespace XnaGameServer
 
                             break;
                         case NetIncomingMessageType.Data:
-                            //
-                            // The client sent input to the server
-                            //
-                            int xinput = msg.ReadInt32();
-                            int yinput = msg.ReadInt32();
-                            c = (char)msg.ReadInt16();
+                            if (msg.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
+                            {
+                                // server sent a position update
+                                //long who = msg.ReadInt64();
+                                int xInput = msg.ReadInt32();
+                                int yInput = msg.ReadInt32();
 
-                            int[] pos = msg.SenderConnection.Tag as int[];
+                                int[] pos = msg.SenderConnection.Tag as int[];
 
-                            // fancy movement logic goes here; we just append input to position
-                            pos[0] += xinput;
-                            pos[1] += yinput;
+                                //fancy movement logic goes here; we just append input to position
+                                pos[0] += xInput;
+                                pos[1] += yInput;
+
+
+                                //
+                                // The client sent input to the server
+                                //
+                                //int xinput = msg.ReadInt32();
+                                //int yinput = msg.ReadInt32();
+
+                                //int[] pos = msg.SenderConnection.Tag as int[];
+
+                                //// fancy movement logic goes here; we just append input to position
+                                //pos[0] += xinput;
+                                //pos[1] += yinput;
+                                //break;
+                            }
+                            break;
+                        default:
+                            // Should not happen and if happens, don't care
+                            Console.WriteLine(msg.ReadString() + " Strange message");
                             break;
                     }
 
@@ -99,6 +118,9 @@ namespace XnaGameServer
                                 // send position update about 'otherPlayer' to 'player'
                                 NetOutgoingMessage om = server.CreateMessage();
 
+                                om.Write((byte)PacketTypes.POSITIONJEU2D);
+
+
                                 // write who this position is for
                                 om.Write(otherPlayer.RemoteUniqueIdentifier);
 
@@ -108,9 +130,9 @@ namespace XnaGameServer
                                 }
 
                                 int[] pos = otherPlayer.Tag as int[];
+
                                 om.Write(pos[0]);
                                 om.Write(pos[1]);
-                                om.Write(c);
 
                                 // send message
                                 server.SendMessage(om, player, NetDeliveryMethod.ReliableOrdered);
@@ -128,5 +150,11 @@ namespace XnaGameServer
 
             server.Shutdown("app exiting");
         }
+    }
+    enum PacketTypes
+    {
+        LOGIN,
+        POSITION,
+        POSITIONJEU2D
     }
 }

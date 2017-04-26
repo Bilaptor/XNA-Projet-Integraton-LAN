@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace XnaGameClient
@@ -25,6 +26,8 @@ namespace XnaGameClient
         float TempsÉcouléDepuisMAJ { get; set; }
         InputManager GestionInput { get; set; }
         MouseState OriginalMouseState { get; set; }
+
+        NetClient client;
 
         bool estEnZoom;
         bool EstEnZoom
@@ -53,6 +56,11 @@ namespace XnaGameClient
             CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
             CréerPointDeVue(positionCaméra, cible, orientation);
             EstEnZoom = false;
+
+            NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+
+            client = new NetClient(config);
         }
 
         public override void Initialize()
@@ -141,6 +149,13 @@ namespace XnaGameClient
 
             Position = Position + déplacementDirection * Direction;
             Position = Position - déplacementLatéral * Latéral;
+
+            NetOutgoingMessage om = client.CreateMessage();
+            om.Write((byte)PacketTypes.POSITION);
+            om.Write(Position.X);
+            om.Write(Position.Y);
+            om.Write(Position.Z);
+            client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
         }
 
         private void GérerRotation()

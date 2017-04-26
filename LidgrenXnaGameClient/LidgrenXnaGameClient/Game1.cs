@@ -216,17 +216,17 @@ namespace XnaGameClient
                 if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed || keyState.IsKeyDown(Keys.Down))
                     yinput = 1;
 
-                //if (xinput != 0 || yinput != 0)
-                // {
+                if (xinput != 0 || yinput != 0)
+                {
                     //
                     // If there's input; send it to server
                     //
                     NetOutgoingMessage om = client.CreateMessage();
+                    om.Write((byte)PacketTypes.POSITIONJEU2D);
                     om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
                     om.Write(yinput);
-                    om.Write('@');
                     client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-                //}
+                }
 
                 // read messages
                 NetIncomingMessage incomingMessage;
@@ -238,16 +238,41 @@ namespace XnaGameClient
                             // just connect to first server discovered
                             client.Connect(incomingMessage.SenderEndPoint);
                             break;
+
                         case NetIncomingMessageType.Data:
-                            // server sent a position update
-                            long who = incomingMessage.ReadInt64();
-                            int x = incomingMessage.ReadInt32();
-                            int y = incomingMessage.ReadInt32();
-                            char c = (char)incomingMessage.ReadInt16();
-                            Positions[who] = new Vector2(x, y);
+                            bool asBeenRead = false;
+                            if (!asBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
+                            {
+                                // server sent a position update
+                                long who = incomingMessage.ReadInt64();
+                                int x = incomingMessage.ReadInt32();
+                                int y = incomingMessage.ReadInt32();
+                                Positions[who] = new Vector2(x, y);
+                                asBeenRead = true;
+                            }
+                            if (!asBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITION)
+                            {
+                                float positionX = incomingMessage.ReadInt32();
+                                float positionY = incomingMessage.ReadInt32();
+                                float positionZ = incomingMessage.ReadInt32();
+                                asBeenRead = true;
+                            }
                             break;
+
+                        default:
+                            // Should not happen and if happens, don't care
+                            Console.WriteLine(incomingMessage.ReadString() + " Strange message");
+                            break;
+
                     }
                 }
+                //case NetIncomingMessageType.Data:
+                //    // server sent a position update
+                //    long who = incomingMessage.ReadInt64();
+                //    int x = incomingMessage.ReadInt32();
+                //    int y = incomingMessage.ReadInt32();
+                //    Positions[who] = new Vector2(x, y);
+                //    break;
             }
 
             base.Update(gameTime);
@@ -375,5 +400,11 @@ namespace XnaGameClient
 
             base.OnExiting(sender, args);
         }
+    }
+    enum PacketTypes
+    {
+        LOGIN,
+        POSITION,
+        POSITIONJEU2D
     }
 }
