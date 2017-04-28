@@ -119,8 +119,8 @@ namespace XnaGameClient
         NetClient client;
         bool Pause { get; set; }
 
-
-
+        //position de l'adversaire qui vas etre modifié par le serveur
+        public Vector3 PositionAdversaireSelonServeur { get; set; }
 
         public Game1()
         {
@@ -283,6 +283,8 @@ namespace XnaGameClient
                                 float positionX = incomingMessage.ReadInt32();
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
+                                
+                                Adversaire.ChangerPosition(new Vector3(positionX, positionY, positionZ));
                                 hasBeenRead = true;
                             }
                             break;

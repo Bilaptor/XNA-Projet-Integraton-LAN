@@ -58,13 +58,18 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleVariation)
             {
-                Position  = CaméraJeu.Position + new Vector3(0,0,0);
+                //Position = CaméraJeu.Position + new Vector3(0,0,0);
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
             }
             Jeu.Window.Title = "PosX:  " + Position.X + "   PosY:  " + Position.Y + "   PosZ:  " + Position.Z;
 
             base.Update(gameTime);
+        }
+
+        public void ChangerPosition(Vector3 nouvellePosition)
+        {
+            Position = nouvellePosition;
         }
 
 
