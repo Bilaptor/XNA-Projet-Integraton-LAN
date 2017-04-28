@@ -18,6 +18,7 @@ namespace XnaGameClient
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
         Caméra CaméraJeu { get; set; }
         Game Jeu { get; set; }
+        Vector3 PositionSelonServeur { get; set; }
        
 
         public Adversaire(Game jeu, String nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
@@ -59,6 +60,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= IntervalleVariation)
             {
                 //Position = CaméraJeu.Position + new Vector3(0,0,0);
+                Position = PositionSelonServeur;
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
             }
@@ -67,9 +69,9 @@ namespace XnaGameClient
             base.Update(gameTime);
         }
 
-        public void ChangerPosition(Vector3 nouvellePosition)
+        public void DonnerPosition(Vector3 nouvellePosition)
         {
-            Position = nouvellePosition;
+             PositionSelonServeur = nouvellePosition;
         }
 
 

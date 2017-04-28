@@ -284,7 +284,7 @@ namespace XnaGameClient
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
                                 
-                                Adversaire.ChangerPosition(new Vector3(positionX, positionY, positionZ));
+                                Adversaire.DonnerPosition(new Vector3(positionX, positionY, positionZ));
                                 hasBeenRead = true;
                             }
                             break;
