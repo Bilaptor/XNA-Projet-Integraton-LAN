@@ -21,7 +21,7 @@ namespace XnaGameClient
         SpriteBatch spriteBatch;
         InputManager GestionInput { get; set; }
         Game Jeu { get; set; }
-        bool Pause { get; set; }
+        public bool Pause { get; private set; }
 
 
         bool accepte = true;

@@ -122,6 +122,8 @@ namespace XnaGameClient
         //position de l'adversaire qui vas etre modifié par le serveur
         public Vector3 PositionAdversaireSelonServeur { get; set; }
 
+        Menu2 LeMenu { get; set; }
+
         public Game1()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
@@ -141,7 +143,7 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
-            Pause = false;
+            Pause = true;
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
             InitialierTableauxCoordonnéesSpline();
@@ -200,9 +202,12 @@ namespace XnaGameClient
             //Components.Add(ObjDemo);
             Adversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
             Components.Add(Adversaire);
-           
-            //Components.Add(new Menu2(this, PériphériqueGraphique, Pause));
-            
+
+            LeMenu = new Menu2(this, PériphériqueGraphique, Pause);
+
+            Services.AddService(typeof(Menu2), LeMenu);
+            Components.Add(LeMenu);
+
             base.Initialize();
         }
 
@@ -452,18 +457,18 @@ namespace XnaGameClient
         }
         protected void MettreEnPause()
         {
-            Adversaire.Enabled = !Pause;
-            ArrièrePlan.Enabled = !Pause;
-            Lave.Enabled = !Pause;
-            //ObjDemo.Enabled = !Pause;
-            CaméraJeu.Enabled = !Pause;
-            PlateHori.Enabled = !Pause;
-            PlateSpline.Enabled = !Pause;
-            Plateverti.Enabled = !Pause;
-            TuileTex1.Enabled = !Pause;
-            TuileTex2.Enabled = !Pause;
-            TuileTex3.Enabled = !Pause;
-            TuileTex4.Enabled = !Pause;
+            Adversaire.Enabled = !LeMenu.Pause;
+            ArrièrePlan.Enabled = !LeMenu.Pause;
+            Lave.Enabled = !LeMenu.Pause;
+            //ObjDemo.Enabled = !LeMenu.Pause;
+            CaméraJeu.Enabled = !LeMenu.Pause;
+            PlateHori.Enabled = !LeMenu.Pause;
+            PlateSpline.Enabled = !LeMenu.Pause;
+            Plateverti.Enabled = !LeMenu.Pause;
+            TuileTex1.Enabled = !LeMenu.Pause;
+            TuileTex2.Enabled = !LeMenu.Pause;
+            TuileTex3.Enabled = !LeMenu.Pause;
+            TuileTex4.Enabled = !LeMenu.Pause;
 
         }
     }
