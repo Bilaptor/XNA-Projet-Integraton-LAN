@@ -92,6 +92,7 @@ namespace XnaGameServer
                                 XInput = msg.ReadInt32();
                                 YInput = msg.ReadInt32();
                                 ZInput = msg.ReadInt32();
+                                hasBeenRead = true;
                             }
                             break;
                         default:
