@@ -250,9 +250,6 @@ namespace XnaGameClient
 
                 if (xinput != 0 || yinput != 0)
                 {
-                    //
-                    // If there's input; send it to server
-                    //
                     NetOutgoingMessage om = client.CreateMessage();
                     om.Write((byte)PacketTypes.POSITIONJEU2D);
                     om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
@@ -267,7 +264,7 @@ namespace XnaGameClient
                     switch (incomingMessage.MessageType)
                     {
                         case NetIncomingMessageType.DiscoveryResponse:
-                            // just connect to first server discovered
+
                             client.Connect(incomingMessage.SenderEndPoint);
                             break;
 
@@ -275,7 +272,6 @@ namespace XnaGameClient
                             bool hasBeenRead = false;
                             if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
                             {
-                                // server sent a position update
                                 long who = incomingMessage.ReadInt64();
                                 int x = incomingMessage.ReadInt32();
                                 int y = incomingMessage.ReadInt32();
@@ -287,10 +283,6 @@ namespace XnaGameClient
                                 float positionX = incomingMessage.ReadInt32();
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
-                                if(positionY > 400)
-                                {
-
-                                }
                                 hasBeenRead = true;
                             }
                             break;

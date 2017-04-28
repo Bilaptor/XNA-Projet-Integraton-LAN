@@ -71,25 +71,29 @@ namespace XnaGameServer
                             break;
                         case NetIncomingMessageType.Data:
                             bool hasBeenRead = false;
-                            if (!hasBeenRead && msg.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
+                            if(!hasBeenRead)
                             {
-                                // server sent a position update
-                                //long who = msg.ReadInt64();
-                                int xInput2D = msg.ReadInt32();
-                                int yInput2D = msg.ReadInt32();
+                                if (msg.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
+                                {
+                                    int xInput2D = msg.ReadInt32();
+                                    int yInput2D = msg.ReadInt32();
 
-                                int[] pos = msg.SenderConnection.Tag as int[];
-
-                                //fancy movement logic goes here; we just append input to position
-                                pos[0] += xInput2D;
-                                pos[1] += yInput2D;
+                                    int[] pos = msg.SenderConnection.Tag as int[];
+                                    
+                                    pos[0] += xInput2D;
+                                    pos[1] += yInput2D;
+                                    hasBeenRead = true;
+                                }
                             }
-                            if (!hasBeenRead && msg.ReadByte() == (byte)PacketTypes.POSITION)
+                            if(!hasBeenRead)
                             {
-
-                                XInput = msg.ReadInt32();
-                                YInput = msg.ReadInt32();
-                                ZInput = msg.ReadInt32();
+                                if (msg.ReadByte() == (byte)PacketTypes.POSITION)
+                                {
+                                    XInput = msg.ReadInt32();
+                                    YInput = msg.ReadInt32();
+                                    ZInput = msg.ReadInt32();
+                                    hasBeenRead = true;
+                                }
                             }
                             break;
                         default:
