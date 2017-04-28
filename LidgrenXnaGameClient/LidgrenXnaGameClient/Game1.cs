@@ -196,8 +196,8 @@ namespace XnaGameClient
             Services.AddService(typeof(Caméra), CaméraJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
-            ObjDemo = new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
-            Components.Add(ObjDemo);
+            //ObjDemo = new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
+            //Components.Add(ObjDemo);
             Adversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
             Components.Add(Adversaire);
            
@@ -238,15 +238,15 @@ namespace XnaGameClient
                 if (keyState.IsKeyDown(Keys.Escape) || GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                     this.Exit();
 
-                // use arrows or dpad to move avatar
-                if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || keyState.IsKeyDown(Keys.Left))
-                    xinput = -1;
-                if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || keyState.IsKeyDown(Keys.Right))
-                    xinput = 1;
-                if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed || keyState.IsKeyDown(Keys.Up))
-                    yinput = -1;
-                if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed || keyState.IsKeyDown(Keys.Down))
-                    yinput = 1;
+                //// use arrows or dpad to move avatar
+                //if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || keyState.IsKeyDown(Keys.Left))
+                //    xinput = -1;
+                //if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || keyState.IsKeyDown(Keys.Right))
+                //    xinput = 1;
+                //if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed || keyState.IsKeyDown(Keys.Up))
+                //    yinput = -1;
+                //if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed || keyState.IsKeyDown(Keys.Down))
+                //    yinput = 1;
 
                 if (xinput != 0 || yinput != 0)
                 {
@@ -461,7 +461,7 @@ namespace XnaGameClient
             Adversaire.Enabled = !Pause;
             ArrièrePlan.Enabled = !Pause;
             Lave.Enabled = !Pause;
-            ObjDemo.Enabled = !Pause;
+            //ObjDemo.Enabled = !Pause;
             CaméraJeu.Enabled = !Pause;
             PlateHori.Enabled = !Pause;
             PlateSpline.Enabled = !Pause;

@@ -62,7 +62,9 @@ namespace XnaGameServer
                                 Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " connected!");
 
                                 // randomize his position and store in connection tag
-                                msg.SenderConnection.Tag = new int[] {
+                                msg.SenderConnection.Tag = new float[] 
+                                {
+                                    NetRandom.Instance.Next(10, 100),
                                     NetRandom.Instance.Next(10, 100),
                                     NetRandom.Instance.Next(10, 100)
                                 };
@@ -75,10 +77,10 @@ namespace XnaGameServer
                             {
                                 // server sent a position update
                                 //long who = msg.ReadInt64();
-                                int xInput2D = msg.ReadInt32();
-                                int yInput2D = msg.ReadInt32();
+                                float xInput2D = msg.ReadInt32();
+                                float yInput2D = msg.ReadInt32();
 
-                                int[] pos = msg.SenderConnection.Tag as int[];
+                                float[] pos = msg.SenderConnection.Tag as float[];
 
                                 //fancy movement logic goes here; we just append input to position
                                 pos[0] += xInput2D;
@@ -131,10 +133,10 @@ namespace XnaGameServer
 
                                 if (otherPlayer.Tag == null)
                                 {
-                                    otherPlayer.Tag = new int[2];
+                                    otherPlayer.Tag = new float[2];
                                 }
 
-                                int[] pos = otherPlayer.Tag as int[];
+                                float[] pos = otherPlayer.Tag as float[];
 
                                 om.Write(pos[0]);
                                 om.Write(pos[1]);
