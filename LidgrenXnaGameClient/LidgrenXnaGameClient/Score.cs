@@ -68,7 +68,7 @@ namespace XnaGameClient
             Temps…coulÈDepuisMAJ += temps…coulÈ;
             if (Temps…coulÈDepuisMAJ >= IntervalleMAJ)
             {
-                CalculerScore();
+                //CalculerScore();
                 Temps…coulÈDepuisMAJ = 0;
             }
         }
