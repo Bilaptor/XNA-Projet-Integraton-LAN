@@ -50,7 +50,7 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ = 0;
             ValFPS = 0;
             CptFrames = 0;
-            ChaîneSCORE = "";
+            ChaîneSCORE = "123";
             PositionHautGauche = new Vector2(Game.Window.ClientBounds.Width - MARGE_GAUCHE,
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
 
