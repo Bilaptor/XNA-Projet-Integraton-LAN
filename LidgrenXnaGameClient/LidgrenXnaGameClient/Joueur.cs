@@ -20,10 +20,9 @@ namespace XnaGameClient
         BasicEffect EffetDeBase { get; set; }
         public BoundingBox ZoneDeCollisionModel { get; set; }
         Vector3 DimensionModel { get; set; }
-
-
-
         protected float IntervalleMAJ { get; set; }
+
+
         public Joueur(Game jeu, String nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Vector3 dimentionModel)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {

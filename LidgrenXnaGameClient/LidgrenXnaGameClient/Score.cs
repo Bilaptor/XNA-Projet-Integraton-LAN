@@ -25,8 +25,6 @@ namespace XnaGameClient
 
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
-        int CptFrames { get; set; }
-        float ValFPS { get; set; }
         int Compteur { get; set; }
 
         string ChaîneSCORE { get; set; }
@@ -59,8 +57,6 @@ namespace XnaGameClient
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
-            ValFPS = 0;
-            CptFrames = 0;
             Compteur = 0;
             ChaîneSCORE = "";
             PositionHautGauche = new Vector2(Game.Window.ClientBounds.Width - MARGE_GAUCHE,
@@ -76,7 +72,6 @@ namespace XnaGameClient
         public override void Update(GameTime gameTime)
         {
             float tempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            ++CptFrames;
             TempsÉcouléDepuisMAJ += tempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
