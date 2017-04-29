@@ -12,40 +12,93 @@ using Microsoft.Xna.Framework.Media;
 
 namespace XnaGameClient
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
-    public class Checkpoint : Microsoft.Xna.Framework.DrawableGameComponent
+    public class Checkpoint : PrimitiveDeBaseAnimée
     {
-        Vector3[] TableauPositionPlateforme { get; set; }
+        const int NB_SOMMETS = 18;
+        const int NB_TRIANGLES = 6;
+        Color Couleur { get; set; }
+        VertexPositionColor[] Sommets { get; set; }
+        Vector3 Origine { get; set; }
+        float DeltaX { get; set; }
+        float DeltaY { get; set; }
+        float DeltaZ { get; set; }
+        BasicEffect EffetDeBase { get; set; }
 
-        public Checkpoint(Game game, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
+        public BoundingBox ZoneDeCollisionCheckPoint { get; set; }
+        Vector3 DimensionCheckpoint { get; set; }
+
+        public Checkpoint(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
                           Vector3 dimension, float intervalleMAJ)
-            : base(game)
+         : base(game, homothétieInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            // TODO: Construct any child components here
+            Couleur = couleur;
+            DeltaX = dimension.X;
+            DeltaY = dimension.Y;
+            DeltaZ = dimension.Z;
+            Origine = new Vector3(-DeltaX / 2, -DeltaY / 2, -DeltaZ / 2);
+            DimensionCheckpoint = dimension;
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
+            Sommets = new VertexPositionColor[NB_SOMMETS];
+            ZoneDeCollisionCheckPoint = new BoundingBox(Vector3.Zero, DimensionCheckpoint);
             base.Initialize();
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        protected override void LoadContent()
         {
-            // TODO: Add your update code here
-            
-            base.Update(gameTime);
+            EffetDeBase = new BasicEffect(GraphicsDevice);
+            EffetDeBase.VertexColorEnabled = true;
+            base.LoadContent();
+        }
+
+        protected override void InitialiserSommets()
+        {
+            Vector3[] points = new Vector3[5];
+            points[0] = new Vector3(Origine.X + DeltaX / 2, Origine.Y + DeltaY, Origine.Z + DeltaZ / 2);
+            points[1] = Origine;
+            points[2] = new Vector3(Origine.X + DeltaX, Origine.Y, Origine.Z);
+            points[3] = new Vector3(Origine.X + DeltaX, Origine.Y, Origine.Z + DeltaZ);
+            points[4] = new Vector3(Origine.X, Origine.Y, Origine.Z + DeltaZ);
+
+            Sommets[0] = new VertexPositionColor(points[4], Couleur);
+            Sommets[1] = new VertexPositionColor(points[0], Couleur);
+            Sommets[2] = new VertexPositionColor(points[3], Couleur);
+
+            Sommets[3] = new VertexPositionColor(points[3], Couleur);
+            Sommets[4] = new VertexPositionColor(points[0], Couleur);
+            Sommets[5] = new VertexPositionColor(points[2], Couleur);
+
+            Sommets[6] = new VertexPositionColor(points[2], Couleur);
+            Sommets[7] = new VertexPositionColor(points[0], Couleur);
+            Sommets[8] = new VertexPositionColor(points[1], Couleur);
+
+            Sommets[9] = new VertexPositionColor(points[1], Couleur);
+            Sommets[10] = new VertexPositionColor(points[0], Couleur);
+            Sommets[11] = new VertexPositionColor(points[4], Couleur);
+
+            Sommets[12] = new VertexPositionColor(points[2], Couleur);
+            Sommets[13] = new VertexPositionColor(points[1], Couleur);
+            Sommets[14] = new VertexPositionColor(points[3], Couleur);
+
+            Sommets[15] = new VertexPositionColor(points[1], Couleur);
+            Sommets[16] = new VertexPositionColor(points[4], Couleur);
+            Sommets[17] = new VertexPositionColor(points[3], Couleur);
+
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            EffetDeBase.World = GetMonde();
+            EffetDeBase.View = CaméraJeu.Vue;
+            EffetDeBase.Projection = CaméraJeu.Projection;
+
+            foreach (EffectPass passeEffet in EffetDeBase.CurrentTechnique.Passes)
+            {
+                passeEffet.Apply();
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, Sommets, 0, NB_TRIANGLES);
+            }
         }
     }
 }
