@@ -15,7 +15,7 @@ namespace XnaGameClient
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Score : AfficheurFPS 
+    public class Score : Microsoft.Xna.Framework.DrawableGameComponent
     {
         const int MARGE_HAUT = 10;
         const int MARGE_GAUCHE = 15;
@@ -27,18 +27,29 @@ namespace XnaGameClient
         float TempsÉcouléDepuisMAJ { get; set; }
         int CptFrames { get; set; }
         float ValFPS { get; set; }
+        int Compteur { get; set; }
 
         string ChaîneSCORE { get; set; }
         Vector2 PositionHautGauche { get; set; }
         Vector2 PositionChaîne { get; set; }
         Vector2 Dimension { get; set; }
+        Game Jeu { get; set; }
+
+        BoundingBox ZoneModel { get; set; }
+        BoundingBox ZoneCheckPoint { get; set; }
+
 
         SpriteBatch GestionSprites { get; set; }
         SpriteFont ArialFont { get; set; }
-        public Score(Game game, string font, Color couleur, float intervalleMAJ)
-            : base(game, font, couleur, intervalleMAJ)
+
+
+        public Score(Game game, string font, Color couleur, float intervalleMAJ, BoundingBox zoneModel, BoundingBox zoneCheckPoint)
+            : base(game)
         {
             // TODO: Construct any child components here
+            Jeu = game;
+            ZoneCheckPoint = zoneCheckPoint;
+            ZoneModel = zoneModel;
         }
 
         /// <summary>
@@ -50,7 +61,8 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ = 0;
             ValFPS = 0;
             CptFrames = 0;
-            ChaîneSCORE = "123";
+            Compteur = 0;
+            ChaîneSCORE = "";
             PositionHautGauche = new Vector2(Game.Window.ClientBounds.Width - MARGE_GAUCHE,
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
 
@@ -68,7 +80,7 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += tempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                //CalculerScore();
+                CalculerScore();
                 TempsÉcouléDepuisMAJ = 0;
             }
         }
@@ -86,15 +98,11 @@ namespace XnaGameClient
 
         void CalculerScore()
         {
-            float oldValFPS = ValFPS;
-            ValFPS = CptFrames / TempsÉcouléDepuisMAJ;
-            if (oldValFPS != ValFPS)
+            if(ZoneModel.Intersects(ZoneCheckPoint))
             {
-                ChaîneSCORE = ValFPS.ToString("0");
-                Dimension = ArialFont.MeasureString(ChaîneSCORE);
-                PositionChaîne = PositionHautGauche - Dimension;
+                Compteur += 1;
+                ChaîneSCORE = Compteur.ToString();
             }
-            CptFrames = 0;
         }
     }
 }

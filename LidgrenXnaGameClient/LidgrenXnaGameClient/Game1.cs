@@ -111,9 +111,10 @@ namespace XnaGameClient
         Vector3[] Tuile4 { get; set; }
         Vector3[] TableauPositionPlateformesHorizontales { get; set; }
 
-     
 
-
+        BoundingBox ZoneDeCollisionModel { get; set; }
+        BoundingBox ZoneDeCollisionCheckPoint { get; set; }
+       
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
@@ -186,7 +187,7 @@ namespace XnaGameClient
             Lave = new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD);
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
-            Components.Add(new Score(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS));
+            Components.Add(new Score(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS, ZoneDeCollisionModel, ZoneDeCollisionCheckPoint));
 
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
