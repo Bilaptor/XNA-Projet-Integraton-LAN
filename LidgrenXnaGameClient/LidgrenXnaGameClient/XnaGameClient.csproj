@@ -113,6 +113,7 @@
     <Compile Include="CaméraSubjective.cs" />
     <Compile Include="cButton.cs" />
     <Compile Include="Checkpoint.cs" />
+    <Compile Include="CheckpointAnimé.cs" />
     <Compile Include="Commentaires.cs" />
     <Compile Include="Composants de base\AfficheurFPS.cs" />
     <Compile Include="Composants de base\ArrièrePlan.cs" />
