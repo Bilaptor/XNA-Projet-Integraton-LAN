@@ -179,6 +179,7 @@ namespace XnaGameClient
                     lacet = VitesseRotation * -déplacementX * DELTA_LACET;
                 }
             }
+            
 
             Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
             Direction = Vector3.Transform(Direction, mLacet);
@@ -198,15 +199,25 @@ namespace XnaGameClient
                     tangage = -déplacementY * VitesseRotation * DELTA_TANGAGE;
                 }
             }
+            Game.Window.Title = Direction + "    " + OrientationVerticale;
+            Vector3 ancienneOrientationVerticale = OrientationVerticale;
 
             Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
-            OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
-            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+            Vector3 futurOrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral); //je suis obligé de créer une future orientationverticale sinon la tangage devient bizarre
+            futurOrientationVerticale = Vector3.Normalize(futurOrientationVerticale);
 
-            Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
-            Direction = Vector3.Transform(Direction, mTangageDirection);
-            Direction = Vector3.Normalize(Direction);
-            Latéral = Vector3.Cross(Direction, OrientationVerticale);
+            if (Position.Y + futurOrientationVerticale.Y > Position.Y)
+            {
+                
+                mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
+                OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
+                OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+
+                Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
+                Direction = Vector3.Transform(Direction, mTangageDirection);
+                Direction = Vector3.Normalize(Direction);
+                Latéral = Vector3.Cross(Direction, OrientationVerticale);
+            }
         }
 
         private void GérerRoulis()

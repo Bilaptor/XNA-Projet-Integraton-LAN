@@ -64,7 +64,7 @@ namespace XnaGameClient
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
             }
-            Jeu.Window.Title = "PosX:  " + Position.X + "   PosY:  " + Position.Y + "   PosZ:  " + Position.Z;
+            //Jeu.Window.Title = "PosX:  " + Position.X + "   PosY:  " + Position.Y + "   PosZ:  " + Position.Z;
 
             base.Update(gameTime);
         }

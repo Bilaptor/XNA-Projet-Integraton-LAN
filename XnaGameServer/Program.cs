@@ -20,8 +20,6 @@ namespace XnaGameServer
             float YInput = 0;
             float ZInput = 0;
 
-
-
             // create and start server
             NetServer server = new NetServer(config);
             server.Start();
