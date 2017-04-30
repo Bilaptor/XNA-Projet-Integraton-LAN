@@ -12,7 +12,7 @@ namespace XnaGameClient
       protected InputManager GestionInput { get; private set; }
       float Temps…coulÈDepuisMAJ { get; set; }
       float IncrÈmentAngleRotation { get; set; }
-      bool Lacet { get; set; }
+      public bool Lacet { get; set; }
       bool Tangage { get; set; }
       bool Roulis { get; set; }
       protected bool Monde¿Recalculer { get; set; }

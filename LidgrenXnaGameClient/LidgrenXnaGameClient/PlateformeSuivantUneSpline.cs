@@ -125,9 +125,9 @@ namespace XnaGameClient
         {
             for(int cpt = 0; cpt < Liste_SplineX.Count; ++cpt)
             {
-                //Position_X = Tableau_SplineX[cpt] + Tableau_SplineX[cpt + 1] * Position_X + Tableau_SplineX[cpt + 2] * (Math.Pow(Position_X, 2)) + Tableau_SplineX[cpt + 3] * (Math.Pow(Position_X, 3));
-                //Position_Z = Tableau_SplineZ[cpt] + Tableau_SplineZ[cpt + 1] * Position_Z + Tableau_SplineZ[cpt + 2] * (Math.Pow(Position_Z, 2)) + Tableau_SplineZ[cpt + 3] * (Math.Pow(Position_Z, 3));
-                //Position += Vector3.Transform(Position, Matrix.CreateTranslation(new Vector3((float)Position_X, 0, (float)Position_Z)));
+                Position_X = Tableau_SplineX[cpt] + Tableau_SplineX[cpt + 1] * Position_X + Tableau_SplineX[cpt + 2] * (Math.Pow(Position_X, 2)) + Tableau_SplineX[cpt + 3] * (Math.Pow(Position_X, 3));
+                Position_Z = Tableau_SplineZ[cpt] + Tableau_SplineZ[cpt + 1] * Position_Z + Tableau_SplineZ[cpt + 2] * (Math.Pow(Position_Z, 2)) + Tableau_SplineZ[cpt + 3] * (Math.Pow(Position_Z, 3));
+                Position += Vector3.Transform(Position, Matrix.CreateTranslation(new Vector3((float)Position_X, 0, (float)Position_Z)));
             }
         }
 

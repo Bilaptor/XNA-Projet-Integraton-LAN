@@ -74,8 +74,6 @@ namespace XnaGameClient
             }
         }
 
-        
-
         public override Matrix GetMonde()
         {
             Monde = Matrix.Identity;
@@ -130,7 +128,6 @@ namespace XnaGameClient
                         VecteurModifiant = new Vector3(VecteurModifiant.X, VecteurModifiant.Y, 0);
                     }
                 }
-                
 
 
                 if (GestionInput.EstNouvelleTouche(Keys.Space))
@@ -138,12 +135,7 @@ namespace XnaGameClient
                     Rotation = RotationIni;
                 }
 
-                
-
             }
         }
-
-
-
     }
 }
