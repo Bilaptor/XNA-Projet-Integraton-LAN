@@ -58,7 +58,6 @@ namespace XnaGameClient
         {
             TempsÉcouléDepuisMAJ = 0;
             Compteur = 0;
-            ChaîneSCORE = "";
             PositionHautGauche = new Vector2(Game.Window.ClientBounds.Width - MARGE_GAUCHE,
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
 
@@ -96,7 +95,7 @@ namespace XnaGameClient
             if(ZoneModel.Intersects(ZoneCheckPoint))
             {
                 Compteur += 1;
-                ChaîneSCORE = Compteur.ToString();
+                ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
             }
         }
     }

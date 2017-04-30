@@ -139,6 +139,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="back ground menu.png">
+      <Name>back ground menu</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="SplineX.txt">
       <Name>SplineX</Name>
     </Content>
