@@ -113,7 +113,7 @@ namespace XnaGameClient
                 GérerSouris();
                 GérerAccélération();
                 GérerDéplacement();
-                GérerRotation();
+                //GérerRotation();
                 CréerPointDeVue();
 
                 Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
@@ -192,45 +192,45 @@ namespace XnaGameClient
             client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
         }
 
-        private void GérerRotation()
-        {
-            GérerLacet();
-            GérerTangage();
-            GérerRoulis();
-        }
+        //private void GérerRotation()
+        //{
+        //    GérerLacet();
+        //    GérerTangage();
+        //    GérerRoulis();
+        //}
 
-        private void GérerLacet()
-        {
-            float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotationManette * DELTA_LACET;
+        //private void GérerLacet()
+        //{
+        //    float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotationManette * DELTA_LACET;
+            
+        //    Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
+        //    Direction = Vector3.Transform(Direction, mLacet);
+        //    Direction = Vector3.Normalize(Direction);
+        //    Latéral = Vector3.Cross(Direction, OrientationVerticale);
+        //}
 
-            Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
-            Direction = Vector3.Transform(Direction, mLacet);
-            Direction = Vector3.Normalize(Direction);
-            Latéral = Vector3.Cross(Direction, OrientationVerticale);
-        }
+        //private void GérerTangage()
+        //{
+        //    float tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotationManette * DELTA_TANGAGE;
 
-        private void GérerTangage()
-        {
-            float tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotationManette * DELTA_TANGAGE;
+        //    Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
+        //    OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
+        //    OrientationVerticale = Vector3.Normalize(OrientationVerticale);
 
-            Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
-            OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
-            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+        //    Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
+        //    Direction = Vector3.Transform(Direction, mTangageDirection);
+        //    Direction = Vector3.Normalize(Direction);
+        //    Latéral = Vector3.Cross(Direction, OrientationVerticale);
+        //}
 
-            Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
-            Direction = Vector3.Transform(Direction, mTangageDirection);
-            Direction = Vector3.Normalize(Direction);
-            Latéral = Vector3.Cross(Direction, OrientationVerticale);
-        }
+        //private void GérerRoulis()
+        //{
+        //    float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotationManette * DELTA_ROULIS;
 
-        private void GérerRoulis()
-        {
-            float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotationManette * DELTA_ROULIS;
-
-            Matrix mRoulis = Matrix.CreateFromAxisAngle(Direction, roulis);
-            OrientationVerticale = Vector3.Transform(OrientationVerticale, mRoulis);
-            OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-        }
+        //    Matrix mRoulis = Matrix.CreateFromAxisAngle(Direction, roulis);
+        //    OrientationVerticale = Vector3.Transform(OrientationVerticale, mRoulis);
+        //    OrientationVerticale = Vector3.Normalize(OrientationVerticale);
+        //}
 
         private void GestionClavier()
         {

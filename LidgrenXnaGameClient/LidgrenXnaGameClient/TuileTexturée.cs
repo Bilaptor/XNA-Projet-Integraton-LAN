@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace XnaGameClient
 {
-    class TuileTexturée : Tuile
+    class TuileTexturée : Tuile, IPausable
     {
         const int NB_TRIANGLES = 2;
         RessourcesManager<Texture2D> gestionnaireDeTextures;
@@ -19,6 +19,11 @@ namespace XnaGameClient
            : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, étendue, intervalleMAJ, créerTableauP)
         {
             NomTextureTuile = nomTextureTuile;
+        }
+
+        public void GérerPause(bool enPause)
+        {
+            this.Enabled = !enPause;
         }
 
         protected override void CréerTableauSommets()

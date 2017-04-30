@@ -8,65 +8,76 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XnaGameClient
 {
-   class ControllerClavier : GameComponent, IController
-   {
-      InputManager GestionInput;
-      MouseState OriginalMouseState { get; set; }
-      float angleHorizontal = 0;
-      float angleVertical = 0;
+    class ControllerClavier : GameComponent, IController
+    {
+        InputManager GestionInput;
+        MouseState OriginalMouseState { get; set; }
+        float angleHorizontal = 0;
+        float angleVertical = 0;
+        const float VITESSE_ROTATION_SOURIS = 0.0025f;
 
 
-      public ControllerClavier(Game game, MouseState originalMouseState) : base(game)
-      {
-         OriginalMouseState = originalMouseState;
-      }
+        public ControllerClavier(Game game, MouseState originalMouseState) : base(game)
+        {
+            OriginalMouseState = originalMouseState;
+        }
 
-      public override void Initialize()
-      {
-         GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
+        public override void Initialize()
+        {
+            GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
 
-         base.Initialize();
-      }
+            base.Initialize();
+        }
 
-      public Vector3 GetPosition()
-      {
-         return Vector3.Zero;
-      }
+        public Vector3 GetPosition()
+        {
+            return Vector3.Zero;
+        }
 
-      public Vector3 GetDirectionVu()
-      {
-         //Game.Window.Title = DirectionVu.ToString();
+        public Vector3 GetDirectionVu()
+        {
+            //Game.Window.Title = DirectionVu.ToString();
 
-         MouseState currentMouseState = Mouse.GetState();
-         if (OriginalMouseState != currentMouseState)
-         {
-            float déplacementX = OriginalMouseState.X - currentMouseState.X;
-            float déplacementY = OriginalMouseState.Y - currentMouseState.Y;
+            MouseState currentMouseState = Mouse.GetState();
+            if (OriginalMouseState != currentMouseState)
+            {
+                float déplacementX = OriginalMouseState.X - currentMouseState.X;
+                float déplacementY = OriginalMouseState.Y - currentMouseState.Y;
 
-            angleHorizontal -= déplacementX * 0.01f;
-            angleHorizontal %= (float)(Math.PI * 2);
+                if (déplacementX == 0)
+                {
+                    déplacementX = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y;
+                }
 
-            angleVertical += déplacementY * 0.01f;
-            if (angleVertical > (Math.PI / 2))
-               angleVertical = (float)(Math.PI / 2 - 0.01);
-            if (angleVertical < -(Math.PI / 2))
-               angleVertical = (float)(-Math.PI / 2 + 0.01);
-         }
+                if (déplacementY == 0)
+                {
+                    déplacementY = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X;
+                }
 
-         return Vector3.Normalize(new Vector3((float)Math.Cos(angleHorizontal), (float)Math.Tan(angleVertical), (float)Math.Sin(angleHorizontal)));
-      }
+                angleHorizontal -= déplacementX * VITESSE_ROTATION_SOURIS;
+                angleHorizontal %= (float)(Math.PI * 2);
 
-      public Vector3 GetDirection()
-      {
-         float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S));
-         float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D));
+                angleVertical += déplacementY * VITESSE_ROTATION_SOURIS;
+                if (angleVertical > (Math.PI / 2))
+                    angleVertical = (float)(Math.PI / 2 - 0.01);
+                if (angleVertical < -(Math.PI / 2))
+                    angleVertical = (float)(-Math.PI / 2 + 0.01);
+            }
 
-         return new Vector3(déplacementDirection, 0, déplacementLatéral);
-      }
+            return Vector3.Normalize(new Vector3((float)Math.Cos(angleHorizontal), (float)Math.Tan(angleVertical), (float)Math.Sin(angleHorizontal)));
+        }
 
-      private int GérerTouche(Keys touche)
-      {
-         return GestionInput.EstEnfoncée(touche) ? 1 : 0;
-      }
-   }
+        public Vector3 GetDirection()
+        {
+            float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S));
+            float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D));
+
+            return new Vector3(déplacementDirection, 0, déplacementLatéral);
+        }
+
+        private int GérerTouche(Keys touche)
+        {
+            return GestionInput.EstEnfoncée(touche) ? 1 : 0;
+        }
+    }
 }
