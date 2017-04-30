@@ -29,8 +29,8 @@ namespace XnaGameClient
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
 
-        const int NB_DE_PLATEFORMES_HORIZONTALES = 25;
-        const int NB_DE_PLATEFORMES_VERTICALES = 25;
+        const int NB_DE_PLATEFORMES_HORIZONTALES = 30;
+        const int NB_DE_PLATEFORMES_VERTICALES = 30;
         const int POSITION_Y_PLATEFORMES = 45;
         const int POSITION_Y_CHECKPOINT = 50;
 
@@ -74,6 +74,7 @@ namespace XnaGameClient
 
         int[] TableauCoordonnéesX_Spline { get; set; }
         int[] TableauCoordonnéesZ_Spline { get; set; }
+        List<Vector3> ListeDeCoordonnées { get; set; }
 
         int IndiceTableauLimitesAireJeu { get; set; }
         int IndiceTableauAngleFlottaison { get; set; }
@@ -427,7 +428,7 @@ namespace XnaGameClient
 
         void GérerPositionsPlateformesSuivantSpline()
         {
-            for(int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
+            for (int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
             {
                 PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt");
                 Components.Add(PlateSpline);

@@ -16,6 +16,7 @@ namespace XnaGameClient
     public class PlateformeSuivantUneSpline : Plateforme
     {
         const int VITESSE = 5;
+        const string CHEMIN = "../../";
 
         float TempsÉcouléDepuisMAJ { get; set; }
 
@@ -46,8 +47,6 @@ namespace XnaGameClient
         {
             NomFichierSplineX = nomSplineX;
             NomFichierSplineZ = nomSplineZ;
-            Position_X = positionInitiale.X;
-            Position_Z = positionInitiale.Z;
         }
 
         public override void Initialize()
@@ -60,6 +59,9 @@ namespace XnaGameClient
             Liste_SplineZ = new List<int>();
             Tableau_SplineX = new int[] { };
             Tableau_SplineZ = new int[] { };
+
+            Position_X = Position.X;
+            Position_Z = Position.Z;
 
             base.Initialize();
         }
@@ -117,16 +119,20 @@ namespace XnaGameClient
 
         void CréerTableauxSpline()
         {
+            LireFichiersSplineX();
+            LireFichiersSplineZ();
             Tableau_SplineX = Liste_SplineX.ToArray();
             Tableau_SplineZ = Liste_SplineZ.ToArray();
         }
 
         void DéplacerPlateforme()
         {
-            for(int cpt = 0; cpt < Liste_SplineX.Count; ++cpt)
+            CréerTableauxSpline();
+
+            for (int cpt = 0; cpt < Liste_SplineX.Count - 1; ++cpt)
             {
-                Position_X = Tableau_SplineX[cpt] + Tableau_SplineX[cpt + 1] * Position_X + Tableau_SplineX[cpt + 2] * (Math.Pow(Position_X, 2)) + Tableau_SplineX[cpt + 3] * (Math.Pow(Position_X, 3));
-                Position_Z = Tableau_SplineZ[cpt] + Tableau_SplineZ[cpt + 1] * Position_Z + Tableau_SplineZ[cpt + 2] * (Math.Pow(Position_Z, 2)) + Tableau_SplineZ[cpt + 3] * (Math.Pow(Position_Z, 3));
+                Position_X = Tableau_SplineX[cpt] + Tableau_SplineX[cpt + 1] * Position.X + Tableau_SplineX[cpt + 2] * (Math.Pow(Position.X, 2)) + Tableau_SplineX[cpt + 3] * (Math.Pow(Position.X, 3));
+                Position_Z = Tableau_SplineZ[cpt] + Tableau_SplineZ[cpt + 1] * Position.Z + Tableau_SplineZ[cpt + 2] * (Math.Pow(Position.Z, 2)) + Tableau_SplineZ[cpt + 3] * (Math.Pow(Position.Z, 3));
                 Position += Vector3.Transform(Position, Matrix.CreateTranslation(new Vector3((float)Position_X, 0, (float)Position_Z)));
             }
         }
@@ -145,3 +151,74 @@ namespace XnaGameClient
         }
     }
 }
+
+//const float VITESSE = 5f;
+
+//List<Vector3> ListeDeCoordonnées { get; set; }
+//float[] Lengths { get; set; }
+//Vector3[] Directions { get; set; }
+//float StagePos { get; set; }
+//int StageIndex { get; set; }
+
+
+//public PlateformeSuivantUneSpline(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
+//                   Vector3 dimension, float angleDeFlottaison, float incrémentAngleDeFlottaison, float intervalleMAJ, List<Vector3> listeDeCoordonnées)
+//    : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison, incrémentAngleDeFlottaison, intervalleMAJ)
+//{
+//    ListeDeCoordonnées = listeDeCoordonnées;
+//}
+
+//public override void Initialize()
+//{
+//    TempsÉcouléDepuisMAJ = 0;
+//    base.Initialize();
+//}
+
+
+//void Build()
+//{
+//    Lengths = new float[ListeDeCoordonnées.Count - 1];
+//    Directions = new Vector3[ListeDeCoordonnées.Count - 1];
+//    for (int i = 0; i < ListeDeCoordonnées.Count - 1; i++)
+//    {
+//        Directions[i] = ListeDeCoordonnées[i + 1] - ListeDeCoordonnées[i];
+//        Lengths[i] = Directions[i].Length();
+//        Directions[i].Normalize();
+//    }
+//}
+
+//void DéplacerPlateforme(float temps)
+//{
+//    Build();
+
+//    if (StageIndex != ListeDeCoordonnées.Count - 1)
+//    {
+//        StagePos += VITESSE * temps;
+//        while (StagePos > Lengths[StageIndex])
+//        {
+//            StagePos -= Lengths[StageIndex];
+//            StageIndex++;
+//            if (StageIndex == ListeDeCoordonnées.Count - 1)
+//            {
+//                Position = ListeDeCoordonnées[StageIndex];
+//            }
+//        }
+//        Position = ListeDeCoordonnées[StageIndex] + Directions[StageIndex] * StagePos;
+//    }
+//}
+
+//public override void Update(GameTime gameTime)
+//        {
+//            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
+//            TempsÉcouléDepuisMAJ += TempsÉcoulé;
+
+//            if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
+//            {
+//                DéplacerPlateforme(TempsÉcouléDepuisMAJ);
+//                TempsÉcouléDepuisMAJ = 0;
+//            }
+//            base.Update(gameTime);
+//        }
+//    }
+//}
+
