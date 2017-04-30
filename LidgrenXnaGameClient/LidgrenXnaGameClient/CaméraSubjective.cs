@@ -29,6 +29,8 @@ namespace XnaGameClient
 
         NetClient client;
 
+        IController controller;
+
         bool estEnZoom;
         bool EstEnZoom
         {
@@ -65,6 +67,8 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
+            controller = new ControllerClavier(Game, OriginalMouseState);
+
             VitesseRotationManette = VITESSE_INITIALE_ROTATION_MANETTE;
             VitesseRotation = VITESSE_INITIALE_ROTATION;
             VitesseTranslation = VITESSE_INITIALE_TRANSLATION;
@@ -106,14 +110,43 @@ namespace XnaGameClient
             GestionClavier();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
+                GérerSouris();
                 GérerAccélération();
                 GérerDéplacement();
                 GérerRotation();
                 CréerPointDeVue();
 
+                Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
+        }
+
+        private void GérerSouris()
+        {
+            Game.Window.Title = Direction.ToString();
+
+            //MouseState currentMouseState = Mouse.GetState();
+            //if (currentMouseState != OriginalMouseState)
+            //{
+            //   float déplacementX = currentMouseState.X - OriginalMouseState.X;
+            //   float déplacementY = currentMouseState.Y - OriginalMouseState.Y;
+
+            //   angleHorizontal += déplacementX * 0.01f;
+            //   angleHorizontal %= (float)(Math.PI * 2);
+
+            //   angleVertical += déplacementY * 0.01f;
+            //   if (angleVertical > (Math.PI / 2))
+            //      angleVertical = (float)(Math.PI / 2 - 0.01);
+            //   if (angleVertical < -(Math.PI / 2))
+            //      angleVertical = (float)(-Math.PI / 2 + 0.01);
+
+            //Direction = new Vector3((float)Math.Cos(angleHorizontal), -(float)Math.Tan(angleVertical), (float)Math.Sin(angleHorizontal));
+            Direction = controller.GetDirectionVu();
+            //Direction.Normalize();
+            Latéral = Vector3.Cross(Direction, OrientationVerticale);
+            OrientationVerticale = Vector3.Up;
+            //}
         }
 
         private int GérerTouche(Keys touche)
@@ -164,21 +197,11 @@ namespace XnaGameClient
             GérerLacet();
             GérerTangage();
             GérerRoulis();
-            Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
         }
 
         private void GérerLacet()
         {
             float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotationManette * DELTA_LACET;
-            if (lacet == 0)
-            {
-                MouseState currentMouseState = Mouse.GetState();
-                if (currentMouseState != OriginalMouseState)
-                {
-                    float déplacementX = currentMouseState.X - OriginalMouseState.X;
-                    lacet = VitesseRotation * -déplacementX * DELTA_LACET;
-                }
-            }
 
             Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
             Direction = Vector3.Transform(Direction, mLacet);
@@ -189,15 +212,6 @@ namespace XnaGameClient
         private void GérerTangage()
         {
             float tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotationManette * DELTA_TANGAGE;
-            if (tangage == 0)
-            {
-                MouseState currentMouseState = Mouse.GetState();
-                if (currentMouseState != OriginalMouseState)
-                {
-                    float déplacementY = currentMouseState.Y - OriginalMouseState.Y;
-                    tangage = -déplacementY * VitesseRotation * DELTA_TANGAGE;
-                }
-            }
 
             Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
             OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);

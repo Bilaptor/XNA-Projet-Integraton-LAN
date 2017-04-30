@@ -121,6 +121,10 @@
     <Compile Include="Composants de base\InputManager.cs" />
     <Compile Include="Composants de base\RessourceDeBase.cs" />
     <Compile Include="Composants de base\RessourcesManager.cs" />
+    <Compile Include="Controllers\ControllerClavier.cs" />
+    <Compile Include="Controllers\ControllerNet.cs" />
+    <Compile Include="Interfaces\IController.cs" />
+    <Compile Include="Interfaces\IPausable.cs" />
     <Compile Include="Joueur.cs" />
     <Compile Include="Lave.cs" />
     <Compile Include="Menu1.cs" />
