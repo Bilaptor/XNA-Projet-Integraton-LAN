@@ -71,10 +71,10 @@ namespace XnaGameClient
             base.Update(gameTime);
         }
 
-        public void DonnerPosition(Vector3 nouvellePosition)
-        {
-            PositionSelonServeur = nouvellePosition;
-        }
+        //public void DonnerPosition(Vector3 nouvellePosition)
+        //{
+        //    PositionSelonServeur = nouvellePosition;
+        //}
 
 
     }
