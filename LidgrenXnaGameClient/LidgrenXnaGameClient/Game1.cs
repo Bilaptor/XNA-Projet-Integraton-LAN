@@ -139,6 +139,8 @@ namespace XnaGameClient
 
         ControllerNet controleurNet;
 
+        
+
         //position de l'adversaire qui vas etre modifié par le serveur
         public Vector3 PositionAdversaireSelonServeur { get; set; }
 
@@ -163,6 +165,7 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
+          
             Pause = true;
             DimensionCheckpoint = new Vector3(2.5f, 2.5f, 2.5f);
             DimensionModel = new Vector3(1, 1, 1);
@@ -206,6 +209,7 @@ namespace XnaGameClient
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
             Components.Add(new Score(this, "Arial20", Color.Chartreuse, INTERVALLE_CALCUL_FPS, CaméraJeu.Position));
+            Components.Add(new Balle(this, 1f, rotationObjet, CaméraJeu.Position, INTERVALLE_MAJ_STANDARD, new Vector3(2, 2, 2), Color.Blue));
 
 
             GérerPositionsPlateformesHorizontales();
@@ -226,6 +230,7 @@ namespace XnaGameClient
             //Components.Add(ObjDemo);
             Aadversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
             Components.Add(Aadversaire);
+           
 
             LeMenu = new Menu2(this, PériphériqueGraphique, Pause);
 
