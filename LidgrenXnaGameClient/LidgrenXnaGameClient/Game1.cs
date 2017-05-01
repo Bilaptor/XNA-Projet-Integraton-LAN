@@ -152,6 +152,7 @@ namespace XnaGameClient
             DimensionModel = new Vector3(1, 1, 1);
             ZoneDeCollisionCheckPoint = new BoundingBox(Vector3.Zero, DimensionCheckpoint);
             ZoneDeCollisionModel = new BoundingBox(Vector3.Zero, DimensionModel);
+
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
             InitialierTableauxCoordonnéesSpline();
@@ -192,7 +193,7 @@ namespace XnaGameClient
             Lave = new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD);
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
-            Components.Add(new Score(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS, Vector3.Zero, new Vector3(Position_X_checkpoint,POSITION_Y_CHECKPOINT,Position_Z_checkpoint), ZoneDeCollisionModel, ZoneDeCollisionCheckPoint));
+            Components.Add(new Score(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS, ZoneDeCollisionModel, ZoneDeCollisionCheckPoint));
 
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();

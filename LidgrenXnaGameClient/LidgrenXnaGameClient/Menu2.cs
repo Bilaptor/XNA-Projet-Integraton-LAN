@@ -267,7 +267,7 @@ namespace XnaGameClient
                         break;
 
                     case GameStat.Commandes:
-                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("back ground menu"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("back ground menu"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
                         btnAnnuler.Draw(spriteBatch);
 
                         break;
