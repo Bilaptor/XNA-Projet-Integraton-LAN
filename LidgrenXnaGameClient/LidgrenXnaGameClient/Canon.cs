@@ -14,10 +14,12 @@ namespace XnaGameClient
 {
     public class Canon : ObjetDeBase
     {
+        public Vector3 PositionCanon { get; set; }
+
         public Canon(Game jeu, String nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale)
             : base(jeu, nomModèle ,échelleInitiale, rotationInitiale, positionInitiale)
         {
-
+            PositionCanon = positionInitiale;
         }
 
         public override void Initialize()

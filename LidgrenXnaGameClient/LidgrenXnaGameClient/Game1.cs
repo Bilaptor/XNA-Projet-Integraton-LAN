@@ -38,11 +38,14 @@ namespace XnaGameClient
         const int LIMITE_POSITION_Z_AVANT_PLATEFORMES = -30;
 
         //limites positions canons
-        const int LIMITE_POSITION_X_DROITE_CANONS = 240;
-        const int LIMITE_POSITION_X_GAUCHE_CANONS = 10;
-        const int LIMITE_POSITION_Z_ARRIÈRE_CANONS = -240;
-        const int LIMITE_POSITION_Z_AVANT_CANONS = -10;
+        const int LIMITE_POSITION_X_DROITE_CANONS = 250;
+        const int LIMITE_POSITION_X_GAUCHE_CANONS = 0;
+        const int LIMITE_POSITION_Z_ARRIÈRE_CANONS = -250;
+        const int LIMITE_POSITION_Z_AVANT_CANONS = 0;
         const int POSITION_Y_CANONS = 75;
+
+        const int NB_CANONS_PAR_MURS = 5;
+        const float ÉCHELLE_CANONS = 0.02f;
 
         //limites des 9 sections de l'aire de jeu
         const int LIMITE_ZONES_1_4_7_X_DROITE = 80;
@@ -201,7 +204,7 @@ namespace XnaGameClient
             Lave = new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD);
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
-            Components.Add(new Score(this, "Arial20", Color.Chartreuse, INTERVALLE_CALCUL_FPS,CaméraJeu.Position));
+            Components.Add(new Score(this, "Arial20", Color.Chartreuse, INTERVALLE_CALCUL_FPS, CaméraJeu.Position));
 
 
             GérerPositionsPlateformesHorizontales();
@@ -209,7 +212,7 @@ namespace XnaGameClient
             GérerPositionsPlateformesSuivantSpline();
             GérerPositionCheckpoint();
             GérerPositionsCanons();
-            
+
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
@@ -242,7 +245,7 @@ namespace XnaGameClient
 
         }
 
-        
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -252,7 +255,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= INTERVALLE_UPDATE)
             {
                 TempsÉcouléDepuisMAJ = 0;
-                
+
                 //
                 // Collect input
                 //
@@ -439,14 +442,59 @@ namespace XnaGameClient
 
             Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint / 2, 23, Position_Z_checkpoint / 2), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
             Components.Add(new CheckpointAnimé(this, 1f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + 5, POSITION_Y_CHECKPOINT, Position_Z_checkpoint + 5), Color.Yellow, DimensionCheckpoint, INTERVALLE_MAJ_STANDARD));
-            
+
+        }
+
+        void GérerPositionsCanonsMurGauche()
+        {
+            Position_X_canons = LIMITE_POSITION_X_GAUCHE_CANONS;
+
+            for (int cpt = 0; cpt < NB_CANONS_PAR_MURS; ++cpt)
+            {
+                Position_Z_canons = GénérateurAléatoire.Next(LIMITE_POSITION_Z_ARRIÈRE_CANONS, LIMITE_POSITION_Z_AVANT_CANONS);
+                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, Vector3.Zero, new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+            }
+        }
+
+        void GérerPositionCanonsMurDroite()
+        {
+            Position_X_canons = LIMITE_POSITION_X_DROITE_CANONS;
+
+            for (int cpt = 0; cpt < NB_CANONS_PAR_MURS; ++cpt)
+            {
+                Position_Z_canons = GénérateurAléatoire.Next(LIMITE_POSITION_Z_ARRIÈRE_CANONS, LIMITE_POSITION_Z_AVANT_CANONS);
+                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0, MathHelper.Pi, 0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+            }
+        }
+
+        void GérerPositionsCanonsMurAvant()
+        {
+            Position_Z_canons = LIMITE_POSITION_Z_AVANT_CANONS;
+
+            for (int cpt = 0; cpt < NB_CANONS_PAR_MURS; ++cpt)
+            {
+                Position_X_canons = GénérateurAléatoire.Next(LIMITE_POSITION_X_GAUCHE_CANONS, LIMITE_POSITION_X_DROITE_CANONS);
+                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0,MathHelper.PiOver2,0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+            }
+        }
+
+        void GérerPositionsCanonsMurArrière()
+        {
+            Position_Z_canons = LIMITE_POSITION_Z_ARRIÈRE_CANONS;
+
+            for (int cpt = 0; cpt < NB_CANONS_PAR_MURS; ++cpt)
+            {
+                Position_X_canons = GénérateurAléatoire.Next(LIMITE_POSITION_X_GAUCHE_CANONS, LIMITE_POSITION_X_DROITE_CANONS);
+                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0, -MathHelper.PiOver2 , 0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+            }
         }
 
         void GérerPositionsCanons()
         {
-            Position_X_canons = 250;
-            Position_Z_canons = -240;
-            Components.Add(new Canon(this, "canon", 0.02f, new Vector3(0 ,MathHelper.Pi,0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+            GérerPositionCanonsMurDroite();
+            GérerPositionsCanonsMurGauche();
+            GérerPositionsCanonsMurAvant();
+            GérerPositionsCanonsMurArrière();
         }
 
         protected override void Draw(GameTime gameTime)
