@@ -29,8 +29,8 @@ namespace XnaGameClient
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
 
-        const int NB_DE_PLATEFORMES_HORIZONTALES = 30;
-        const int NB_DE_PLATEFORMES_VERTICALES = 30;
+        const int NB_DE_PLATEFORMES_HORIZONTALES = 25;
+        const int NB_DE_PLATEFORMES_VERTICALES = 25;
         const int POSITION_Y_PLATEFORMES = 45;
         const int POSITION_Y_CHECKPOINT = 50;
 
@@ -74,7 +74,6 @@ namespace XnaGameClient
 
         int[] TableauCoordonnéesX_Spline { get; set; }
         int[] TableauCoordonnéesZ_Spline { get; set; }
-        List<Vector3> ListeDeCoordonnées { get; set; }
 
         int IndiceTableauLimitesAireJeu { get; set; }
         int IndiceTableauAngleFlottaison { get; set; }
@@ -115,7 +114,7 @@ namespace XnaGameClient
 
         BoundingBox ZoneDeCollisionModel { get; set; }
         BoundingBox ZoneDeCollisionCheckPoint { get; set; }
-       
+
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
@@ -235,7 +234,6 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= INTERVALLE_UPDATE)
             {
                 TempsÉcouléDepuisMAJ = 0;
-                MettreEnPause();
 
                 //
                 // Collect input
@@ -293,7 +291,7 @@ namespace XnaGameClient
                                 float positionX = incomingMessage.ReadInt32();
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
-                                
+
                                 Adversaire.DonnerPosition(new Vector3(positionX, positionY, positionZ));
                                 hasBeenRead = true;
                             }
@@ -314,7 +312,7 @@ namespace XnaGameClient
                 //    Positions[who] = new Vector2(x, y);
                 //    break;
             }
-            
+
             base.Update(gameTime);
         }
 
@@ -442,14 +440,14 @@ namespace XnaGameClient
             Position_X_checkpoint = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
             Position_Z_checkpoint = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
 
-            Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint/2, 23, Position_Z_checkpoint/2), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
-            Components.Add(new CheckpointAnimé(this, 5f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint+5, POSITION_Y_CHECKPOINT, Position_Z_checkpoint+5), Color.Yellow, new Vector3(DIMENSION_CHECKPOINT,DIMENSION_CHECKPOINT,DIMENSION_CHECKPOINT) ,INTERVALLE_MAJ_STANDARD));
+            Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint / 2, 23, Position_Z_checkpoint / 2), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new CheckpointAnimé(this, 5f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + 5, POSITION_Y_CHECKPOINT, Position_Z_checkpoint + 5), Color.Yellow, new Vector3(DIMENSION_CHECKPOINT, DIMENSION_CHECKPOINT, DIMENSION_CHECKPOINT), INTERVALLE_MAJ_STANDARD));
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-          
+
             base.Draw(gameTime);
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
@@ -472,22 +470,7 @@ namespace XnaGameClient
 
             base.OnExiting(sender, args);
         }
-        protected void MettreEnPause()
-        {
-            Adversaire.Enabled = !LeMenu.Pause;
-            ArrièrePlan.Enabled = !LeMenu.Pause;
-            Lave.Enabled = !LeMenu.Pause;
-            //ObjDemo.Enabled = !LeMenu.Pause;
-            CaméraJeu.Enabled = !LeMenu.Pause;
-            PlateHori.Enabled = !LeMenu.Pause;
-            PlateSpline.Enabled = !LeMenu.Pause;
-            Plateverti.Enabled = !LeMenu.Pause;
-            TuileTex1.Enabled = !LeMenu.Pause;
-            TuileTex2.Enabled = !LeMenu.Pause;
-            TuileTex3.Enabled = !LeMenu.Pause;
-            TuileTex4.Enabled = !LeMenu.Pause;
 
-        }
     }
     enum PacketTypes
     {

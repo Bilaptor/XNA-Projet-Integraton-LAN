@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace XnaGameClient
 {
-    public class ArrièrePlanDéroulant : Microsoft.Xna.Framework.DrawableGameComponent
+    public class ArrièrePlanDéroulant : Microsoft.Xna.Framework.DrawableGameComponent, IPausable
     {
         const float vitesseDéplacement = 0.5f;
         Vector2 Scale { get; set; }
@@ -33,14 +33,14 @@ namespace XnaGameClient
             NomImage = nomImage;
             IntervalleMAJ = intervalMAJ;
         }
-        
+
         public override void Initialize()
         {
             base.Initialize();
             Scale = new Vector2(Game.Window.ClientBounds.Width / (float)ImageDeFond.Width, Game.Window.ClientBounds.Height / (float)ImageDeFond.Height);
             Déplacement = new Vector2(1, 0);
             ZoneAffichage1 = new Vector2(0, 0);
-            ZoneAffichage2 = new Vector2(ZoneAffichage1.X +ImageDeFond.Width * Scale.X, ZoneAffichage1.Y);
+            ZoneAffichage2 = new Vector2(ZoneAffichage1.X + ImageDeFond.Width * Scale.X, ZoneAffichage1.Y);
         }
 
         protected override void LoadContent()
@@ -61,7 +61,12 @@ namespace XnaGameClient
                 TempsÉcouléDepuisMAJ = 0;
             }
         }
-        
+
+        public void GérerPause(bool enPause)
+        {
+            this.Enabled = !enPause;
+        }
+
         public override void Draw(GameTime gameTime)
         {
             GestionSprites.Begin();
@@ -73,7 +78,7 @@ namespace XnaGameClient
         private void DéplacerBackground()
         {
             CptFrames = 0;
-            if(ZoneAffichage1.X < -ImageDeFond.Width * Scale.X || ZoneAffichage1.X > ImageDeFond.Width * Scale.X)
+            if (ZoneAffichage1.X < -ImageDeFond.Width * Scale.X || ZoneAffichage1.X > ImageDeFond.Width * Scale.X)
             {
                 ZoneAffichage1 = new Vector2(vitesseDéplacement, 0);
             }
