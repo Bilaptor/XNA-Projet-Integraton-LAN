@@ -58,15 +58,11 @@ namespace XnaGameClient
             CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
             CréerPointDeVue(positionCaméra, cible, orientation);
             EstEnZoom = false;
-
-            NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
-
-            client = new NetClient(config);
         }
 
         public override void Initialize()
         {
+            client = (Game as Game1).client;
             controller = new ControllerClavier(Game, OriginalMouseState);
 
             VitesseRotationManette = VITESSE_INITIALE_ROTATION_MANETTE;
@@ -166,7 +162,8 @@ namespace XnaGameClient
 
         private void GérerDéplacement()
         {
-            Vector3 nouvellePosition = Position;
+
+            Vector3 AnciennePosition = Position;
             float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
             float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
@@ -183,6 +180,8 @@ namespace XnaGameClient
             Position = Position + déplacementDirection * Direction;
             Position = Position - déplacementLatéral * Latéral;
 
+            if(AnciennePosition != Position)
+            {
             // envoie la position au serveur
             NetOutgoingMessage om = client.CreateMessage();
             om.Write((byte)PacketTypes.POSITION);
@@ -190,6 +189,7 @@ namespace XnaGameClient
             om.Write(Position.Y);
             om.Write(Position.Z);
             client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
         }
 
         //private void GérerRotation()
