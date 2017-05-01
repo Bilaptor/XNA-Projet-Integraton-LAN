@@ -122,8 +122,10 @@ namespace XnaGameClient
 
         Texture2D[] Textures;
         Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
-        NetClient client;
+        public NetClient client;
         bool Pause { get; set; }
+
+        ControllerNet controleurNet;
 
         //position de l'adversaire qui vas etre modifié par le serveur
         public Vector3 PositionAdversaireSelonServeur { get; set; }
@@ -171,7 +173,7 @@ namespace XnaGameClient
             GestionnaireDeModèles = new RessourcesManager<Model>(this, "Models");
             GestionInput = new InputManager(this);
             GénérateurAléatoire = new Random();
-
+            controleurNet = new ControllerNet(this);
             //IsMouseVisible = true;
             //fait en sorte que la souris reste au milieu de l'écran
             Mouse.SetPosition(this.Window.ClientBounds.Width / 2, this.Window.ClientBounds.Height / 2);
@@ -265,45 +267,8 @@ namespace XnaGameClient
                     client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                // read messages
-                NetIncomingMessage incomingMessage;
-                while ((incomingMessage = client.ReadMessage()) != null)
-                {
-                    switch (incomingMessage.MessageType)
-                    {
-                        case NetIncomingMessageType.DiscoveryResponse:
+                controleurNet.LireMessages();
 
-                            client.Connect(incomingMessage.SenderEndPoint);
-                            break;
-
-                        case NetIncomingMessageType.Data:
-                            bool hasBeenRead = false;
-                            if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
-                            {
-                                long who = incomingMessage.ReadInt64();
-                                int x = incomingMessage.ReadInt32();
-                                int y = incomingMessage.ReadInt32();
-                                Positions[who] = new Vector2(x, y);
-                                hasBeenRead = true;
-                            }
-                            if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITION)
-                            {
-                                float positionX = incomingMessage.ReadInt32();
-                                float positionY = incomingMessage.ReadInt32();
-                                float positionZ = incomingMessage.ReadInt32();
-
-                                Adversaire.DonnerPosition(new Vector3(positionX, positionY, positionZ));
-                                hasBeenRead = true;
-                            }
-                            break;
-
-                        default:
-                            // Should not happen and if happens, don't care
-                            Console.WriteLine(incomingMessage.ReadString() + " Strange message");
-                            break;
-
-                    }
-                }
                 //case NetIncomingMessageType.Data:
                 //    // server sent a position update
                 //    long who = incomingMessage.ReadInt64();
@@ -474,7 +439,7 @@ namespace XnaGameClient
     }
     enum PacketTypes
     {
-        LOGIN,
+        CONNECTIONNUMBER,
         POSITION,
         POSITIONJEU2D
     }

@@ -15,10 +15,12 @@ namespace XnaGameServer
             NetPeerConfiguration config = new NetPeerConfiguration("xnaapp");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.Port = 14242;
-            config.MaximumConnections = 2;
+            config.MaximumConnections = 200;
             float XInput = 0;
             float YInput = 0;
             float ZInput = 0;
+            int UniqueIdentifier = 0;
+
 
             // create and start server
             NetServer server = new NetServer(config);
@@ -57,7 +59,16 @@ namespace XnaGameServer
                                 //
                                 // A new player just connected!
                                 //
+                                ++UniqueIdentifier;
                                 Console.WriteLine(NetUtility.ToHexString(msg.SenderConnection.RemoteUniqueIdentifier) + " connected!");
+
+                                foreach (NetConnection player in server.Connections)
+                                {
+                                    NetOutgoingMessage omIdentifier = server.CreateMessage();
+                                    omIdentifier.Write((byte)PacketTypes.POSITION);
+                                    omIdentifier.Write((byte)PacketTypes.CONNECTIONNUMBER);
+                                    server.SendMessage(omIdentifier, player, NetDeliveryMethod.ReliableOrdered);
+                                }
 
                                 // randomize his position and store in connection tag
                                 msg.SenderConnection.Tag = new float[] 
@@ -126,7 +137,6 @@ namespace XnaGameServer
 
                                 om.Write((byte)PacketTypes.POSITIONJEU2D);
 
-
                                 // write who this position is for
                                 om.Write(otherPlayer.RemoteUniqueIdentifier);
 
@@ -159,7 +169,7 @@ namespace XnaGameServer
     }
     enum PacketTypes
     {
-        LOGIN,
+        CONNECTIONNUMBER,
         POSITION,
         POSITIONJEU2D
     }
