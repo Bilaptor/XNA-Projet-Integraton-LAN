@@ -35,25 +35,22 @@ namespace XnaGameClient
 
         BoundingBox ZoneModel { get; set; }
         BoundingBox ZoneCheckPoint { get; set; }
+        Vector3 PositionModel { get; set; }
+        Vector3 PositionCheckpoint { get; set; }
 
 
         SpriteBatch GestionSprites { get; set; }
         SpriteFont ArialFont { get; set; }
 
 
-        public Score(Game game, string font, Color couleur, float intervalleMAJ, BoundingBox zoneModel, BoundingBox zoneCheckPoint)
+        public Score(Game game, string font, Color couleur, float intervalleMAJ, Vector3 positionModel, Vector3 positionCheckpoint, BoundingBox zoneModel, BoundingBox zoneCheckPoint)
             : base(game)
         {
-            // TODO: Construct any child components here
             Jeu = game;
             ZoneCheckPoint = zoneCheckPoint;
             ZoneModel = zoneModel;
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
         public override void Initialize()
         {
             Temps…coulÈDepuisMAJ = 0;
@@ -78,10 +75,7 @@ namespace XnaGameClient
                 Temps…coulÈDepuisMAJ = 0;
             }
         }
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         public override void Draw(GameTime gameTime)
         {
             GestionSprites.Begin();
