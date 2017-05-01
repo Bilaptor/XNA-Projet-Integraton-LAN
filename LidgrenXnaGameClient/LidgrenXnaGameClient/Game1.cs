@@ -22,9 +22,6 @@ namespace XnaGameClient
 
         const float ANGLE_DE_FLOTTAISON = MathHelper.Pi / 360;
 
-        const float DIMENSION_CHECKPOINT = 0.5f;
-
-
         //dimensions plateformes
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
@@ -111,7 +108,8 @@ namespace XnaGameClient
         Vector3[] Tuile4 { get; set; }
         Vector3[] TableauPositionPlateformesHorizontales { get; set; }
 
-
+        Vector3 DimensionCheckpoint { get; set; }
+        Vector3 DimensionModel { get; set; }
         BoundingBox ZoneDeCollisionModel { get; set; }
         BoundingBox ZoneDeCollisionCheckPoint { get; set; }
 
@@ -152,10 +150,16 @@ namespace XnaGameClient
         protected override void Initialize()
         {
             Pause = true;
+            DimensionCheckpoint = new Vector3(2.5f, 2.5f, 2.5f);
+            DimensionModel = new Vector3(1, 1, 1);
+            ZoneDeCollisionCheckPoint = new BoundingBox(Vector3.Zero, DimensionCheckpoint);
+            ZoneDeCollisionModel = new BoundingBox(Vector3.Zero, DimensionModel);
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
             InitialierTableauxCoordonnéesSpline();
+            //InitialiserListeCoordonnéesSpline();
             TableauPositionPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_HORIZONTALES];
+            ZoneDeCollisionCheckPoint = new BoundingBox(Vector3.Zero, DimensionCheckpoint);
 
             PositionCaméra = new Vector3(125, 250, -125);
             PositionCibleCaméra = new Vector3(125, 0, -125);
@@ -190,7 +194,7 @@ namespace XnaGameClient
             Lave = new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD);
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
-            Components.Add(new Score(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS, ZoneDeCollisionModel, ZoneDeCollisionCheckPoint));
+            Components.Add(new Score(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS, Vector3.Zero, new Vector3(Position_X_checkpoint,POSITION_Y_CHECKPOINT,Position_Z_checkpoint), ZoneDeCollisionModel, ZoneDeCollisionCheckPoint));
 
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
@@ -307,6 +311,16 @@ namespace XnaGameClient
             TableauCoordonnéesZ_Spline = new int[] { -25, -45, -55, -80, -105, -120, -115, -100, -85, -65, -50, -35, -20, -15, -20, -15, -10, -15 };
         }
 
+        //void InitialiserListeCoordonnéesSpline()
+        //{
+        //    ListeDeCoordonnées = new List<Vector3>();
+
+        //    for(int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
+        //    {
+        //        ListeDeCoordonnées.Add(new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]));
+        //    }
+        //}
+
         void CréerMur1()
         {
             Tuile1 = new Vector3[4];
@@ -393,9 +407,15 @@ namespace XnaGameClient
         {
             for (int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
             {
-                PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt");
+                PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, MathHelper.Pi / 360, "SplineX.txt", "SplineZ.txt");
                 Components.Add(PlateSpline);
             }
+
+            //for (int cpt = 0; cpt<ListeDeCoordonnées.Count; ++cpt)
+            //{
+            //    PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, ListeDeCoordonnées);
+            //    Components.Add(PlateSpline);
+            //}
         }
 
         void GérerPositionCheckpoint()
@@ -406,7 +426,7 @@ namespace XnaGameClient
             Position_Z_checkpoint = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
 
             Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint / 2, 23, Position_Z_checkpoint / 2), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
-            Components.Add(new CheckpointAnimé(this, 5f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + 5, POSITION_Y_CHECKPOINT, Position_Z_checkpoint + 5), Color.Yellow, new Vector3(DIMENSION_CHECKPOINT, DIMENSION_CHECKPOINT, DIMENSION_CHECKPOINT), INTERVALLE_MAJ_STANDARD));
+            Components.Add(new CheckpointAnimé(this, 1f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + 5, POSITION_Y_CHECKPOINT, Position_Z_checkpoint + 5), Color.Yellow, DimensionCheckpoint, INTERVALLE_MAJ_STANDARD));
         }
 
         protected override void Draw(GameTime gameTime)

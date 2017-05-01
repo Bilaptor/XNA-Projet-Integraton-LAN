@@ -109,7 +109,7 @@ namespace XnaGameClient
             btnJoin.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 200));
 
             btnAnnuler = new cButton(Jeu.Content.Load<Texture2D>("button model ANNULER"), graphics.GraphicsDevice);
-            btnAnnuler.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 500));
+            btnAnnuler.setPosition(new Vector2(10, 400));
 
             btnCommandes = new cButton(Jeu.Content.Load<Texture2D>("button model COMMANDES"), graphics.GraphicsDevice);
             btnCommandes.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 300));
@@ -148,6 +148,7 @@ namespace XnaGameClient
                     btnHost.Update(mouse);
                     if (btnHost.isClicked)
                     {
+                        Jeu.IsMouseVisible = false;
                         accepte = false;
                         Pause = false;
                         SetPause(false);
@@ -168,7 +169,10 @@ namespace XnaGameClient
                     btnJoin.Update(mouse);
                     if (btnJoin.isClicked == true)
                     {
-                        CurrentGameStat = GameStat.Join;
+                        Jeu.IsMouseVisible = false;
+                        accepte = false;
+                        Pause = false;
+                        SetPause(false);
                     }
 
                     btnCommandes.Update(mouse);
@@ -265,7 +269,7 @@ namespace XnaGameClient
                         break;
 
                     case GameStat.Commandes:
-                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("back ground menu"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
                         btnAnnuler.Draw(spriteBatch);
 
                         break;
