@@ -41,7 +41,7 @@ namespace XnaGameClient
         int screenHeight = 480;
         //int screenWidth = 1600;
         //int screenHeight = 900;
-      
+
 
         cButton btnHost;
         cButton btnJoin;
@@ -59,8 +59,8 @@ namespace XnaGameClient
             graphics.IsFullScreen = false;
             Jeu.Content.RootDirectory = "Content";
             Pause = pause;
-    
 
+            SetPause(pause);
 
         }
 
@@ -74,7 +74,7 @@ namespace XnaGameClient
         {
             // TODO: Add your initialization logic here
             //Services.AddService(typeof(InputManager), GestionInput);
-
+            Pause = true;
             base.Initialize();
         }
 
@@ -85,6 +85,7 @@ namespace XnaGameClient
         /// </summary>
         protected override void LoadContent()
         {
+            //SetPause(true);
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -93,7 +94,7 @@ namespace XnaGameClient
             graphics.PreferredBackBufferHeight = screenHeight;
             graphics.ApplyChanges();
             Jeu.IsMouseVisible = true;
-            
+
 
             btnHost = new cButton(Jeu.Content.Load<Texture2D>("button model host"), graphics.GraphicsDevice);
             btnHost.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 100));
@@ -108,7 +109,7 @@ namespace XnaGameClient
             btnJoin.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 200));
 
             btnAnnuler = new cButton(Jeu.Content.Load<Texture2D>("button model ANNULER"), graphics.GraphicsDevice);
-            btnAnnuler.setPosition(new Vector2(10, 400));
+            btnAnnuler.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 500));
 
             btnCommandes = new cButton(Jeu.Content.Load<Texture2D>("button model COMMANDES"), graphics.GraphicsDevice);
             btnCommandes.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 300));
@@ -124,6 +125,13 @@ namespace XnaGameClient
             // TODO: Unload any non ContentManager content here
         }
 
+        private void SetPause(bool enPause)
+        {
+            foreach (GameComponent g in Game.Components)
+                if (g is IPausable)
+                    (g as IPausable).GérerPause(enPause);
+        }
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -131,7 +139,7 @@ namespace XnaGameClient
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            
+
             MouseState mouse = Mouse.GetState();
 
             switch (CurrentGameStat)
@@ -142,7 +150,7 @@ namespace XnaGameClient
                     {
                         accepte = false;
                         Pause = false;
-
+                        SetPause(false);
                     }
 
                     //btnOptions.Update(mouse);
@@ -160,8 +168,7 @@ namespace XnaGameClient
                     btnJoin.Update(mouse);
                     if (btnJoin.isClicked == true)
                     {
-                        accepte = false;
-                        Pause = false;
+                        CurrentGameStat = GameStat.Join;
                     }
 
                     btnCommandes.Update(mouse);
@@ -220,7 +227,7 @@ namespace XnaGameClient
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Draw(GameTime gameTime)
         {
-            if(accepte == true)
+            if (accepte == true)
             {
                 GraphicsDevice.Clear(Color.CornflowerBlue);
 
@@ -258,7 +265,7 @@ namespace XnaGameClient
                         break;
 
                     case GameStat.Commandes:
-                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("back ground menu"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
+                        spriteBatch.Draw(Jeu.Content.Load<Texture2D>("background 1"), new Rectangle(0, 0, screenWidth, screenHeight), Color.Red);
                         btnAnnuler.Draw(spriteBatch);
 
                         break;
@@ -268,7 +275,7 @@ namespace XnaGameClient
             }
         }
 
-        
-            
+
+
     }
 }

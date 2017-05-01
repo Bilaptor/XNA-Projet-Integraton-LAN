@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XnaGameClient
 {
-    public abstract class PrimitiveDeBaseAniméePourPlateforme : PrimitiveDeBase
+    public abstract class PrimitiveDeBaseAniméePourPlateforme : PrimitiveDeBase, IPausable
     {
         protected float Homothétie { get; set; }
         protected Vector3 Position { get; set; }
@@ -35,7 +35,7 @@ namespace XnaGameClient
         }
 
         protected PrimitiveDeBaseAniméePourPlateforme(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
-           :base(jeu, homothétieInitiale, rotationInitiale, positionInitiale)
+           : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale)
         {
             IntervalleMAJ = intervalleMAJ;
         }
@@ -70,6 +70,11 @@ namespace XnaGameClient
                 EffectuerMiseÀJour();
                 TempsÉcouléDepuisMAJ = 0;
             }
+        }
+
+        public void GérerPause(bool enPause)
+        {
+            this.Enabled = !enPause;
         }
 
         protected virtual void EffectuerMiseÀJour()

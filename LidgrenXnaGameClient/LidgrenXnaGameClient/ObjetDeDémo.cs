@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XnaGameClient
 {
-    public class ObjetDeDémo : ObjetDeBase
+    public class ObjetDeDémo : ObjetDeBase, IPausable
     {
         const float MAX_GROSSISSEMENT = 1F;
         const float MIN_GROSSISSEMENT = 0.005F;
@@ -32,7 +32,7 @@ namespace XnaGameClient
         {
             base.Initialize();
             Vector3 vecteurModifiant = new Vector3(0, 0, 0);
-            
+
         }
 
         protected override void LoadContent()
@@ -52,6 +52,11 @@ namespace XnaGameClient
                 TempsÉcouléDepuisMAJ = 0;
                 CalculerGrand();
             }
+        }
+
+        public void GérerPause(bool enPause)
+        {
+            this.Enabled = !enPause;
         }
 
         private void CalculerGrand()
