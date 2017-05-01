@@ -12,6 +12,8 @@ namespace XnaGameClient
         const float AUCUNE_HOMOTHÉTIE = 1f;
         const float AVANT_PLAN = 0f;
 
+        Color Couleur { get; set; }
+
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         int CptFrames { get; set; }
@@ -29,6 +31,7 @@ namespace XnaGameClient
            : base(game)
         {
             IntervalleMAJ = intervalleMAJ;
+            Couleur = couleur;
         }
 
         public override void Initialize()
@@ -76,7 +79,7 @@ namespace XnaGameClient
         public override void Draw(GameTime gameTime)
         {
             GestionSprites.Begin();
-            GestionSprites.DrawString(ArialFont, ChaîneFPS, PositionChaîne, Color.Chartreuse, AUCUNE_ROTATION,
+            GestionSprites.DrawString(ArialFont, ChaîneFPS, PositionChaîne, Couleur, AUCUNE_ROTATION,
                                       Vector2.Zero, AUCUNE_HOMOTHÉTIE, SpriteEffects.None, AVANT_PLAN);
             GestionSprites.End();
         }

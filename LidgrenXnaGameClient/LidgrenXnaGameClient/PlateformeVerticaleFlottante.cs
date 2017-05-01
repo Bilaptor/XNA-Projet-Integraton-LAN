@@ -36,12 +36,12 @@ namespace XnaGameClient
             if (AngleFlottaison < LIMITE_ANGLE_FLOTTAISON)
             {
                 Position += Vector3.Transform(Position, Matrix.CreateTranslation(0, (float)Math.Sin(AngleFlottaison), 0));
-                AngleFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+                AngleFlottaison += IncrémentAngleDeFlottaison;
             }
             else
             {
                 Position -= Vector3.Transform(Position, Matrix.CreateTranslation(0, (float)Math.Sin(AngleFlottaison), 0));
-                AngleFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+                AngleFlottaison += IncrémentAngleDeFlottaison;
             }
 
         }

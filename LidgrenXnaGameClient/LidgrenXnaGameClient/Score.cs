@@ -23,6 +23,8 @@ namespace XnaGameClient
         const float AUCUNE_HOMOTHÉTIE = 1f;
         const float AVANT_PLAN = 0f;
 
+        Vector3 Position { get; set; }
+        Color Couleur { get; set; }
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         int Compteur { get; set; }
@@ -41,27 +43,31 @@ namespace XnaGameClient
         SpriteFont ArialFont { get; set; }
 
 
-        public Score(Game game, string font, Color couleur, float intervalleMAJ, BoundingBox zoneModel, BoundingBox zoneCheckPoint)
+        public Score(Game game, string font, Color couleur, float intervalleMAJ, Vector3 positionCaméra)
             : base(game)
         {
-            // TODO: Construct any child components here
             Jeu = game;
-            ZoneCheckPoint = zoneCheckPoint;
-            ZoneModel = zoneModel;
+            Couleur = couleur;
+            Position = positionCaméra;
         }
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
         public override void Initialize()
         {
+            base.Initialize();
             TempsÉcouléDepuisMAJ = 0;
             Compteur = 0;
             PositionHautGauche = new Vector2(Game.Window.ClientBounds.Width - MARGE_GAUCHE,
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
+            foreach(Checkpoint T in Game.Components.Where(c => c is Checkpoint))
+            {
+                ZoneCheckPoint = new BoundingBox(T.Position - new Vector3(6, 6, 6), T.Position + new Vector3(6, 6, 6));
+            }
 
-            base.Initialize();
+            
+            ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
+            
+
+           
         }
         protected override void LoadContent()
         {
@@ -74,29 +80,34 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += tempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
+                Position = Position;
+                ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
                 CalculerScore();
                 TempsÉcouléDepuisMAJ = 0;
             }
         }
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
         public override void Draw(GameTime gameTime)
         {
             GestionSprites.Begin();
-            GestionSprites.DrawString(ArialFont, ChaîneSCORE, PositionChaîne, Color.Chartreuse, AUCUNE_ROTATION,
+            GestionSprites.DrawString(ArialFont, ChaîneSCORE, PositionChaîne, Couleur, AUCUNE_ROTATION,
                                       Vector2.Zero, AUCUNE_HOMOTHÉTIE, SpriteEffects.None, AVANT_PLAN);
             GestionSprites.End();
         }
 
         void CalculerScore()
         {
-            if(ZoneModel.Intersects(ZoneCheckPoint))
+            if (ZoneModel.Intersects(ZoneCheckPoint))
             {
                 Compteur += 1;
                 ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
             }
+            else
+            {
+                ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
+            }
+
+            
         }
     }
 }
