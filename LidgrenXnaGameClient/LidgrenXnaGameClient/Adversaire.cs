@@ -19,11 +19,12 @@ namespace XnaGameClient
         Caméra CaméraJeu { get; set; }
         Game Jeu { get; set; }
         Vector3 PositionSelonServeur { get; set; }
-       
+        ControllerNet ControleurNet { get; set; }
+
 
         public Adversaire(Game jeu, String nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
-             
-            : base(jeu,nomModèle,échelleInitiale,rotationInitiale,positionInitiale,intervalleMAJ)
+
+            : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
 
             Jeu = jeu;
@@ -31,26 +32,27 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
-           
-                base.Initialize();
+
+            ControleurNet = new ControllerNet(Game);
+            base.Initialize();
             //foreach (GameComponent c in Game.Components)
             //{
             //    compteur += 1;
 
             //}
-            foreach(CaméraSubjective T in Game.Components.Where(c => c is CaméraSubjective))
-            {
-                PositionASuivre = T.Position;
-            }
-            
-            TempsÉcouléDepuisMAJ = 0;
+            //foreach (CaméraSubjective T in Game.Components.Where(c => c is CaméraSubjective))
+            //{
+            //    PositionASuivre = T.Position;
+            //}
+
+            //TempsÉcouléDepuisMAJ = 0;
 
 
         }
         protected override void LoadContent()
         {
             base.LoadContent();
-            CaméraJeu = Game.Services.GetService(typeof(Caméra)) as Caméra;
+            //CaméraJeu = Game.Services.GetService(typeof(Caméra)) as Caméra;
         }
 
         public override void Update(GameTime gameTime)
@@ -59,9 +61,8 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleVariation)
             {
-                //Position = CaméraJeu.Position + new Vector3(0,0,0);
-                //Position = ControllerNet.
-                Position = PositionSelonServeur;
+                Position = ControleurNet.GetPosition();
+                //Position = PositionSelonServeur;
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
             }
@@ -70,10 +71,10 @@ namespace XnaGameClient
             base.Update(gameTime);
         }
 
-        public void DonnerPosition(Vector3 nouvellePosition)
-        {
-             PositionSelonServeur = nouvellePosition;
-        }
+        //public void DonnerPosition(Vector3 nouvellePosition)
+        //{
+        //    PositionSelonServeur = nouvellePosition;
+        //}
 
 
     }

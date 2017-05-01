@@ -30,13 +30,14 @@ namespace XnaGameClient
         }
 
         public ControllerNet(Game game)
-            :base(game)
+            : base(game)
         {
 
         }
 
         public override void Initialize()
         {
+            Position = new Vector3(0, 0, 0);
             base.Initialize();
         }
 
@@ -64,25 +65,34 @@ namespace XnaGameClient
                         if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.CONNECTIONNUMBER)
                         {
                             Identifiant = incomingMessage.ReadInt32();
+                            hasBeenRead = true;
                         }
                         if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
                         {
-                            long who = incomingMessage.ReadInt64();
-                            int x = incomingMessage.ReadInt32();
-                            int y = incomingMessage.ReadInt32();
-                            //Positions[who] = new Vector2(x, y);
-                            hasBeenRead = true;
+                            if (incomingMessage.ReadInt32() != Identifiant)
+                            {
+                                long who = incomingMessage.ReadInt64();
+                                int x = incomingMessage.ReadInt32();
+                                int y = incomingMessage.ReadInt32();
+                                //Positions[who] = new Vector2(x, y);
+                                hasBeenRead = true;
+                            }
                         }
                         if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITION)
                         {
-                            float positionX = incomingMessage.ReadInt32();
-                            float positionY = incomingMessage.ReadInt32();
-                            float positionZ = incomingMessage.ReadInt32();
+                            if (incomingMessage.ReadInt32() != Identifiant)
+                            {
 
-                            Position = new Vector3(positionX, positionY, positionZ);
 
-                            //Adversaire.DonnerPosition(new Vector3(positionX, positionY, positionZ));
-                            hasBeenRead = true;
+                                float positionX = incomingMessage.ReadInt32();
+                                float positionY = incomingMessage.ReadInt32();
+                                float positionZ = incomingMessage.ReadInt32();
+
+                                Position = new Vector3(positionX, positionY, positionZ);
+
+                                //Adversaire.DonnerPosition(new Vector3(positionX, positionY, positionZ));
+                                hasBeenRead = true;
+                            }
                         }
                         break;
 
