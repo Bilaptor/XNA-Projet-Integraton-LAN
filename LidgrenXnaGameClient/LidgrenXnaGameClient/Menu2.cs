@@ -168,7 +168,9 @@ namespace XnaGameClient
                     btnJoin.Update(mouse);
                     if (btnJoin.isClicked == true)
                     {
-                        CurrentGameStat = GameStat.Join;
+                        accepte = false;
+                        Pause = false;
+                        SetPause(false);
                     }
 
                     btnCommandes.Update(mouse);
