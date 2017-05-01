@@ -28,6 +28,7 @@ namespace XnaGameClient
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         int Compteur { get; set; }
+        Caméra CaméraJeu { get; set; }
 
         string ChaîneSCORE { get; set; }
         Vector2 PositionHautGauche { get; set; }
@@ -73,6 +74,7 @@ namespace XnaGameClient
         {
             GestionSprites = Game.Services.GetService(typeof(SpriteBatch)) as SpriteBatch;
             ArialFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
+            CaméraJeu = Game.Services.GetService(typeof(Caméra)) as Caméra;
         }
         public override void Update(GameTime gameTime)
         {
@@ -80,7 +82,7 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += tempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                Position = Position;
+                Position = CaméraJeu.Position;
                 ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
                 CalculerScore();
                 TempsÉcouléDepuisMAJ = 0;
