@@ -65,8 +65,8 @@ namespace XnaGameServer
                                 foreach (NetConnection player in server.Connections)
                                 {
                                     NetOutgoingMessage omIdentifier = server.CreateMessage();
-                                    omIdentifier.Write((byte)PacketTypes.POSITION);
                                     omIdentifier.Write((byte)PacketTypes.CONNECTIONNUMBER);
+                                    omIdentifier.Write(UniqueIdentifier);
                                     server.SendMessage(omIdentifier, player, NetDeliveryMethod.ReliableOrdered);
                                 }
 

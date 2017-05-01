@@ -37,6 +37,7 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
+            Position = new Vector3(0,0,0);
             base.Initialize();
         }
 
@@ -64,6 +65,7 @@ namespace XnaGameClient
                         if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.CONNECTIONNUMBER)
                         {
                             Identifiant = incomingMessage.ReadInt32();
+                            hasBeenRead = true;
                         }
                         if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITIONJEU2D)
                         {
