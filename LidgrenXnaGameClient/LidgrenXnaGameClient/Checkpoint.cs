@@ -23,6 +23,7 @@ namespace XnaGameClient
         float DeltaY { get; set; }
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
+        public Vector3 Position { get; set; }
 
         public BoundingBox ZoneDeCollisionCheckPoint { get; set; }
         Vector3 DimensionCheckpoint { get; set; }
@@ -37,6 +38,7 @@ namespace XnaGameClient
             DeltaZ = dimension.Z;
             Origine = new Vector3(-DeltaX / 2, -DeltaY / 2, -DeltaZ / 2);
             DimensionCheckpoint = dimension;
+            Position = positionInitiale;
         }
 
         public override void Initialize()
