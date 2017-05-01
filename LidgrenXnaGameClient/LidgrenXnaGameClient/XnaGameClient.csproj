@@ -111,6 +111,7 @@
     <Compile Include="Afficheur3D.cs" />
     <Compile Include="Caméra.cs" />
     <Compile Include="CaméraSubjective.cs" />
+    <Compile Include="Canon.cs" />
     <Compile Include="cButton.cs" />
     <Compile Include="Checkpoint.cs" />
     <Compile Include="CheckpointAnimé.cs" />

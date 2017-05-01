@@ -37,6 +37,13 @@ namespace XnaGameClient
         const int LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES = -230;
         const int LIMITE_POSITION_Z_AVANT_PLATEFORMES = -30;
 
+        //limites positions canons
+        const int LIMITE_POSITION_X_DROITE_CANONS = 240;
+        const int LIMITE_POSITION_X_GAUCHE_CANONS = 10;
+        const int LIMITE_POSITION_Z_ARRIÈRE_CANONS = -240;
+        const int LIMITE_POSITION_Z_AVANT_CANONS = -10;
+        const int POSITION_Y_CANONS = 75;
+
         //limites des 9 sections de l'aire de jeu
         const int LIMITE_ZONES_1_4_7_X_DROITE = 80;
         const int LIMITE_ZONES_2_5_8_X_DROITE = 150;
@@ -83,6 +90,8 @@ namespace XnaGameClient
         int Position_X_checkpoint { get; set; }
         int Position_Z_checkpoint { get; set; }
 
+        int Position_X_canons { get; set; }
+        int Position_Z_canons { get; set; }
 
 
         float TempsÉcouléDepuisMAJ { get; set; }
@@ -199,6 +208,7 @@ namespace XnaGameClient
             GérerPositionsPlateformesVerticales();
             GérerPositionsPlateformesSuivantSpline();
             GérerPositionCheckpoint();
+            GérerPositionsCanons();
             
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), GestionnaireDeFonts);
@@ -430,6 +440,13 @@ namespace XnaGameClient
             Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint / 2, 23, Position_Z_checkpoint / 2), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
             Components.Add(new CheckpointAnimé(this, 1f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + 5, POSITION_Y_CHECKPOINT, Position_Z_checkpoint + 5), Color.Yellow, DimensionCheckpoint, INTERVALLE_MAJ_STANDARD));
             
+        }
+
+        void GérerPositionsCanons()
+        {
+            Position_X_canons = 250;
+            Position_Z_canons = -240;
+            Components.Add(new Canon(this, "canon", 0.02f, new Vector3(MathHelper.Pi,MathHelper.Pi,0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
         }
 
         protected override void Draw(GameTime gameTime)
