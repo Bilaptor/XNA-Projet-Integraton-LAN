@@ -7,7 +7,7 @@ using Lidgren.Network;
 
 namespace XnaGameClient
 {
-    class ControllerNet : Microsoft.Xna.Framework.GameComponent, IController
+    public class ControllerNet : Microsoft.Xna.Framework.GameComponent, IController
     {
         Vector3 Direction { get; set; }
         Vector3 Position { get; set; }
@@ -80,9 +80,6 @@ namespace XnaGameClient
                         }
                         if (!hasBeenRead && incomingMessage.ReadByte() == (byte)PacketTypes.POSITION)
                         {
-                            if (incomingMessage.ReadInt32() != Identifiant)
-                            {
-
                                 float positionX = incomingMessage.ReadInt32();
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
@@ -91,13 +88,12 @@ namespace XnaGameClient
 
                                 //Adversaire.DonnerPosition(new Vector3(positionX, positionY, positionZ));
                                 hasBeenRead = true;
-                            }
                         }
                         break;
 
                     default:
                         // Should not happen and if happens, don't care
-                        Console.WriteLine(incomingMessage.ReadString() + " Strange message");
+                        Console.WriteLine(incomingMessage.ReadString() + " Strange message client");
                         break;
 
                 }
