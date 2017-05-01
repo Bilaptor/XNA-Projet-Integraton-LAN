@@ -56,7 +56,7 @@ namespace XnaGameClient
 
 
 
-        Adversaire Adversaire { get; set; }
+        Adversaire Aadversaire { get; set; }
         ArrièrePlanDéroulant ArrièrePlan { get; set; }
         Lave Lave { get; set; }
         ObjetDeDémo ObjDemo { get; set; }
@@ -123,6 +123,7 @@ namespace XnaGameClient
         Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
         public NetClient client;
         bool Pause { get; set; }
+        public ControllerNet ControleurNet;
 
         ControllerNet controleurNet;
 
@@ -210,8 +211,8 @@ namespace XnaGameClient
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             //ObjDemo = new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
             //Components.Add(ObjDemo);
-            Adversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
-            Components.Add(Adversaire);
+            Aadversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
+            Components.Add(Aadversaire);
 
             LeMenu = new Menu2(this, PériphériqueGraphique, Pause);
 
