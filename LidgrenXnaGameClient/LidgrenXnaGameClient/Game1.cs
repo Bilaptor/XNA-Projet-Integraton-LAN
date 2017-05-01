@@ -446,7 +446,7 @@ namespace XnaGameClient
         {
             Position_X_canons = 250;
             Position_Z_canons = -240;
-            Components.Add(new Canon(this, "canon", 0.02f, new Vector3(MathHelper.Pi,MathHelper.Pi,0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+            Components.Add(new Canon(this, "canon", 0.02f, new Vector3(0 ,MathHelper.Pi,0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
         }
 
         protected override void Draw(GameTime gameTime)
