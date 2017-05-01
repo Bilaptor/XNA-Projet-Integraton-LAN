@@ -154,6 +154,7 @@ namespace XnaGameClient
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
             InitialierTableauxCoordonnéesSpline();
+            //InitialiserListeCoordonnéesSpline();
             TableauPositionPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_HORIZONTALES];
 
             PositionCaméra = new Vector3(125, 250, -125);
@@ -344,6 +345,16 @@ namespace XnaGameClient
             TableauCoordonnéesZ_Spline = new int[] { -25, -45, -55, -80, -105, -120, -115, -100, -85, -65, -50, -35, -20, -15, -20, -15, -10, -15 };
         }
 
+        //void InitialiserListeCoordonnéesSpline()
+        //{
+        //    ListeDeCoordonnées = new List<Vector3>();
+
+        //    for(int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
+        //    {
+        //        ListeDeCoordonnées.Add(new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]));
+        //    }
+        //}
+
         void CréerMur1()
         {
             Tuile1 = new Vector3[4];
@@ -433,6 +444,12 @@ namespace XnaGameClient
                 PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, "SplineX.txt", "SplineZ.txt");
                 Components.Add(PlateSpline);
             }
+
+            //for (int cpt = 0; cpt<ListeDeCoordonnées.Count; ++cpt)
+            //{
+            //    PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, ListeDeCoordonnées);
+            //    Components.Add(PlateSpline);
+            //}
         }
 
         void GérerPositionCheckpoint()
