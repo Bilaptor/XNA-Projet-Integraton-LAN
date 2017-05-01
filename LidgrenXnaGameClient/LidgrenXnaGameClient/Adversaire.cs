@@ -62,7 +62,10 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= IntervalleVariation)
             {
                 Position = ControleurNet.GetPosition();
-                //Position = PositionSelonServeur;
+                if (Position.Y < -50)
+                {
+
+                }
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
             }
@@ -70,12 +73,5 @@ namespace XnaGameClient
 
             base.Update(gameTime);
         }
-
-        //public void DonnerPosition(Vector3 nouvellePosition)
-        //{
-        //    PositionSelonServeur = nouvellePosition;
-        //}
-
-
     }
 }

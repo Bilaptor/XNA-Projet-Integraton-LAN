@@ -83,7 +83,6 @@ namespace XnaGameClient
                             if (incomingMessage.ReadInt32() != Identifiant)
                             {
 
-
                                 float positionX = incomingMessage.ReadInt32();
                                 float positionY = incomingMessage.ReadInt32();
                                 float positionZ = incomingMessage.ReadInt32();
