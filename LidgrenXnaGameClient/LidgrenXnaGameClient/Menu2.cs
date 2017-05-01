@@ -148,6 +148,7 @@ namespace XnaGameClient
                     btnHost.Update(mouse);
                     if (btnHost.isClicked)
                     {
+                        Jeu.IsMouseVisible = false;
                         accepte = false;
                         Pause = false;
                         SetPause(false);
@@ -168,6 +169,7 @@ namespace XnaGameClient
                     btnJoin.Update(mouse);
                     if (btnJoin.isClicked == true)
                     {
+                        Jeu.IsMouseVisible = false;
                         accepte = false;
                         Pause = false;
                         SetPause(false);

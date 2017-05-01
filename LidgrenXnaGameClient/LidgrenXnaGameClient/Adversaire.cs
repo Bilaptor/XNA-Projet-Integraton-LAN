@@ -60,6 +60,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= IntervalleVariation)
             {
                 //Position = CaméraJeu.Position + new Vector3(0,0,0);
+                //Position = ControllerNet.
                 Position = PositionSelonServeur;
                 TempsÉcouléDepuisMAJ = 0;
                 Monde = GetMonde();
