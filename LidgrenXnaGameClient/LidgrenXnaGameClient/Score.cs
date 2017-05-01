@@ -47,6 +47,8 @@ namespace XnaGameClient
             : base(game)
         {
             Jeu = game;
+            PositionCheckpoint = positionCheckpoint;
+            PositionModel = PositionModel;
             ZoneCheckPoint = zoneCheckPoint;
             ZoneModel = zoneModel;
         }
@@ -86,9 +88,13 @@ namespace XnaGameClient
 
         void CalculerScore()
         {
-            if(ZoneModel.Intersects(ZoneCheckPoint))
+            if (ZoneModel.Intersects(ZoneCheckPoint))
             {
                 Compteur += 1;
+                ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
+            }
+            else
+            {
                 ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
             }
         }
