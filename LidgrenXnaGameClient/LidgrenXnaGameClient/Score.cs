@@ -35,20 +35,16 @@ namespace XnaGameClient
 
         BoundingBox ZoneModel { get; set; }
         BoundingBox ZoneCheckPoint { get; set; }
-        Vector3 PositionModel { get; set; }
-        Vector3 PositionCheckpoint { get; set; }
 
 
         SpriteBatch GestionSprites { get; set; }
         SpriteFont ArialFont { get; set; }
 
 
-        public Score(Game game, string font, Color couleur, float intervalleMAJ, Vector3 positionModel, Vector3 positionCheckpoint, BoundingBox zoneModel, BoundingBox zoneCheckPoint)
+        public Score(Game game, string font, Color couleur, float intervalleMAJ, BoundingBox zoneModel, BoundingBox zoneCheckPoint)
             : base(game)
         {
             Jeu = game;
-            PositionCheckpoint = positionCheckpoint;
-            PositionModel = PositionModel;
             ZoneCheckPoint = zoneCheckPoint;
             ZoneModel = zoneModel;
         }
@@ -97,6 +93,8 @@ namespace XnaGameClient
             {
                 ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
             }
+
+            
         }
     }
 }
