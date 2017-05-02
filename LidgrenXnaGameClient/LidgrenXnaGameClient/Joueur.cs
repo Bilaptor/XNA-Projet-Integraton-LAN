@@ -58,13 +58,13 @@ namespace XnaGameClient
             Game.Window.Title = this.Position.ToString();
 
             GérerSouris();
-            //if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
-            //{
+            if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
+            {
 
 
-            //Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
-            //if (!EnCollision)
-            //    SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
+                Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
+            if (!EnCollision)
+                SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
 
 
             //if (EnCollision)
@@ -86,7 +86,11 @@ namespace XnaGameClient
 
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
             TempsDepuisDerniereMAJ = 0;
-            // }
+            if(Position.Y <= 10)
+                {
+                    Position = new Vector3(Position.X, 120, Position.Z);
+                }
+            }
             base.Update(gameTime);
         }
 
