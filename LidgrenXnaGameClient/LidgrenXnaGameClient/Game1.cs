@@ -176,6 +176,7 @@ namespace XnaGameClient
             InitialierTableauxCoordonnéesSpline();
             //InitialiserListeCoordonnéesSpline();
             TableauPositionPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_HORIZONTALES];
+            TableauPositionPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_VERTICALES];
 
             PositionCaméra = new Vector3(125, 250, -125);
             PositionCibleCaméra = new Vector3(125, 0, -125);
