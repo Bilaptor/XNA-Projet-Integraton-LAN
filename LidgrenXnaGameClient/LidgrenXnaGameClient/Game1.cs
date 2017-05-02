@@ -25,7 +25,6 @@ namespace XnaGameClient
         //dimensions plateformes
         const int LARGEUR_PLATEFORME = 6;
         const int ÉPAISSEUR_PLATEFORME = 1;
-
         const int NB_DE_PLATEFORMES_HORIZONTALES = 25;
         const int NB_DE_PLATEFORMES_VERTICALES = 25;
         const int POSITION_Y_PLATEFORMES = 45;
@@ -119,7 +118,8 @@ namespace XnaGameClient
         Vector3[] Tuile2 { get; set; }
         Vector3[] Tuile3 { get; set; }
         Vector3[] Tuile4 { get; set; }
-        Vector3[] TableauPositionPlateformesHorizontales { get; set; }
+        public Vector3[] TableauPositionPlateformesHorizontales { get; set; }
+        public Vector3[] TableauPositionPlateformesVerticales { get; set; }
 
         Vector3 DimensionCheckpoint { get; set; }
         Vector3 DimensionModel { get; set; }
@@ -472,6 +472,7 @@ namespace XnaGameClient
                 IndiceTableauAngleFlottaison = GénérateurAléatoire.Next(0, IncrémementAngleDeFlottaison.Length);
                 Position_X_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
                 Position_Z_plateformes = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
+                TableauPositionPlateformesVerticales[cpt] = new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes);
 
                 Plateverti = new PlateformeVerticaleFlottante(this, 1f, Vector3.Zero, new Vector3(Position_X_plateformes, POSITION_Y_PLATEFORMES, Position_Z_plateformes), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, IncrémementAngleDeFlottaison[IndiceTableauAngleFlottaison], INTERVALLE_MAJ_STANDARD);
                 Components.Add(Plateverti);

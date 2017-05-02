@@ -14,6 +14,9 @@ namespace XnaGameClient
 {
     public class Checkpoint : PrimitiveDeBaseAnimée
     {
+        const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+        const int NB_PLATEFORMES_HORIZONTALES = 25;
+        const int NB_PLATEFORMES_VERTICALES = 25;
         const int NB_SOMMETS = 18;
         const int NB_TRIANGLES = 6;
         Color Couleur { get; set; }
@@ -24,9 +27,14 @@ namespace XnaGameClient
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
 
+        Vector3[] PositionPlateformesHorizontales { get; set; }
+        Vector3[] PositionPlateformesVerticales { get; set; }
+
         public Vector3 PositionCheckpoint { get; set; }
         Vector3 PositionCaméra { get; set; }
 
+        Plateforme Plateforme { get; set; }
+        Random GénérateurAléatoire { get; set; }
         
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
@@ -59,6 +67,7 @@ namespace XnaGameClient
         {
             EffetDeBase = new BasicEffect(GraphicsDevice);
             EffetDeBase.VertexColorEnabled = true;
+            GénérateurAléatoire = new Random();
             base.LoadContent();
         }
 
@@ -109,8 +118,23 @@ namespace XnaGameClient
                         Game.Components.RemoveAt(i);
                     }
                 }
+
+                PositionCheckpoint = new Vector3(0, 0, 0);
+                //AllerChercherNouvellePositionCheckpoint();
+                Game.Components.Add(new CheckpointAnimé(Game, 1f, new Vector3(MathHelper.Pi,0,0), PositionCheckpoint, Color.Yellow, new Vector3(2.5f, 2.5f, 2.5f), INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
             }
         }
+
+        //void AllerChercherNouvellePositionCheckpoint()
+        //{
+        //    foreach (Game1 T in Game.Components.Where(c => c is Game1))
+        //    {
+        //        PositionPlateformesHorizontales = T.TableauPositionPlateformesHorizontales;
+        //        PositionPlateformesVerticales = T.TableauPositionPlateformesVerticales;
+        //    }
+
+            
+        //}
 
         public override void Draw(GameTime gameTime)
         {

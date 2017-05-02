@@ -17,6 +17,7 @@ namespace XnaGameClient
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
 
+        public Vector3 PositionPlateforme { get; set; }
         public BoundingBox ZoneDeCollisionPlateforme { get; set; }
         Vector3 DimensionPlateforme { get; set; }
 
@@ -40,6 +41,7 @@ namespace XnaGameClient
             IncrémentAngleDeFlottaison = incrémentAngleDeFlottaison;
             IntervalleMAJ = intervalleMAJ;
             DimensionPlateforme = dimension;
+            PositionPlateforme = positionInitiale;
         }
 
         public override void Initialize()
