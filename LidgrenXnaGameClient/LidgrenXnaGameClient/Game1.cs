@@ -161,7 +161,7 @@ namespace XnaGameClient
 
             client = new NetClient(config);
             client.Start();
-            client.Connect(host: "127.0.0.1", port: 14242);
+            //client.Connect(host: "127.0.0.1", port: (14242));
         }
 
         protected override void Initialize()

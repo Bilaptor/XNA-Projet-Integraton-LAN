@@ -35,10 +35,8 @@ namespace XnaGameServer
                 NetIncomingMessage msg;
                 while ((msg = server.ReadMessage()) != null)
                 {
-                    if (msg.SenderConnection != null)
-                    {
                         #region Recoit message
-                        Console.WriteLine("Reading message " + msg.ToString() + " from " + msg.SenderConnection.RemoteUniqueIdentifier);
+                        //Console.WriteLine("Reading message " + msg.ToString() + " from " + msg.SenderConnection.RemoteUniqueIdentifier);
 
                         switch (msg.MessageType)
                         {
@@ -108,7 +106,7 @@ namespace XnaGameServer
                         // send position updates 30 times per second
                         //
                         double now = NetTime.Now;
-                        if (now > nextSendUpdates)
+                        if (now > nextSendUpdates && msg.SenderConnection != null)
                         {
                             // for each player...
                             foreach (NetConnection player in server.Connections)
@@ -130,7 +128,6 @@ namespace XnaGameServer
 
                             // schedule next update
                             nextSendUpdates += (1.0 / 30.0);
-                        }
                     }
 
                     // sleep to allow other processes to run smoothly
