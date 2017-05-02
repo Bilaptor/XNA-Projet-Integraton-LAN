@@ -37,6 +37,7 @@ namespace XnaGameClient
 
         BoundingBox ZoneModel { get; set; }
         BoundingBox ZoneCheckPoint { get; set; }
+        Caméra CaméraJeu { get; set; }
 
 
         SpriteBatch GestionSprites { get; set; }
@@ -60,11 +61,11 @@ namespace XnaGameClient
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
             foreach(Checkpoint T in Game.Components.Where(c => c is Checkpoint))
             {
-                ZoneCheckPoint = new BoundingBox(T.Position - new Vector3(6, 6, 6), T.Position + new Vector3(6, 6, 6));
+                ZoneCheckPoint = new BoundingBox(T.PositionCheckpoint - new Vector3(3,3,3), T.PositionCheckpoint + new Vector3(3,3,3));
             }
 
             
-            ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
+            ZoneModel = new BoundingBox(Position - new Vector3(3,3,3), Position + new Vector3(3,3,3));
             
 
            
@@ -73,6 +74,7 @@ namespace XnaGameClient
         {
             GestionSprites = Game.Services.GetService(typeof(SpriteBatch)) as SpriteBatch;
             ArialFont = Game.Content.Load<SpriteFont>("Fonts/Arial");
+            CaméraJeu = Game.Services.GetService(typeof(Caméra)) as Caméra;
         }
         public override void Update(GameTime gameTime)
         {
@@ -80,8 +82,8 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += tempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                Position = Position;
-                ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
+                Position = CaméraJeu.Position;
+                ZoneModel = new BoundingBox(Position - new Vector3(3, 3, 3), Position + new Vector3(3, 3, 3));
                 CalculerScore();
                 TempsÉcouléDepuisMAJ = 0;
             }

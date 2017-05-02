@@ -23,13 +23,19 @@ namespace XnaGameClient
         float DeltaY { get; set; }
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
-        public Vector3 Position { get; set; }
 
-        public BoundingBox ZoneDeCollisionCheckPoint { get; set; }
-        Vector3 DimensionCheckpoint { get; set; }
+        public Vector3 PositionCheckpoint { get; set; }
+        Vector3 PositionCaméra { get; set; }
+
+        
+        float IntervalleMAJ { get; set; }
+        float TempsÉcouléDepuisMAJ { get; set; }
+
+        BoundingBox ZoneDeCollisionCheckPoint { get; set; }
+        BoundingBox ZoneModel { get; set; }
 
         public Checkpoint(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
-                          Vector3 dimension, float intervalleMAJ)
+                          Vector3 dimension, float intervalleMAJ, Vector3 positionCaméra)
          : base(game, homothétieInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Couleur = couleur;
@@ -37,14 +43,15 @@ namespace XnaGameClient
             DeltaY = dimension.Y;
             DeltaZ = dimension.Z;
             Origine = new Vector3(-DeltaX / 2, -DeltaY / 2, -DeltaZ / 2);
-            DimensionCheckpoint = dimension;
-            Position = positionInitiale;
+            PositionCheckpoint = positionInitiale;
+            PositionCaméra = positionCaméra;
         }
 
         public override void Initialize()
         {
             Sommets = new VertexPositionColor[NB_SOMMETS];
-            ZoneDeCollisionCheckPoint = new BoundingBox(Vector3.Zero, DimensionCheckpoint);
+            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(3, 3, 3), PositionCheckpoint + new Vector3(3, 3, 3));
+            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(3, 3, 3), PositionCaméra + new Vector3(3,3,3));
             base.Initialize();
         }
 
@@ -90,6 +97,22 @@ namespace XnaGameClient
 
         }
 
+
+        void GérerDisparitionEtNouvelleApparitionCheckpoint()
+        {
+            if(ZoneDeCollisionCheckPoint.Intersects(ZoneModel))
+            {
+                for (int i = Game.Components.Count - 1; i >= 0; --i)
+                {
+                    if (Game.Components[i] is Checkpoint)
+                    {
+                        Game.Components.RemoveAt(i);
+                    }
+                }
+                
+            }
+        }
+
         public override void Draw(GameTime gameTime)
         {
             EffetDeBase.World = GetMonde();
@@ -101,6 +124,21 @@ namespace XnaGameClient
                 passeEffet.Apply();
                 GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, Sommets, 0, NB_TRIANGLES);
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TempsÉcouléDepuisMAJ += TempsÉcoulé;
+
+            if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
+            {
+                PositionCaméra = CaméraJeu.Position;
+                ZoneModel = new BoundingBox(PositionCaméra - new Vector3(3,3,3), PositionCaméra + new Vector3(3,3,3));
+                GérerDisparitionEtNouvelleApparitionCheckpoint();
+                TempsÉcouléDepuisMAJ = 0;
+            }
+            base.Update(gameTime);
         }
     }
 }

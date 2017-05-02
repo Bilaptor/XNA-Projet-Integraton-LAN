@@ -18,8 +18,8 @@ namespace XnaGameClient
         float TempsÉcouléDepuisMAJ { get; set; }
 
         public CheckpointAnimé(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
-                               Vector3 dimension, float intervalleMAJ)
-            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, intervalleMAJ)
+                               Vector3 dimension, float intervalleMAJ, Vector3 positionCaméra)
+            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, intervalleMAJ, positionCaméra)
         {
             IntervalleMAJ = intervalleMAJ;
         }
