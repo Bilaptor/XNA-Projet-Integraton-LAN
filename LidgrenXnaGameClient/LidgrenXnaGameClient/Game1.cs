@@ -327,7 +327,7 @@ namespace XnaGameClient
                case PacketTypes.POSITION:
                   Position = LireVector3(msg);
                   this.Window.Title = Position.ToString();
-                  AutreJoueur.SetPosition(Position + new Vector3(10, 0, 10));
+                  AutreJoueur.SetPosition(Position);
                   hasBeenRead = true;
                   break;
 

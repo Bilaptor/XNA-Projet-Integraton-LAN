@@ -112,9 +112,9 @@ namespace XnaGameServer
                         {
                             // for each player...
                             foreach (NetConnection player in server.Connections)
-                            {//.Where(x => x.RemoteUniqueIdentifier != UniqueIdentifier)
-                             // ... send information about every other player (actually including self)
-                                foreach (NetConnection otherPlayer in server.Connections)
+                            {
+                                // ... send information about every other player (actually including self)
+                                foreach (NetConnection otherPlayer in server.Connections.Where(x => x.RemoteUniqueIdentifier != UniqueIdentifier))
                                 {
                                     Console.WriteLine(msg.SenderConnection.RemoteUniqueIdentifier.ToString());
                                     NetOutgoingMessage omPosition = server.CreateMessage();
