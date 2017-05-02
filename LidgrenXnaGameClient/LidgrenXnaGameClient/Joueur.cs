@@ -58,35 +58,38 @@ namespace XnaGameClient
             Game.Window.Title = this.Position.ToString();
 
             GérerSouris();
+            //if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
+            //{
 
-            Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
-            if (!EnCollision)
-                SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
+                Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
+                if (!EnCollision)
+                    SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
 
 
-            //if()
-            //if (EnCollision)
-            //   Game.Window.Title = "En Collision";
-            //else
-            //   Game.Window.Title = "";
+                //if()
+                //if (EnCollision)
+                //   Game.Window.Title = "En Collision";
+                //else
+                //   Game.Window.Title = "";
 
-            if (AnciennePosition != Position)
-            {
-                //envoie la position au serveur
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte)PacketTypes.POSITION);
-                om.Write(Position.X);
-                om.Write(Position.Y);
-                om.Write(Position.Z);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
+                if (AnciennePosition != Position)
+                {
+                    //envoie la position au serveur
+                    NetOutgoingMessage om = client.CreateMessage();
+                    om.Write((byte)PacketTypes.POSITION);
+                    om.Write(Position.X);
+                    om.Write(Position.Y);
+                    om.Write(Position.Z);
+                    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+                }
 
 
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
             TempsDepuisDerniereMAJ = 0;
-            if (Position.Y <= 10)
-            {
-                Position = new Vector3(Position.X, 120, Position.Z);
+            if(Position.Y <= 10)
+                {
+                    Position = new Vector3(Position.X, 120, Position.Z);
+                //}
             }
             base.Update(gameTime);
         }
@@ -107,10 +110,10 @@ namespace XnaGameClient
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
         {
-            ZoneDeCollisionModel = new BoundingBox(position - DimensionModel / 2, position + DimensionModel / 2);
+            ZoneDeCollisionModel = new BoundingBox(new Vector3(position.X, position.Y, position.Z) - DimensionModel / 2, new Vector3(position.X, position.Y, position.Z) + DimensionModel / 2);
         }
 
-        //Envoie le volume de collision afin de traite les collision avec l'objet.
+        //Envoie le volume de collision afin de traiter les collision avec l'objet.
         public BoundingBox GetVolume()
         {
             SetPositionVolume(this.Position);

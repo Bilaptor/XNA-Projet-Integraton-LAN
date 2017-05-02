@@ -9,6 +9,7 @@ namespace XnaGameClient
     {
         const int NB_SOMMETS = 14;
         const int NB_TRIANGLES = 12;
+        const int LARGEUR_PLATEFORME = 6;
         Color Couleur { get; set; }
         VertexPositionColor[] Sommets { get; set; }
         Vector3 Origine { get; set; }
@@ -105,7 +106,7 @@ namespace XnaGameClient
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
         {
-            ZoneDeCollisionPlateforme = new BoundingBox(new Vector3(position.X, position.Y, position.Z) - DimensionPlateforme / 2, new Vector3(position.X, position.Y, position.Z) + DimensionPlateforme / 2);
+            ZoneDeCollisionPlateforme = new BoundingBox(new Vector3(position.X + LARGEUR_PLATEFORME, position.Y, position.Z + LARGEUR_PLATEFORME) - DimensionPlateforme / 2, new Vector3(position.X + LARGEUR_PLATEFORME, position.Y, position.Z + LARGEUR_PLATEFORME) + DimensionPlateforme / 2);
         }
 
         public BoundingBox GetVolume()
