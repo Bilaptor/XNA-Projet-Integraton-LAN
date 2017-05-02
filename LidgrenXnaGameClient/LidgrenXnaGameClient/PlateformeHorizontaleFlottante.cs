@@ -25,7 +25,7 @@ namespace XnaGameClient
             base.Initialize();
         }
 
-        void GérerTranslationHorizontalePLateforme()
+        void GérerTranslationHorizontalePlateforme()
         {
             Translation = true;
 
@@ -52,7 +52,7 @@ namespace XnaGameClient
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                GérerTranslationHorizontalePLateforme();
+                GérerTranslationHorizontalePlateforme();
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
