@@ -61,11 +61,11 @@ namespace XnaGameClient
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
             foreach(Checkpoint T in Game.Components.Where(c => c is Checkpoint))
             {
-                ZoneCheckPoint = new BoundingBox(T.PositionCheckpoint - new Vector3(6, 6, 6), T.PositionCheckpoint + new Vector3(6, 6, 6));
+                ZoneCheckPoint = new BoundingBox(T.PositionCheckpoint - new Vector3(3,3,3), T.PositionCheckpoint + new Vector3(3,3,3));
             }
 
             
-            ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
+            ZoneModel = new BoundingBox(Position - new Vector3(3,3,3), Position + new Vector3(3,3,3));
             
 
            
@@ -83,7 +83,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 Position = CaméraJeu.Position;
-                ZoneModel = new BoundingBox(Position - new Vector3(6, 6, 6), Position + new Vector3(6, 6, 6));
+                ZoneModel = new BoundingBox(Position - new Vector3(3, 3, 3), Position + new Vector3(3, 3, 3));
                 CalculerScore();
                 TempsÉcouléDepuisMAJ = 0;
             }

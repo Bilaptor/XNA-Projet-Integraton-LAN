@@ -50,8 +50,8 @@ namespace XnaGameClient
         public override void Initialize()
         {
             Sommets = new VertexPositionColor[NB_SOMMETS];
-            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(6, 6, 6), PositionCheckpoint + new Vector3(6, 6, 6));
-            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(6, 6, 6), PositionCaméra + new Vector3(6, 6, 6));
+            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(3, 3, 3), PositionCheckpoint + new Vector3(3, 3, 3));
+            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(3, 3, 3), PositionCaméra + new Vector3(3,3,3));
             base.Initialize();
         }
 
@@ -134,7 +134,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 PositionCaméra = CaméraJeu.Position;
-                ZoneModel = new BoundingBox(PositionCaméra - new Vector3(6, 6, 6), PositionCaméra + new Vector3(6, 6, 6));
+                ZoneModel = new BoundingBox(PositionCaméra - new Vector3(3,3,3), PositionCaméra + new Vector3(3,3,3));
                 GérerDisparitionEtNouvelleApparitionCheckpoint();
                 TempsÉcouléDepuisMAJ = 0;
             }

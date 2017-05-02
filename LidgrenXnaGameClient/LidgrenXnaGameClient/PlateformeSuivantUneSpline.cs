@@ -84,6 +84,7 @@ namespace XnaGameClient
 
                     AjouterValeursAuSplineX(SplineX_Nombres_Lue);
                 }
+                fichierLectureSplineX.Close();
             }
         }
 
@@ -104,6 +105,7 @@ namespace XnaGameClient
 
                     AjouterValeursAuSplineZ(SplineZ_Nombres_Lue);
                 }
+                fichierLectureSplineZ.Close();
             }
         }
 
