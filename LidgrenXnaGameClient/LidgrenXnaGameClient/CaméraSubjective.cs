@@ -27,7 +27,7 @@ namespace XnaGameClient
         InputManager GestionInput { get; set; }
         protected MouseState OriginalMouseState { get; set; }
 
-        NetClient client;
+        //NetClient client;
 
         bool estEnZoom;
         bool EstEnZoom
@@ -60,7 +60,7 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
-            client = (Game as Game1).client;
+            //client = (Game as Game1).client;
             VitesseRotationManette = VITESSE_INITIALE_ROTATION_MANETTE;
             VitesseRotation = VITESSE_INITIALE_ROTATION;
             VitesseTranslation = VITESSE_INITIALE_TRANSLATION;
@@ -155,16 +155,16 @@ namespace XnaGameClient
             //Position = Position + déplacementDirection * Direction;
             //Position = Position - déplacementLatéral * Latéral;
 
-            if (AnciennePosition != Position)
-            {
-                //envoie la position au serveur
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte)PacketTypes.POSITION);
-                om.Write(Position.X);
-                om.Write(Position.Y);
-                om.Write(Position.Z);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
+            //if (AnciennePosition != Position)
+            //{
+            //    //envoie la position au serveur
+            //    NetOutgoingMessage om = client.CreateMessage();
+            //    om.Write((byte)PacketTypes.POSITION);
+            //    om.Write(Position.X);
+            //    om.Write(Position.Y);
+            //    om.Write(Position.Z);
+            //    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            //}
         }
 
         public Vector3 GetLatéral()

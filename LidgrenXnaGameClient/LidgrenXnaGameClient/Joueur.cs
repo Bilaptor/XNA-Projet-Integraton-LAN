@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
+using Lidgren.Network;
 
 namespace XnaGameClient
 {
@@ -25,6 +25,7 @@ namespace XnaGameClient
         public BoundingBox ZoneDeCollisionModel { get; set; }
         Vector3 DimensionModel { get; set; }
         protected float IntervalleMAJ { get; set; }
+        NetClient client;
 
         Vector3 Vitesse;
 
@@ -39,6 +40,7 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
+            client = (Game as Game1).client;
             controller = new ControllerClavier(Game, OriginalMouseState);
             (controller as GameComponent).Initialize();
 
@@ -51,6 +53,7 @@ namespace XnaGameClient
 
         public override void Update(GameTime gameTime)
         {
+            Vector3 AnciennePosition = Position;
             TempsDepuisDerniereMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
             Game.Window.Title = this.Position.ToString();
 
@@ -69,6 +72,18 @@ namespace XnaGameClient
             //   Game.Window.Title = "En Collision";
             //else
             //   Game.Window.Title = "";
+
+            if (AnciennePosition != Position)
+            {
+                //envoie la position au serveur
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte)PacketTypes.POSITION);
+                om.Write(Position.X);
+                om.Write(Position.Y);
+                om.Write(Position.Z);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+
 
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
             TempsDepuisDerniereMAJ = 0;
