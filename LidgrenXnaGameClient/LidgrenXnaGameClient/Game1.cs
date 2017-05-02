@@ -213,7 +213,6 @@ namespace XnaGameClient
             Components.Add(new Score(this, "Arial20", Color.Chartreuse, INTERVALLE_CALCUL_FPS, CaméraJeu.Position));
             Components.Add(new Balle(this, 1f, rotationObjet, CaméraJeu.Position, INTERVALLE_MAJ_STANDARD, new Vector3(2, 2, 2), Color.Blue));
 
-
             GérerPositionsPlateformesHorizontales();
             GérerPositionsPlateformesVerticales();
             GérerPositionsPlateformesSuivantSpline();
@@ -384,8 +383,10 @@ namespace XnaGameClient
 
         void InitialierTableauxCoordonnéesSpline()
         {
-            TableauCoordonnéesX_Spline = new int[] { 20, 35, 50, 60, 55, 65, 80, 95, 105, 115, 105, 110, 110, 105, 90, 75, 55, 35 };
-            TableauCoordonnéesZ_Spline = new int[] { -25, -45, -55, -80, -105, -120, -115, -100, -85, -65, -50, -35, -20, -15, -20, -15, -10, -15 };
+            //TableauCoordonnéesX_Spline = new int[] { 20, 35, 50, 60, 55, 65, 80, 95, 105, 115, 105, 110, 110, 105, 90, 75, 55, 35 };
+            //TableauCoordonnéesZ_Spline = new int[] { -25, -45, -55, -80, -105, -120, -115, -100, -85, -65, -50, -35, -20, -15, -20, -15, -10, -15 };
+            TableauCoordonnéesX_Spline = new int[] { 40, 70, 100, 120, 110, 130, 160, 190, 210, 230, 210, 220, 220, 210, 180, 150, 110, 70 };
+            TableauCoordonnéesZ_Spline = new int[] { -50, -90, -110, -160, -210, -240, -230, -200, -170, -130, -100, -70, -40, -30, -40, -30, -20, -30 };
         }
 
         //void InitialiserListeCoordonnéesSpline()
@@ -484,7 +485,7 @@ namespace XnaGameClient
         {
             for (int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
             {
-                PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, MathHelper.Pi / 360, "SplineX.txt", "SplineZ.txt");
+                PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], POSITION_Y_PLATEFORMES, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, MathHelper.Pi / 360, "SplineX.txt", "SplineZ.txt");
                 Components.Add(PlateSpline);
             }
 
