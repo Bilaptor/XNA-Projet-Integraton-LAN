@@ -67,7 +67,6 @@ namespace XnaGameClient
             //    SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
 
 
-
             //if (EnCollision)
             //   Game.Window.Title = "En Collision";
             //else

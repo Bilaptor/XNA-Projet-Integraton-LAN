@@ -105,7 +105,7 @@ namespace XnaGameClient
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
         {
-            ZoneDeCollisionPlateforme = new BoundingBox(position - DimensionPlateforme / 2, position + DimensionPlateforme / 2);
+            ZoneDeCollisionPlateforme = new BoundingBox(new Vector3(position.X, position.Y, position.Z) - DimensionPlateforme / 2, new Vector3(position.X, position.Y, position.Z) + DimensionPlateforme / 2);
         }
 
         public BoundingBox GetVolume()
