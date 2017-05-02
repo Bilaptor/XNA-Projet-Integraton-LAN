@@ -66,7 +66,7 @@ namespace XnaGameClient
 
 
 
-        Adversaire Aadversaire { get; set; }
+        Adversaire AutreJoueur { get; set; }
         ArrièrePlanDéroulant ArrièrePlan { get; set; }
         Lave Lave { get; set; }
         ObjetDeDémo ObjDemo { get; set; }
@@ -139,6 +139,8 @@ namespace XnaGameClient
 
         ControllerNet controleurNet;
 
+        
+
         //position de l'adversaire qui vas etre modifié par le serveur
         public Vector3 PositionAdversaireSelonServeur { get; set; }
 
@@ -159,10 +161,12 @@ namespace XnaGameClient
 
             client = new NetClient(config);
             client.Start();
+            client.Connect(host: "127.0.0.1", port: 14242);
         }
 
         protected override void Initialize()
         {
+          
             Pause = true;
             DimensionCheckpoint = new Vector3(2.5f, 2.5f, 2.5f);
             DimensionModel = new Vector3(1, 1, 1);
@@ -206,6 +210,7 @@ namespace XnaGameClient
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
             Components.Add(new Score(this, "Arial20", Color.Chartreuse, INTERVALLE_CALCUL_FPS, CaméraJeu.Position));
+            Components.Add(new Balle(this, 1f, rotationObjet, CaméraJeu.Position, INTERVALLE_MAJ_STANDARD, new Vector3(2, 2, 2), Color.Blue));
 
 
             GérerPositionsPlateformesHorizontales();
@@ -224,8 +229,9 @@ namespace XnaGameClient
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             //ObjDemo = new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
             //Components.Add(ObjDemo);
-            Aadversaire = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
-            Components.Add(Aadversaire);
+            AutreJoueur = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
+            Components.Add(AutreJoueur);
+           
 
             LeMenu = new Menu2(this, PériphériqueGraphique, Pause);
 
@@ -257,48 +263,86 @@ namespace XnaGameClient
             {
                 TempsÉcouléDepuisMAJ = 0;
 
-                //
-                // Collect input
-                //
-                int xinput = 0;
-                int yinput = 0;
                 KeyboardState keyState = Keyboard.GetState();
-
-                // exit game if escape or Back is pressed
+                
                 if (keyState.IsKeyDown(Keys.Escape) || GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                     this.Exit();
 
-                //// use arrows or dpad to move avatar
-                //if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed || keyState.IsKeyDown(Keys.Left))
-                //    xinput = -1;
-                //if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed || keyState.IsKeyDown(Keys.Right))
-                //    xinput = 1;
-                //if (GamePad.GetState(PlayerIndex.One).DPad.Up == ButtonState.Pressed || keyState.IsKeyDown(Keys.Up))
-                //    yinput = -1;
-                //if (GamePad.GetState(PlayerIndex.One).DPad.Down == ButtonState.Pressed || keyState.IsKeyDown(Keys.Down))
-                //    yinput = 1;
 
-                if (xinput != 0 || yinput != 0)
-                {
-                    NetOutgoingMessage om = client.CreateMessage();
-                    om.Write((byte)PacketTypes.POSITIONJEU2D);
-                    om.Write(xinput); // very inefficient to send a full Int32 (4 bytes) but we'll use this for simplicity
-                    om.Write(yinput);
-                    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-                }
-
-                controleurNet.LireMessages();
-
-                //case NetIncomingMessageType.Data:
-                //    // server sent a position update
-                //    long who = incomingMessage.ReadInt64();
-                //    int x = incomingMessage.ReadInt32();
-                //    int y = incomingMessage.ReadInt32();
-                //    Positions[who] = new Vector2(x, y);
-                //    break;
+                LireMessages();
             }
 
             base.Update(gameTime);
+        }
+
+        Vector2 Position2D;
+        Vector3 Position;
+        int Identifiant = 0;
+        public void LireMessages()
+        {
+            // read messages
+            NetIncomingMessage incomingMessage;
+            while ((incomingMessage = client.ReadMessage()) != null)
+            {
+                switch (incomingMessage.MessageType)
+                {
+                    case NetIncomingMessageType.DiscoveryResponse:
+                        client.Connect(incomingMessage.SenderEndPoint);
+                        break;
+
+                    case NetIncomingMessageType.Data:
+                        TraiterMessage(incomingMessage);
+                        break;
+
+                    default:
+                        // Should not happen and if happens, don't care
+                        Console.WriteLine(incomingMessage.ReadString() + " Strange message client");
+                        break;
+                }
+            }
+        }
+
+        public void TraiterMessage(NetIncomingMessage msg)
+        {
+            bool hasBeenRead = false;
+            byte TypeMessage = msg.ReadByte();
+            long UniqueId = 0;
+            UniqueId = msg.ReadInt64();
+
+            if (!hasBeenRead)
+            {
+                switch ((PacketTypes)TypeMessage)
+                {
+                    case PacketTypes.CONNECTIONNUMBER:
+
+                        hasBeenRead = true;
+                        break;
+
+                    case PacketTypes.POSITION:
+                        Position = LireVector3(msg);
+                        this.Window.Title = Position.ToString();
+                        AutreJoueur.SetPosition(Position);
+                        hasBeenRead = true;
+                        break;
+
+                    case PacketTypes.POSITIONJEU2D:
+                        if (msg.ReadInt32() != Identifiant)
+                        {
+                            Position2D = LireVector2(msg);
+                            hasBeenRead = true;
+                        }
+                        break;
+                }
+            }
+        }
+
+        Vector3 LireVector3(NetIncomingMessage msg)
+        {
+            return new Vector3(msg.ReadFloat(), msg.ReadFloat(), msg.ReadFloat());
+        }
+        Vector2 LireVector2(NetIncomingMessage msg)
+        {
+            return new Vector2(msg.ReadFloat(), msg.ReadFloat());
         }
 
         void InitialiserTableauxLimitesAireJeu()
