@@ -20,9 +20,8 @@ namespace XnaGameClient
         public BoundingBox ZoneDeCollisionPlateforme { get; set; }
         Vector3 DimensionPlateforme { get; set; }
 
-
         protected float IntervalleMAJ { get; set; }
-        string NomTextureCube { get; set; }
+        string NomTexturePlateforme { get; set; }
 
         protected float AngleDeFlottaison { get; set; }
         protected float IncrémentAngleDeFlottaison { get; set; }
@@ -102,7 +101,6 @@ namespace XnaGameClient
                 GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, Sommets, 0, NB_TRIANGLES);
             }
         }
-
 
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
