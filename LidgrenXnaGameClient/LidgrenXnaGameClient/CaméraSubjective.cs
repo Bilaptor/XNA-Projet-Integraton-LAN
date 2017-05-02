@@ -192,46 +192,6 @@ namespace XnaGameClient
             }
         }
 
-        //private void GérerRotation()
-        //{
-        //    GérerLacet();
-        //    GérerTangage();
-        //    GérerRoulis();
-        //}
-
-        //private void GérerLacet()
-        //{
-        //    float lacet = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * VitesseRotationManette * DELTA_LACET;
-            
-        //    Matrix mLacet = Matrix.CreateFromAxisAngle(OrientationVerticale, lacet);
-        //    Direction = Vector3.Transform(Direction, mLacet);
-        //    Direction = Vector3.Normalize(Direction);
-        //    Latéral = Vector3.Cross(Direction, OrientationVerticale);
-        //}
-
-        //private void GérerTangage()
-        //{
-        //    float tangage = GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * VitesseRotationManette * DELTA_TANGAGE;
-
-        //    Matrix mTangageLatéral = Matrix.CreateFromAxisAngle(Latéral, tangage);
-        //    OrientationVerticale = Vector3.Transform(OrientationVerticale, mTangageLatéral);
-        //    OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-
-        //    Matrix mTangageDirection = Matrix.CreateFromAxisAngle(Latéral, tangage);
-        //    Direction = Vector3.Transform(Direction, mTangageDirection);
-        //    Direction = Vector3.Normalize(Direction);
-        //    Latéral = Vector3.Cross(Direction, OrientationVerticale);
-        //}
-
-        //private void GérerRoulis()
-        //{
-        //    float roulis = (GérerTouche(Keys.PageUp) - GérerTouche(Keys.PageDown)) * VitesseRotationManette * DELTA_ROULIS;
-
-        //    Matrix mRoulis = Matrix.CreateFromAxisAngle(Direction, roulis);
-        //    OrientationVerticale = Vector3.Transform(OrientationVerticale, mRoulis);
-        //    OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-        //}
-
         private void GestionClavier()
         {
             if (GestionInput.EstNouvelleTouche(Keys.Z))
