@@ -104,7 +104,7 @@ namespace XnaGameClient
             {
                 //GérerSouris();
                 //GérerAccélération();
-                GérerDéplacement();
+                //GérerDéplacement();
                 CréerPointDeVue();
 
                 Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
@@ -135,10 +135,10 @@ namespace XnaGameClient
         //    }
         //}
 
-        private void GérerDéplacement()
-        {
+        //private void GérerDéplacement()
+        //{
 
-            Vector3 AnciennePosition = Position;
+            //Vector3 AnciennePosition = Position;
             //float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
             //float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
@@ -165,7 +165,7 @@ namespace XnaGameClient
             //    om.Write(Position.Z);
             //    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
             //}
-        }
+        //}
 
         public Vector3 GetLatéral()
         {
