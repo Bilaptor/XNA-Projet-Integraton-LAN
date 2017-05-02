@@ -120,7 +120,7 @@ namespace XnaGameClient
 
         private void GérerSouris()
         {
-            Game.Window.Title = Direction.ToString();
+            //Game.Window.Title = Position.ToString();
 
             //MouseState currentMouseState = Mouse.GetState();
             //if (currentMouseState != OriginalMouseState)
@@ -180,8 +180,8 @@ namespace XnaGameClient
             Position = Position + déplacementDirection * Direction;
             Position = Position - déplacementLatéral * Latéral;
 
-            if(AnciennePosition != Position)
-            {
+         if (AnciennePosition != Position)
+         {
             // envoie la position au serveur
             NetOutgoingMessage om = client.CreateMessage();
             om.Write((byte)PacketTypes.POSITION);
