@@ -61,7 +61,7 @@ namespace XnaGameClient
                                             Game.Window.ClientBounds.Height - MARGE_HAUT);
             foreach(Checkpoint T in Game.Components.Where(c => c is Checkpoint))
             {
-                ZoneCheckPoint = new BoundingBox(T.Position - new Vector3(6, 6, 6), T.Position + new Vector3(6, 6, 6));
+                ZoneCheckPoint = new BoundingBox(T.PositionCheckpoint - new Vector3(6, 6, 6), T.PositionCheckpoint + new Vector3(6, 6, 6));
             }
 
             
