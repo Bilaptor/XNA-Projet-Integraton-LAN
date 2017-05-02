@@ -104,7 +104,7 @@ namespace XnaGameClient
             {
                 //GérerSouris();
                 //GérerAccélération();
-                //GérerDéplacement();
+                GérerDéplacement();
                 CréerPointDeVue();
 
                 Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
@@ -135,37 +135,37 @@ namespace XnaGameClient
         //    }
         //}
 
-        //private void GérerDéplacement()
-        //{
+        private void GérerDéplacement()
+        {
 
-        //    Vector3 AnciennePosition = Position;
-        //    float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
-        //    float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
+            //Vector3 AnciennePosition = Position;
+            //float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
+            //float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
-        //    if (déplacementDirection == 0)
-        //    {
-        //        déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
-        //    }
+            //if (déplacementDirection == 0)
+            //{
+            //    déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
+            //}
 
-        //    if (déplacementLatéral == 0)
-        //    {
-        //        déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
-        //    }
+            //if (déplacementLatéral == 0)
+            //{
+            //    déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
+            //}
 
-        //    Position = Position + déplacementDirection * Direction;
-        //    Position = Position - déplacementLatéral * Latéral;
+            //Position = Position + déplacementDirection * Direction;
+            //Position = Position - déplacementLatéral * Latéral;
 
-        //    if (AnciennePosition != Position)
-        //    {
-        //        //envoie la position au serveur
-        //       NetOutgoingMessage om = client.CreateMessage();
-        //        om.Write((byte)PacketTypes.POSITION);
-        //        om.Write(Position.X);
-        //        om.Write(Position.Y);
-        //        om.Write(Position.Z);
-        //        client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-        //    }
-        //}
+            if (AnciennePosition != Position)
+            {
+                //envoie la position au serveur
+                NetOutgoingMessage om = client.CreateMessage();
+                om.Write((byte)PacketTypes.POSITION);
+                om.Write(Position.X);
+                om.Write(Position.Y);
+                om.Write(Position.Z);
+                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
 
         public Vector3 GetLatéral()
         {

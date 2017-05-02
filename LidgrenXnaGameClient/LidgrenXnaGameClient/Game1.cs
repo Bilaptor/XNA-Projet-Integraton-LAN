@@ -248,10 +248,7 @@ namespace XnaGameClient
             Textures = new Texture2D[5];
             for (int i = 0; i < 5; i++)
                 Textures[i] = Content.Load<Texture2D>("c" + (i + 1));
-
-
         }
-
 
 
         protected override void Update(GameTime gameTime)
