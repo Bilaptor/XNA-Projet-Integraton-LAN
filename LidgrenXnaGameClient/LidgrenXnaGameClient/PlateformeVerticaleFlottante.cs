@@ -29,7 +29,7 @@ namespace XnaGameClient
             base.Initialize();
         }
 
-        void GérerFlottaisonCube()
+        void GérerTranslationVertcicalePlateforme()
         {
             Translation = true;
 
@@ -57,7 +57,7 @@ namespace XnaGameClient
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                GérerFlottaisonCube();
+                GérerTranslationVertcicalePlateforme();
                 TempsÉcouléDepuisMAJ = 0;
             }
 

@@ -59,9 +59,9 @@ namespace XnaGameClient
             //{
 
 
-            Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
-            if (!EnCollision)
-                SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
+            //Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
+            //if (!EnCollision)
+            //    SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
 
 
 
