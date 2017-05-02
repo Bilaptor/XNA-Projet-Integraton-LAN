@@ -325,13 +325,13 @@ namespace XnaGameClient
                         hasBeenRead = true;
                         break;
 
-                    case PacketTypes.POSITIONJEU2D:
-                        if (msg.ReadInt32() != Identifiant)
-                        {
-                            Position2D = LireVector2(msg);
-                            hasBeenRead = true;
-                        }
-                        break;
+                    //case PacketTypes.POSITIONJEU2D:
+                    //    if (msg.ReadInt32() != Identifiant)
+                    //    {
+                    //        Position2D = LireVector2(msg);
+                    //        hasBeenRead = true;
+                    //    }
+                    //    break;
                 }
             }
         }

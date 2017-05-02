@@ -109,10 +109,10 @@ namespace XnaGameServer
                         if (now > nextSendUpdates && msg.SenderConnection != null)
                         {
                             // for each player...
-                            foreach (NetConnection player in server.Connections)
-                            {
+                            //foreach (NetConnection player in server.Connections)
+                            //{
                                 // ... send information about every other player (actually including self)
-                                foreach (NetConnection otherPlayer in server.Connections.Where(x => x.RemoteUniqueIdentifier != UniqueIdentifier))
+                                foreach (NetConnection player in server.Connections.Where(x => x.RemoteUniqueIdentifier.ToString() != UniqueIdentifier.ToString()))
                                 {
                                     Console.WriteLine(msg.SenderConnection.RemoteUniqueIdentifier.ToString());
                                     NetOutgoingMessage omPosition = server.CreateMessage();
@@ -123,7 +123,7 @@ namespace XnaGameServer
                                     omPosition.Write((float)ZInput);
                                     server.SendMessage(omPosition, player, NetDeliveryMethod.ReliableOrdered);
                                 }
-                            }
+                            //}
                             #endregion
 
                             // schedule next update

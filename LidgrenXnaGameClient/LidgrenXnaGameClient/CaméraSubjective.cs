@@ -109,7 +109,6 @@ namespace XnaGameClient
                 GérerSouris();
                 GérerAccélération();
                 GérerDéplacement();
-                //GérerRotation();
                 CréerPointDeVue();
 
                 Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
@@ -120,29 +119,9 @@ namespace XnaGameClient
 
         private void GérerSouris()
         {
-            //Game.Window.Title = Position.ToString();
-
-            //MouseState currentMouseState = Mouse.GetState();
-            //if (currentMouseState != OriginalMouseState)
-            //{
-            //   float déplacementX = currentMouseState.X - OriginalMouseState.X;
-            //   float déplacementY = currentMouseState.Y - OriginalMouseState.Y;
-
-            //   angleHorizontal += déplacementX * 0.01f;
-            //   angleHorizontal %= (float)(Math.PI * 2);
-
-            //   angleVertical += déplacementY * 0.01f;
-            //   if (angleVertical > (Math.PI / 2))
-            //      angleVertical = (float)(Math.PI / 2 - 0.01);
-            //   if (angleVertical < -(Math.PI / 2))
-            //      angleVertical = (float)(-Math.PI / 2 + 0.01);
-
-            //Direction = new Vector3((float)Math.Cos(angleHorizontal), -(float)Math.Tan(angleVertical), (float)Math.Sin(angleHorizontal));
             Direction = controller.GetDirectionVu();
-            //Direction.Normalize();
             Latéral = Vector3.Cross(Direction, OrientationVerticale);
             OrientationVerticale = Vector3.Up;
-            //}
         }
 
         private int GérerTouche(Keys touche)
