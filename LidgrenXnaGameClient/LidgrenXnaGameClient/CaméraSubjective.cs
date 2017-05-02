@@ -138,7 +138,7 @@ namespace XnaGameClient
         private void GérerDéplacement()
         {
 
-            //Vector3 AnciennePosition = Position;
+            Vector3 AnciennePosition = Position;
             //float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
             //float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
 
