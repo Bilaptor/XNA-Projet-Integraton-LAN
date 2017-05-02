@@ -107,6 +107,8 @@ namespace XnaGameClient
                     if (Game.Components[i] is Checkpoint)
                     {
                         Game.Components.RemoveAt(i);
+                        PositionCheckpoint = Vector3.Zero;
+                        ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(3, 3, 3), PositionCheckpoint + new Vector3(3, 3, 3));
                     }
                 }
                 
