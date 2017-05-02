@@ -203,7 +203,7 @@ namespace XnaGameClient
             Components.Add(ArrièrePlan);
             CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), OriginalMouseState, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
-            Joueur j = new Joueur(this, new Vector3(205, 45, -195), OriginalMouseState, INTERVALLE_CALCUL_STANDARD, new Vector3(2, 4, 2));
+            Joueur j = new Joueur(this, new Vector3(205, 120, -195), OriginalMouseState, INTERVALLE_CALCUL_STANDARD, new Vector3(2, 4, 2));
             Components.Add(j);
             Components.Add(new Afficheur3D(this));
             CréerMursAireDeJeu();
@@ -248,6 +248,7 @@ namespace XnaGameClient
             Textures = new Texture2D[5];
             for (int i = 0; i < 5; i++)
                 Textures[i] = Content.Load<Texture2D>("c" + (i + 1));
+            //base.LoadContent();
         }
 
 
@@ -266,9 +267,6 @@ namespace XnaGameClient
                     for (int j = i + 1; j < Components.Count; ++j)
                         if (!LeMenu.Pause && Components[i] is IPhysique && Components[j] is IPhysique)
                         {
-                            if (i == 83)
-                                i = 83;
-
                             IPhysique A = Components[i] as IPhysique;
                             IPhysique B = Components[j] as IPhysique;
                             bool enCollision = A.GetVolume().Intersects(B.GetVolume());
@@ -287,8 +285,7 @@ namespace XnaGameClient
 
             base.Update(gameTime);
         }
-
-        Vector2 Position2D;
+        
         Vector3 Position;
         int Identifiant = 0;
         public void LireMessages()

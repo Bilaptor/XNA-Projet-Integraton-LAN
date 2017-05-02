@@ -58,35 +58,31 @@ namespace XnaGameClient
             Game.Window.Title = this.Position.ToString();
 
             GérerSouris();
-            //if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
-            //{
+
+                Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
+                if (!EnCollision)
+                    SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
 
 
-            //Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
-            //if (!EnCollision)
-            //    SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
+                //if (EnCollision)
+                //   Game.Window.Title = "En Collision";
+                //else
+                //   Game.Window.Title = "";
+
+                if (AnciennePosition != Position)
+                {
+                    //envoie la position au serveur
+                    NetOutgoingMessage om = client.CreateMessage();
+                    om.Write((byte)PacketTypes.POSITION);
+                    om.Write(Position.X);
+                    om.Write(Position.Y);
+                    om.Write(Position.Z);
+                    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
+                }
 
 
-            //if (EnCollision)
-            //   Game.Window.Title = "En Collision";
-            //else
-            //   Game.Window.Title = "";
-
-            if (AnciennePosition != Position)
-            {
-                //envoie la position au serveur
-                NetOutgoingMessage om = client.CreateMessage();
-                om.Write((byte)PacketTypes.POSITION);
-                om.Write(Position.X);
-                om.Write(Position.Y);
-                om.Write(Position.Z);
-                client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            }
-
-
-            Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
-            TempsDepuisDerniereMAJ = 0;
-            // }
+                Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
+                TempsDepuisDerniereMAJ = 0;
             base.Update(gameTime);
         }
 
