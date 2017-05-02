@@ -103,16 +103,6 @@ namespace XnaGameClient
             }
         }
 
-        /// <summary>
-        /// méthode qui reconnaît les collisions entre les bounding box des plateformes et les bounding sphere
-        /// des personnages.
-        /// </summary>
-        /// <param name="autreZoneCollison"></param>
-        /// <returns></returns>
-        public bool EstEnCollision(BoundingSphere autreZoneCollison)
-        {
-            return ZoneDeCollisionPlateforme.Intersects(autreZoneCollison);
-        }
 
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
