@@ -203,7 +203,8 @@ namespace XnaGameClient
             Components.Add(ArrièrePlan);
             CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), OriginalMouseState, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
-            Components.Add(new Joueur(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD, new Vector3(1, 1, 1)));
+            Joueur j = new Joueur(this, new Vector3(205, 100, -195), OriginalMouseState, INTERVALLE_CALCUL_STANDARD, new Vector3(2, 4, 2));
+            Components.Add(j);
             Components.Add(new Afficheur3D(this));
             CréerMursAireDeJeu();
             Lave = new Lave(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), PositionOrigineLave, new Vector2(250, 250), new Vector2(100, 100), "Lave", 1, 1 / 60f, INTERVALLE_MAJ_STANDARD);
@@ -224,7 +225,7 @@ namespace XnaGameClient
             Services.AddService(typeof(RessourcesManager<Texture2D>), GestionnaireDeTextures);
             Services.AddService(typeof(RessourcesManager<Model>), GestionnaireDeModèles);
             Services.AddService(typeof(InputManager), GestionInput);
-            Services.AddService(typeof(Caméra), CaméraJeu);
+            Services.AddService(typeof(Caméra), j);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             //ObjDemo = new ObjetDeDémo(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
@@ -259,9 +260,25 @@ namespace XnaGameClient
             float tempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             ++CptFrames;
             TempsÉcouléDepuisMAJ += tempsÉcoulé;
+
+
             if (TempsÉcouléDepuisMAJ >= INTERVALLE_UPDATE)
             {
                 TempsÉcouléDepuisMAJ = 0;
+
+                for (int i = 0; i < Components.Count; ++i)
+                    for (int j = i + 1; j < Components.Count; ++j)
+                        if (!LeMenu.Pause && Components[i] is IPhysique && Components[j] is IPhysique)
+                        {
+                            if (i == 83)
+                                i = 83;
+
+                            IPhysique A = Components[i] as IPhysique;
+                            IPhysique B = Components[j] as IPhysique;
+                            bool enCollision = A.GetVolume().Intersects(B.GetVolume());
+                            (Components[i] as IPhysique).SetEnCollision(enCollision, B);
+                            (Components[j] as IPhysique).SetEnCollision(enCollision, A);
+                        }
 
                 KeyboardState keyState = Keyboard.GetState();
                 

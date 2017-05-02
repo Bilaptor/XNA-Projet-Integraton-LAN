@@ -10,7 +10,7 @@ namespace XnaGameClient
    {
       string NomModèle { get; set; }
       RessourcesManager<Model> GestionnaireDeModèles { get; set; }
-      Caméra CaméraJeu { get; set; }
+      protected Caméra CaméraJeu { get; set; }
       protected float Échelle { get; set; }
       protected Vector3 Rotation { get; set; }
       protected Vector3 Position { get; set; }

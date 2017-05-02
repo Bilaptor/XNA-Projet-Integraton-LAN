@@ -11,7 +11,7 @@ namespace XnaGameClient
     {
         Vector3 Direction { get; set; }
         Vector3 Position { get; set; }
-        int Identifiant;
+        //int Identifiant;
         //NetClient client;
 
         public Vector3 GetPosition()

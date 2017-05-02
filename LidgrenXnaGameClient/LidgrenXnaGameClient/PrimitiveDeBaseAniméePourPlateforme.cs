@@ -57,7 +57,7 @@ namespace XnaGameClient
             Monde = Matrix.Identity *
                     Matrix.CreateScale(Homothétie) *
                     Matrix.CreateFromYawPitchRoll(AngleLacet, AngleTangage, AngleRoulis) *
-                    Matrix.CreateTranslation(PositionInitiale + Position);
+                    Matrix.CreateTranslation(Position);
         }
 
         public override void Update(GameTime gameTime)

@@ -28,17 +28,21 @@ namespace XnaGameClient
         void GérerTranslationHorizontalePLateforme()
         {
             Translation = true;
-            
-            if (AngleDeFlottaison < LIMITE_ANGLE_FLOTTAISON)
-            {
-                Position += Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
-                AngleDeFlottaison += IncrémentAngleDeFlottaison;
-            }
-            else
-            {
-                Position -= Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
-                AngleDeFlottaison += IncrémentAngleDeFlottaison;
-            }
+
+            //if (AngleDeFlottaison < LIMITE_ANGLE_FLOTTAISON)
+            //{
+            //   Position += Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
+            //   AngleDeFlottaison += IncrémentAngleDeFlottaison;
+            //}
+            //else
+            //{
+            //   Position -= Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
+            //   AngleDeFlottaison += IncrémentAngleDeFlottaison;
+            //}
+
+            Position = PositionInitiale + new Vector3((float)Math.Cos(AngleDeFlottaison), 0, (float)Math.Sin(AngleDeFlottaison));
+            AngleDeFlottaison += IncrémentAngleDeFlottaison;
+            AngleDeFlottaison %= 2 * (float)Math.PI;
         }
 
         public override void Update(GameTime gameTime)

@@ -16,8 +16,8 @@ namespace XnaGameClient
 
 
         public PlateformeVerticaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
-                                   Vector3 dimension,float angleDeFlottaison , float incrémentAngleDeFlottaison, float intervalleMAJ)
-            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison , incrémentAngleDeFlottaison, intervalleMAJ)
+                                   Vector3 dimension, float angleDeFlottaison, float incrémentAngleDeFlottaison, float intervalleMAJ)
+            : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison, incrémentAngleDeFlottaison, intervalleMAJ)
         {
 
         }
@@ -33,16 +33,20 @@ namespace XnaGameClient
         {
             Translation = true;
 
-            if (AngleFlottaison < LIMITE_ANGLE_FLOTTAISON)
-            {
-                Position += Vector3.Transform(Position, Matrix.CreateTranslation(0, (float)Math.Sin(AngleFlottaison), 0));
-                AngleFlottaison += IncrémentAngleDeFlottaison;
-            }
-            else
-            {
-                Position -= Vector3.Transform(Position, Matrix.CreateTranslation(0, (float)Math.Sin(AngleFlottaison), 0));
-                AngleFlottaison += IncrémentAngleDeFlottaison;
-            }
+            //if (AngleFlottaison < LIMITE_ANGLE_FLOTTAISON)
+            //{
+            //    Position += Vector3.Transform(Position, Matrix.CreateTranslation(0, (float)Math.Sin(AngleFlottaison), 0));
+            //    AngleFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+            //}
+            //else
+            //{
+            //    Position -= Vector3.Transform(Position, Matrix.CreateTranslation(0, (float)Math.Sin(AngleFlottaison), 0));
+            //    AngleFlottaison += INCRÉMENT_ANGLE_FLOTTAISON;
+            //}
+
+            Position = PositionInitiale + new Vector3(0, (float)Math.Sin(AngleDeFlottaison), 0);
+            AngleDeFlottaison += IncrémentAngleDeFlottaison;
+            AngleDeFlottaison %= 2 * (float)Math.PI;
 
         }
 

@@ -127,6 +127,7 @@
     <Compile Include="Controllers\ControllerNet.cs" />
     <Compile Include="Interfaces\IController.cs" />
     <Compile Include="Interfaces\IPausable.cs" />
+    <Compile Include="Interfaces\IPhysique.cs" />
     <Compile Include="Joueur.cs" />
     <Compile Include="Lave.cs" />
     <Compile Include="Menu1.cs" />

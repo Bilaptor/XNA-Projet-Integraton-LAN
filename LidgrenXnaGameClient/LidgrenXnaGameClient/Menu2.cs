@@ -75,6 +75,7 @@ namespace XnaGameClient
             // TODO: Add your initialization logic here
             //Services.AddService(typeof(InputManager), GestionInput);
             Pause = true;
+            SetPause(true);
             base.Initialize();
         }
 

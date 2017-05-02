@@ -72,7 +72,7 @@ namespace XnaGameClient
             float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S));
             float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D));
 
-            return new Vector3(déplacementDirection, 0, déplacementLatéral);
+            return new Vector3(déplacementDirection, GérerTouche(Keys.Space), -déplacementLatéral);
         }
 
         private int GérerTouche(Keys touche)

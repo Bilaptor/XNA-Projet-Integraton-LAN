@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XnaGameClient
 {
-    public class Plateforme : PrimitiveDeBaseAniméePourPlateforme
+    public class Plateforme : PrimitiveDeBaseAniméePourPlateforme, IPhysique
     {
         const int NB_SOMMETS = 14;
         const int NB_TRIANGLES = 12;
@@ -114,5 +114,19 @@ namespace XnaGameClient
             return ZoneDeCollisionPlateforme.Intersects(autreZoneCollison);
         }
 
+        //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
+        private void SetPositionVolume(Vector3 position)
+        {
+            ZoneDeCollisionPlateforme = new BoundingBox(position - DimensionPlateforme / 2, position + DimensionPlateforme / 2);
+        }
+
+        public BoundingBox GetVolume()
+        {
+            SetPositionVolume(this.Position);
+            return ZoneDeCollisionPlateforme;
+        }
+
+        public void SetEnCollision(bool enCollision, IPhysique autre)
+        { }
     }
 }
