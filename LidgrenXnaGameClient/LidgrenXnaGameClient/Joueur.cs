@@ -61,7 +61,7 @@ namespace XnaGameClient
             Game.Window.Title = this.Position.ToString();
 
             GérerSouris((float)TempsDepuisDerniereMAJ);
-            if (TempsDepuisDerniereMAJ >= 1/500f)
+            if (TempsDepuisDerniereMAJ >= 1/60f)
             {
                 Vitesse += new Vector3(0, -65, 0) * (float)TempsDepuisDerniereMAJ;
                 if (Vitesse.Y < VITESSE_CHUTE_MAXIMALE)
@@ -103,11 +103,21 @@ namespace XnaGameClient
             SetDirection(controller.GetDirectionVu());
 
             Vector3 dir = controller.GetDirection();
+            
             Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT;
             Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT;
 
+            if (Position.X < 0)
+                Position = new Vector3(0, Position.Y, Position.Z);
+            if (Position.X > 250)
+                Position = new Vector3(250, Position.Y, Position.Z);
+            if (Position.Z > 0)
+                Position = new Vector3(Position.X, Position.Y, 0);
+            if (Position.Z < -250)
+                Position = new Vector3(Position.X, Position.Y, -250);
+
             //fait en sorte que le joueur ne puisse pa sauter plein de fois dans les airs
-            if(Vitesse.Y > -3 && Vitesse.Y < 1.5f)
+            if (Vitesse.Y > -3 && Vitesse.Y < 1.5f)
                 Vitesse += new Vector3(0, 32 * dir.Y, 0);
         }
 
