@@ -82,8 +82,6 @@ namespace XnaGameClient
                     client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
                 }
 
-
-
                 TempsDepuisDerniereMAJ = 0;
                 if (Position.Y <= 10)
                 {
