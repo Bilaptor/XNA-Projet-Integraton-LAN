@@ -204,7 +204,7 @@ namespace XnaGameClient
             Components.Add(ArrièrePlan);
             CaméraJeu = new CaméraSubjective(this, PositionCaméra, PositionCibleCaméra, new Vector3(0, 0, -126), OriginalMouseState, INTERVALLE_UPDATE);
             Components.Add(CaméraJeu);
-            Joueur j = new Joueur(this, new Vector3(205, 120, -195), OriginalMouseState, INTERVALLE_CALCUL_STANDARD, new Vector3(2, 4, 2));
+            Joueur j = new Joueur(this, new Vector3(166, 120, -224), OriginalMouseState, INTERVALLE_CALCUL_STANDARD, new Vector3(2, 4, 2));
             Components.Add(j);
             Components.Add(new Afficheur3D(this));
             CréerMursAireDeJeu();

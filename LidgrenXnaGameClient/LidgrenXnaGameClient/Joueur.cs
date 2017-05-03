@@ -17,7 +17,7 @@ namespace XnaGameClient
     /// </summary>
     public class Joueur : CaméraSubjective, IPhysique
     {
-        const float VITESSE_DÉPLACEMENT = 0.03f;
+        const float VITESSE_DÉPLACEMENT = 15f;
         const float VITESSE_CHUTE_MAXIMALE = -87;
         float TempsDepuisDerniereMAJ;
 
@@ -27,6 +27,7 @@ namespace XnaGameClient
         Vector3 DimensionModel { get; set; }
         protected float IntervalleMAJ { get; set; }
         NetClient client;
+        Vector3 PositionInitial { get; set; }
 
         Vector3 Vitesse;
 
@@ -35,6 +36,7 @@ namespace XnaGameClient
         public Joueur(Game jeu, Vector3 positionInitiale, MouseState originalMouseState, float intervalleMAJ, Vector3 dimentionModel)
           : base(jeu, positionInitiale, new Vector3(200, 0, -90), Vector3.Up, originalMouseState, intervalleMAJ)
         {
+            PositionInitial = positionInitiale;
             IntervalleMAJ = intervalleMAJ;
             DimensionModel = dimentionModel;
         }
@@ -56,9 +58,9 @@ namespace XnaGameClient
         {
             Vector3 AnciennePosition = Position;
             TempsDepuisDerniereMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //Game.Window.Title = this.Position.ToString();
+            Game.Window.Title = this.Position.ToString();
 
-            GérerSouris();
+            GérerSouris((float)TempsDepuisDerniereMAJ);
             if (TempsDepuisDerniereMAJ >= 1/500f)
             {
                 Vitesse += new Vector3(0, -65, 0) * (float)TempsDepuisDerniereMAJ;
@@ -85,14 +87,14 @@ namespace XnaGameClient
                 TempsDepuisDerniereMAJ = 0;
                 if (Position.Y <= 10)
                 {
-                    Position = new Vector3(Position.X, 120, Position.Z);
+                    Position = PositionInitial;
                 }
             }
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
             base.Update(gameTime);
         }
 
-        private void GérerSouris()
+        private void GérerSouris(float deltaT)
         {
             Vector2 d = new Vector2(Direction.X, Direction.Z);
             d.Normalize();
@@ -101,12 +103,11 @@ namespace XnaGameClient
             SetDirection(controller.GetDirectionVu());
 
             Vector3 dir = controller.GetDirection();
-            Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT;
-            Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT;
-            Game.Window.Title = EnCollision.ToString();
+            Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT;
+            Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT;
 
             //fait en sorte que le joueur ne puisse pa sauter plein de fois dans les airs
-            if(Vitesse.Y > -1 && Vitesse.Y < 1)
+            if(Vitesse.Y > -3 && Vitesse.Y < 1.5f)
                 Vitesse += new Vector3(0, 32 * dir.Y, 0);
         }
 
@@ -116,8 +117,9 @@ namespace XnaGameClient
         }
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
-        {
-            ZoneDeCollisionModel = new BoundingBox(new Vector3(position.X, position.Y, position.Z) - DimensionModel / 2, new Vector3(position.X, position.Y, position.Z) + DimensionModel / 2);
+        {                                                                                                                                                // -2.5 car on ne veut pas que le modelle remonte sur 
+                                                                                                                                                         //  la plateforme quand la plateforme est à la hauteur de sa tete
+            ZoneDeCollisionModel = new BoundingBox(new Vector3(position.X, position.Y, position.Z) - DimensionModel / 2, new Vector3(position.X, position.Y - 2.5f, position.Z) + DimensionModel / 2);
         }
 
         //Envoie le volume de collision afin de traiter les collision avec l'objet.
