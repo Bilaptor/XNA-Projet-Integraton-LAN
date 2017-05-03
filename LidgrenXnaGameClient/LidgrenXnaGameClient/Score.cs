@@ -63,7 +63,6 @@ namespace XnaGameClient
             {
                 ZoneCheckPoint = new BoundingBox(T.PositionCheckpoint - new Vector3(3,3,3), T.PositionCheckpoint + new Vector3(3,3,3));
             }
-
             
             ZoneModel = new BoundingBox(Position - new Vector3(3,3,3), Position + new Vector3(3,3,3));
             
@@ -84,6 +83,10 @@ namespace XnaGameClient
             {
                 Position = CamÈraJeu.Position;
                 ZoneModel = new BoundingBox(Position - new Vector3(3, 3, 3), Position + new Vector3(3, 3, 3));
+                foreach (Checkpoint T in Game.Components.Where(c => c is Checkpoint))
+                {
+                    ZoneCheckPoint = new BoundingBox(T.PositionCheckpoint - new Vector3(3, 3, 3), T.PositionCheckpoint + new Vector3(3, 3, 3));
+                }
                 CalculerScore();
                 Temps…coulÈDepuisMAJ = 0;
             }
