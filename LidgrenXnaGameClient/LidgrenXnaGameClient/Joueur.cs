@@ -59,7 +59,7 @@ namespace XnaGameClient
             //Game.Window.Title = this.Position.ToString();
 
             GérerSouris();
-            if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
+            if (TempsDepuisDerniereMAJ >= 1/500f)
             {
                 Vitesse += new Vector3(0, -65, 0) * (float)TempsDepuisDerniereMAJ;
                 if (Vitesse.Y < VITESSE_CHUTE_MAXIMALE)
