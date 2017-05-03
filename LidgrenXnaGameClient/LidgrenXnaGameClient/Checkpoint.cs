@@ -15,8 +15,8 @@ namespace XnaGameClient
     public class Checkpoint : PrimitiveDeBaseAnimée
     {
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
-        const int NB_PLATEFORMES_HORIZONTALES = 25;
-        const int NB_PLATEFORMES_VERTICALES = 25;
+        const int LARGEUR_PLATEFORME = 6;
+        const int DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES = 5;
         const int NB_SOMMETS = 18;
         const int NB_TRIANGLES = 6;
         Color Couleur { get; set; }
@@ -27,8 +27,9 @@ namespace XnaGameClient
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
 
-        Vector3[] PositionPlateformesHorizontales { get; set; }
-        Vector3[] PositionPlateformesVerticales { get; set; }
+        Vector3[][] TableauPositionPlateformes { get; set; }
+        Vector3[] TableauPositionsPlateformesHorizontales { get; set;}
+        Vector3[] TableauPositionsPlateformesVerticales { get; set; }
 
         public Vector3 PositionCheckpoint { get; set; }
         Vector3 PositionCaméra { get; set; }
@@ -58,8 +59,8 @@ namespace XnaGameClient
         public override void Initialize()
         {
             Sommets = new VertexPositionColor[NB_SOMMETS];
-            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(3, 3, 3), PositionCheckpoint + new Vector3(3, 3, 3));
-            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(3, 3, 3), PositionCaméra + new Vector3(3,3,3));
+            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
+            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCaméra + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
             base.Initialize();
         }
 
@@ -119,22 +120,26 @@ namespace XnaGameClient
                     }
                 }
 
-                PositionCheckpoint = new Vector3(0, 0, 0);
-                //AllerChercherNouvellePositionCheckpoint();
+                AllerChercherNouvellePositionCheckpoint();
                 Game.Components.Add(new CheckpointAnimé(Game, 1f, new Vector3(MathHelper.Pi,0,0), PositionCheckpoint, Color.Yellow, new Vector3(2.5f, 2.5f, 2.5f), INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
             }
         }
 
-        //void AllerChercherNouvellePositionCheckpoint()
-        //{
-        //    foreach (Game1 T in Game.Components.Where(c => c is Game1))
-        //    {
-        //        PositionPlateformesHorizontales = T.TableauPositionPlateformesHorizontales;
-        //        PositionPlateformesVerticales = T.TableauPositionPlateformesVerticales;
-        //    }
+        void AllerChercherNouvellePositionCheckpoint()
+        {
+            foreach(PlateformeHorizontaleFlottante T in Game.Components.Where(c => c is PlateformeHorizontaleFlottante))
+            {
+                TableauPositionsPlateformesHorizontales = new Vector3[] { T.PositionPlateforme };
+            }
+            foreach(PlateformeVerticaleFlottante T in Game.Components.Where(c => c is PlateformeVerticaleFlottante))
+            {
+                TableauPositionsPlateformesVerticales = new Vector3[] { T.PositionPlateforme };
+            }
 
-            
-        //}
+            TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales };
+            PositionCheckpoint = TableauPositionPlateformes[GénérateurAléatoire.Next(0, 2)][GénérateurAléatoire.Next(0, TableauPositionsPlateformesHorizontales.Count())] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
+            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
+        }
 
         public override void Draw(GameTime gameTime)
         {
