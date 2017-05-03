@@ -105,11 +105,11 @@ namespace XnaGameClient
             if (ZoneModel.Intersects(ZoneCheckPoint))
             {
                 Compteur += 1;
-                ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
+                ChaîneSCORE = "Player 1:" + Compteur;
             }
             else
             {
-                ChaîneSCORE = "Player 1:" + Compteur + "     Player 2:" + Compteur;
+                ChaîneSCORE = "Player 1:" + Compteur;
             }
 
             
