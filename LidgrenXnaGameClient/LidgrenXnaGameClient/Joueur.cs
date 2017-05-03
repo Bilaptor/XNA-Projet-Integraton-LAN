@@ -56,7 +56,7 @@ namespace XnaGameClient
         {
             Vector3 AnciennePosition = Position;
             TempsDepuisDerniereMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Game.Window.Title = this.Position.ToString();
+            //Game.Window.Title = this.Position.ToString();
 
             GérerSouris();
             if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
@@ -103,7 +103,11 @@ namespace XnaGameClient
             Vector3 dir = controller.GetDirection();
             Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT;
             Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT;
-            Vitesse += new Vector3(0, 32 * dir.Y, 0);
+            Game.Window.Title = EnCollision.ToString();
+
+            //fait en sorte que le joueur ne puisse pa sauter plein de fois dans les airs
+            if(Vitesse.Y > -1 && Vitesse.Y < 1)
+                Vitesse += new Vector3(0, 32 * dir.Y, 0);
         }
 
         public bool EstEnCollision(BoundingSphere autreZoneCollison)
