@@ -11,9 +11,9 @@ namespace XnaGameClient
         const float VITESSE_INITIALE_ROTATION = 0.1f;
         const float VITESSE_INITIALE_ROTATION_MANETTE = 4f;
         const float VITESSE_INITIALE_TRANSLATION = 1.5f;
-        const float DELTA_LACET = MathHelper.Pi / 180; // 1 degré à la fois
-        const float DELTA_TANGAGE = MathHelper.Pi / 180; // 1 degré à la fois
-        const float DELTA_ROULIS = MathHelper.Pi / 180; // 1 degré à la fois
+        const float DELTA_LACET = MathHelper.Pi / 180;
+        const float DELTA_TANGAGE = MathHelper.Pi / 180;
+        const float DELTA_ROULIS = MathHelper.Pi / 180;
         const float RAYON_COLLISION = 1f;
 
         protected Vector3 Direction { get; set; }
@@ -102,9 +102,6 @@ namespace XnaGameClient
             GestionClavier();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                //GérerSouris();
-                //GérerAccélération();
-                //GérerDéplacement();
                 CréerPointDeVue();
 
                 Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
@@ -113,59 +110,10 @@ namespace XnaGameClient
             base.Update(gameTime);
         }
 
-        //private void GérerSouris()
-        //{
-        //    Direction = controller.GetDirectionVu();
-        //    Latéral = Vector3.Cross(Direction, OrientationVerticale);
-        //    OrientationVerticale = Vector3.Up;
-        //}
-
         private int GérerTouche(Keys touche)
         {
             return GestionInput.EstEnfoncée(touche) ? 1 : 0;
         }
-
-        //private void GérerAccélération()
-        //{
-        //    int valAccélération = (GérerTouche(Keys.Subtract) + GérerTouche(Keys.OemMinus)) - (GérerTouche(Keys.Add) + GérerTouche(Keys.OemPlus));
-        //    if (valAccélération != 0)
-        //    {
-        //        IntervalleMAJ += ACCÉLÉRATION * valAccélération;
-        //        IntervalleMAJ = MathHelper.Max(INTERVALLE_MAJ_STANDARD, IntervalleMAJ);
-        //    }
-        //}
-
-        //private void GérerDéplacement()
-        //{
-
-            //Vector3 AnciennePosition = Position;
-            //float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
-            //float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
-
-            //if (déplacementDirection == 0)
-            //{
-            //    déplacementDirection = GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y * VitesseTranslation;
-            //}
-
-            //if (déplacementLatéral == 0)
-            //{
-            //    déplacementLatéral = -GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X * VitesseTranslation;
-            //}
-
-            //Position = Position + déplacementDirection * Direction;
-            //Position = Position - déplacementLatéral * Latéral;
-
-            //if (AnciennePosition != Position)
-            //{
-            //    //envoie la position au serveur
-            //    NetOutgoingMessage om = client.CreateMessage();
-            //    om.Write((byte)PacketTypes.POSITION);
-            //    om.Write(Position.X);
-            //    om.Write(Position.Y);
-            //    om.Write(Position.Z);
-            //    client.SendMessage(om, NetDeliveryMethod.ReliableOrdered);
-            //}
-        //}
 
         public Vector3 GetLatéral()
         {

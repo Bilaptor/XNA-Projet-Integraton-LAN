@@ -17,8 +17,9 @@ namespace XnaGameClient
     /// </summary>
     public class Joueur : CaméraSubjective, IPhysique
     {
+        const float VITESSE_DÉPLACEMENT = 0.03f;
+        const float VITESSE_CHUTE_MAXIMALE = -87;
         float TempsDepuisDerniereMAJ;
-        float IntervalMAJ;
 
         bool EnCollision { get; set; }
         BasicEffect EffetDeBase { get; set; }
@@ -55,22 +56,18 @@ namespace XnaGameClient
         {
             Vector3 AnciennePosition = Position;
             TempsDepuisDerniereMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Game.Window.Title = this.Position.ToString();
+            //Game.Window.Title = this.Position.ToString();
 
             GérerSouris();
-            //if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
-            //{
-
-                Vitesse += new Vector3(0, -5f, 0) * (float)TempsDepuisDerniereMAJ;
+            if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
+            {
+                Vitesse += new Vector3(0, -65, 0) * (float)TempsDepuisDerniereMAJ;
+                if (Vitesse.Y < VITESSE_CHUTE_MAXIMALE)
+                {
+                    Vitesse = new Vector3(Vitesse.X, VITESSE_CHUTE_MAXIMALE, Vitesse.Z);
+                }
                 if (!EnCollision)
                     SetPosition(Position + Vitesse * (float)TempsDepuisDerniereMAJ);
-
-
-                //if()
-                //if (EnCollision)
-                //   Game.Window.Title = "En Collision";
-                //else
-                //   Game.Window.Title = "";
 
                 if (AnciennePosition != Position)
                 {
@@ -84,23 +81,33 @@ namespace XnaGameClient
                 }
 
 
-            Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
-            TempsDepuisDerniereMAJ = 0;
-            if(Position.Y <= 10)
+
+                TempsDepuisDerniereMAJ = 0;
+                if (Position.Y <= 10)
                 {
                     Position = new Vector3(Position.X, 120, Position.Z);
-                //}
+                }
             }
+            Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
             base.Update(gameTime);
         }
 
         private void GérerSouris()
         {
+            Vector2 d = new Vector2(Direction.X, Direction.Z);
+            d.Normalize();
+            Vector2 l = new Vector2(GetLatéral().X, GetLatéral().Z);
+            l.Normalize();
             SetDirection(controller.GetDirectionVu());
 
             Vector3 dir = controller.GetDirection();
-            Position += dir.X * new Vector3(Direction.X, 0, Direction.Z) * 0.05f;
-            Position += dir.Z * new Vector3(GetLatéral().X, 0, GetLatéral().Z) * 0.05f;
+            Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT;
+            Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT;
+            Game.Window.Title = EnCollision.ToString();
+
+            //fait en sorte que le joueur ne puisse pa sauter plein de fois dans les airs
+            if(Vitesse.Y > -1 && Vitesse.Y < 1)
+                Vitesse += new Vector3(0, 32 * dir.Y, 0);
         }
 
         public bool EstEnCollision(BoundingSphere autreZoneCollison)
@@ -127,7 +134,7 @@ namespace XnaGameClient
             if (EnCollision)
             {
                 Position = new Vector3(Position.X, autre.GetVolume().Max.Y + DimensionModel.Y / 2, Position.Z);
-                Vitesse = new Vector3(Vitesse.X, 0.5f, Vitesse.Z);
+                if(Vitesse.Y < 0) { Vitesse = new Vector3(Vitesse.X, 0.5f, Vitesse.Z); }
             }
         }
     }

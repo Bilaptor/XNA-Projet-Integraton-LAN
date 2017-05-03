@@ -7,10 +7,10 @@ using Microsoft.Xna.Framework;
 
 namespace XnaGameClient
 {
-   interface IController
-   {
-      Vector3 GetPosition();
-      Vector3 GetDirection();
-      Vector3 GetDirectionVu();
-   }
+    interface IController
+    {
+        Vector3 GetPosition();
+        Vector3 GetDirection();
+        Vector3 GetDirectionVu();
+    }
 }
