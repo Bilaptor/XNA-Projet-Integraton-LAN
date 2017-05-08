@@ -35,7 +35,8 @@ namespace XnaGameClient
         Vector3 PositionCaméra { get; set; }
 
         Plateforme Plateforme { get; set; }
-        Random GénérateurAléatoire { get; set; }
+        Random GénérateurAléatoirePourTypePlateforme { get; set; }
+        Random GénérateurAléatoirePourPositionCheckpoint { get; set; }
         
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
@@ -68,7 +69,6 @@ namespace XnaGameClient
         {
             EffetDeBase = new BasicEffect(GraphicsDevice);
             EffetDeBase.VertexColorEnabled = true;
-            GénérateurAléatoire = new Random();
             base.LoadContent();
         }
 
@@ -127,18 +127,25 @@ namespace XnaGameClient
 
         void AllerChercherNouvellePositionCheckpoint()
         {
-            foreach(PlateformeHorizontaleFlottante T in Game.Components.Where(c => c is PlateformeHorizontaleFlottante))
+            ChercherPositionsDesPlateformes();
+
+            GénérateurAléatoirePourTypePlateforme = new Random();
+            GénérateurAléatoirePourPositionCheckpoint = new Random();
+            TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales };
+            PositionCheckpoint = TableauPositionPlateformes[GénérateurAléatoirePourTypePlateforme.Next(0, 2)][GénérateurAléatoirePourPositionCheckpoint.Next(0, TableauPositionsPlateformesHorizontales.Count())] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
+            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
+        }
+
+        void ChercherPositionsDesPlateformes()
+        {
+            foreach (PlateformeHorizontaleFlottante T in Game.Components.Where(c => c is PlateformeHorizontaleFlottante))
             {
                 TableauPositionsPlateformesHorizontales = new Vector3[] { T.PositionPlateforme };
             }
-            foreach(PlateformeVerticaleFlottante T in Game.Components.Where(c => c is PlateformeVerticaleFlottante))
+            foreach (PlateformeVerticaleFlottante T in Game.Components.Where(c => c is PlateformeVerticaleFlottante))
             {
                 TableauPositionsPlateformesVerticales = new Vector3[] { T.PositionPlateforme };
             }
-
-            TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales };
-            PositionCheckpoint = TableauPositionPlateformes[GénérateurAléatoire.Next(0, 2)][GénérateurAléatoire.Next(0, TableauPositionsPlateformesHorizontales.Count())] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
-            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
         }
 
         public override void Draw(GameTime gameTime)
@@ -162,7 +169,7 @@ namespace XnaGameClient
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 PositionCaméra = CaméraJeu.Position;
-                ZoneModel = new BoundingBox(PositionCaméra - new Vector3(3,3,3), PositionCaméra + new Vector3(3,3,3));
+                ZoneModel = new BoundingBox(PositionCaméra - new Vector3(LARGEUR_PLATEFORME/2, LARGEUR_PLATEFORME/2, LARGEUR_PLATEFORME/2), PositionCaméra + new Vector3(LARGEUR_PLATEFORME/2, LARGEUR_PLATEFORME/2, LARGEUR_PLATEFORME/2));
                 GérerDisparitionEtNouvelleApparitionCheckpoint();
                 TempsÉcouléDepuisMAJ = 0;
             }
