@@ -17,7 +17,7 @@ namespace XnaGameClient
     /// </summary>
     public class Joueur : CaméraSubjective, IPhysique
     {
-        const float VITESSE_DÉPLACEMENT = 15f;
+        const float VITESSE_DÉPLACEMENT = 875f;
         const float VITESSE_CHUTE_MAXIMALE = -87;
         float TempsDepuisDerniereMAJ;
 
@@ -102,8 +102,8 @@ namespace XnaGameClient
 
             Vector3 dir = controller.GetDirection();
             
-            Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT;
-            Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT;
+            Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT * IntervalleMAJ;
+            Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT * IntervalleMAJ;
 
             if (Position.X < 0)
                 Position = new Vector3(0, Position.Y, Position.Z);
@@ -115,7 +115,7 @@ namespace XnaGameClient
                 Position = new Vector3(Position.X, Position.Y, -250);
 
             //fait en sorte que le joueur ne puisse pa sauter plein de fois dans les airs
-            if (Vitesse.Y > -3 && Vitesse.Y < 1.5f)
+            if (Vitesse.Y > -4 && Vitesse.Y < 2)
                 Vitesse += new Vector3(0, 32 * dir.Y, 0);
         }
 
