@@ -17,7 +17,7 @@ namespace XnaGameClient
     /// </summary>
     public class Joueur : CaméraSubjective, IPhysique
     {
-        const float VITESSE_DÉPLACEMENT = 875f;
+        const float VITESSE_DÉPLACEMENT = 50f;
         const float VITESSE_CHUTE_MAXIMALE = -87;
         float TempsDepuisDerniereMAJ;
 
@@ -101,10 +101,12 @@ namespace XnaGameClient
             SetDirection(controller.GetDirectionVu());
 
             Vector3 dir = controller.GetDirection();
-            
-            Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT * IntervalleMAJ;
-            Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT * IntervalleMAJ;
 
+            if (TempsDepuisDerniereMAJ >= 1 / 60f)
+            {
+                Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT;
+                Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT;
+            }
             if (Position.X < 0)
                 Position = new Vector3(0, Position.Y, Position.Z);
             if (Position.X > 250)
