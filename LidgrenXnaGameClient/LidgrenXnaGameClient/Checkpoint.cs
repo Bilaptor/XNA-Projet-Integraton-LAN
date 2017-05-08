@@ -14,11 +14,13 @@ namespace XnaGameClient
 {
     public class Checkpoint : PrimitiveDeBaseAnimée
     {
+        const int NB_DE_PLATEFORMES_UN_TYPE = 25;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         const int LARGEUR_PLATEFORME = 6;
         const int DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES = 5;
         const int NB_SOMMETS = 18;
         const int NB_TRIANGLES = 6;
+        Random générateurAléatoire = new Random();
         Color Couleur { get; set; }
         VertexPositionColor[] Sommets { get; set; }
         Vector3 Origine { get; set; }
@@ -35,8 +37,6 @@ namespace XnaGameClient
         Vector3 PositionCaméra { get; set; }
 
         Plateforme Plateforme { get; set; }
-        Random GénérateurAléatoirePourTypePlateforme { get; set; }
-        Random GénérateurAléatoirePourPositionCheckpoint { get; set; }
         
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
@@ -59,6 +59,8 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
+            TableauPositionsPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
+            TableauPositionsPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
             Sommets = new VertexPositionColor[NB_SOMMETS];
             ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
             ZoneModel = new BoundingBox(PositionCaméra - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCaméra + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
@@ -119,7 +121,6 @@ namespace XnaGameClient
                         Game.Components.RemoveAt(i);
                     }
                 }
-
                 AllerChercherNouvellePositionCheckpoint();
                 Game.Components.Add(new CheckpointAnimé(Game, 1f, new Vector3(MathHelper.Pi,0,0), PositionCheckpoint, Color.Yellow, new Vector3(2.5f, 2.5f, 2.5f), INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
             }
@@ -129,10 +130,8 @@ namespace XnaGameClient
         {
             ChercherPositionsDesPlateformes();
 
-            GénérateurAléatoirePourTypePlateforme = new Random();
-            GénérateurAléatoirePourPositionCheckpoint = new Random();
             TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales };
-            PositionCheckpoint = TableauPositionPlateformes[GénérateurAléatoirePourTypePlateforme.Next(0, 2)][GénérateurAléatoirePourPositionCheckpoint.Next(0, TableauPositionsPlateformesHorizontales.Count())] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
+            PositionCheckpoint = TableauPositionPlateformes[générateurAléatoire.Next(0, TableauPositionPlateformes.Count())][générateurAléatoire.Next(0, TableauPositionsPlateformesHorizontales.Count())] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
             ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
         }
 
@@ -140,11 +139,18 @@ namespace XnaGameClient
         {
             foreach (PlateformeHorizontaleFlottante T in Game.Components.Where(c => c is PlateformeHorizontaleFlottante))
             {
-                TableauPositionsPlateformesHorizontales = new Vector3[] { T.PositionPlateforme };
+                for (int cpt = 0; cpt < NB_DE_PLATEFORMES_UN_TYPE; ++cpt)
+                {
+                    TableauPositionsPlateformesHorizontales[cpt] = T.PositionPlateforme;
+                }
             }
+
             foreach (PlateformeVerticaleFlottante T in Game.Components.Where(c => c is PlateformeVerticaleFlottante))
             {
-                TableauPositionsPlateformesVerticales = new Vector3[] { T.PositionPlateforme };
+                for (int cpt = 0; cpt < NB_DE_PLATEFORMES_UN_TYPE; ++cpt)
+                {
+                    TableauPositionsPlateformesVerticales[cpt] = T.PositionPlateforme;
+                }
             }
         }
 

@@ -174,7 +174,6 @@ namespace XnaGameClient
             InitialiserTableauxLimitesAireJeu();
             InitialiserTableauIncrémentationAngleFlottaison();
             InitialierTableauxCoordonnéesSpline();
-            //InitialiserListeCoordonnéesSpline();
             TableauPositionPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_HORIZONTALES];
             TableauPositionPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_VERTICALES];
 
@@ -378,21 +377,9 @@ namespace XnaGameClient
 
         void InitialierTableauxCoordonnéesSpline()
         {
-            //TableauCoordonnéesX_Spline = new int[] { 20, 35, 50, 60, 55, 65, 80, 95, 105, 115, 105, 110, 110, 105, 90, 75, 55, 35 };
-            //TableauCoordonnéesZ_Spline = new int[] { -25, -45, -55, -80, -105, -120, -115, -100, -85, -65, -50, -35, -20, -15, -20, -15, -10, -15 };
             TableauCoordonnéesX_Spline = new int[] { 40, 70, 100, 120, 110, 130, 160, 190, 210, 230, 210, 220, 220, 210, 180, 150, 110, 70 };
             TableauCoordonnéesZ_Spline = new int[] { -50, -90, -110, -160, -210, -240, -230, -200, -170, -130, -100, -70, -40, -30, -40, -30, -20, -30 };
         }
-
-        //void InitialiserListeCoordonnéesSpline()
-        //{
-        //    ListeDeCoordonnées = new List<Vector3>();
-
-        //    for(int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length; ++cpt)
-        //    {
-        //        ListeDeCoordonnées.Add(new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]));
-        //    }
-        //}
 
         void CréerMur1()
         {
