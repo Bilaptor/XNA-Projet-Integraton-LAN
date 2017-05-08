@@ -12,6 +12,7 @@ namespace XnaGameClient
 
         float TempsÉcouléDepuisMAJ { get; set; }
         float AngleFlottaison { get; set; }
+        public Vector3 PositionsPlateformesVerticales { get; set; }
 
 
 
@@ -19,6 +20,7 @@ namespace XnaGameClient
                                    Vector3 dimension, float angleDeFlottaison, float incrémentAngleDeFlottaison, float intervalleMAJ)
             : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison, incrémentAngleDeFlottaison, intervalleMAJ)
         {
+            PositionsPlateformesVerticales = positionInitiale;
         }
 
 

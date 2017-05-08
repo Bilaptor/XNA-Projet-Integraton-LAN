@@ -20,7 +20,9 @@ namespace XnaGameClient
         const int DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES = 5;
         const int NB_SOMMETS = 18;
         const int NB_TRIANGLES = 6;
+        
         Random générateurAléatoire = new Random();
+        Vector3 Dimension { get; set; }
         Color Couleur { get; set; }
         VertexPositionColor[] Sommets { get; set; }
         Vector3 Origine { get; set; }
@@ -59,6 +61,7 @@ namespace XnaGameClient
 
         public override void Initialize()
         {
+            Dimension = new Vector3(2.5f, 2.5f, 2.5f);
             TableauPositionsPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
             TableauPositionsPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
             Sommets = new VertexPositionColor[NB_SOMMETS];
@@ -122,7 +125,7 @@ namespace XnaGameClient
                     }
                 }
                 AllerChercherNouvellePositionCheckpoint();
-                Game.Components.Add(new CheckpointAnimé(Game, 1f, new Vector3(MathHelper.Pi,0,0), PositionCheckpoint, Color.Yellow, new Vector3(2.5f, 2.5f, 2.5f), INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
+                Game.Components.Add(new CheckpointAnimé(Game, 1f, new Vector3(MathHelper.Pi,0,0), PositionCheckpoint, Color.Yellow, Dimension, INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
             }
         }
 
@@ -131,7 +134,7 @@ namespace XnaGameClient
             ChercherPositionsDesPlateformes();
 
             TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales };
-            PositionCheckpoint = TableauPositionPlateformes[générateurAléatoire.Next(0, TableauPositionPlateformes.Count())][générateurAléatoire.Next(0, TableauPositionsPlateformesHorizontales.Count())] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
+            PositionCheckpoint = TableauPositionPlateformes[générateurAléatoire.Next(0, 2)][générateurAléatoire.Next(0, NB_DE_PLATEFORMES_UN_TYPE)] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
             ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
         }
 
@@ -141,7 +144,7 @@ namespace XnaGameClient
             {
                 for (int cpt = 0; cpt < NB_DE_PLATEFORMES_UN_TYPE; ++cpt)
                 {
-                    TableauPositionsPlateformesHorizontales[cpt] = T.PositionPlateforme;
+                    TableauPositionsPlateformesHorizontales[cpt] = T.PositionsPlateformesHorizontales;
                 }
             }
 
@@ -149,7 +152,7 @@ namespace XnaGameClient
             {
                 for (int cpt = 0; cpt < NB_DE_PLATEFORMES_UN_TYPE; ++cpt)
                 {
-                    TableauPositionsPlateformesVerticales[cpt] = T.PositionPlateforme;
+                    TableauPositionsPlateformesVerticales[cpt] = T.PositionsPlateformesVerticales;
                 }
             }
         }

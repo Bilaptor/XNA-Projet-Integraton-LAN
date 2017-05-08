@@ -10,12 +10,14 @@ namespace XnaGameClient
         const float LIMITE_ANGLE_FLOTTAISON = MathHelper.Pi / 180;
 
         float TempsÉcouléDepuisMAJ { get; set; }
+        public Vector3 PositionsPlateformesHorizontales { get; set;}
 
 
         public PlateformeHorizontaleFlottante(Game game, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Color couleur,
                                    Vector3 dimension, float angleDeFlottaison,float incrémentAngleDeFlottaison,float intervalleMAJ)
             : base(game, homothétieInitiale, rotationInitiale, positionInitiale, couleur, dimension, angleDeFlottaison, incrémentAngleDeFlottaison, intervalleMAJ)
         {
+            PositionsPlateformesHorizontales = positionInitiale;
         }
 
         public override void Initialize()
