@@ -146,7 +146,7 @@ namespace XnaGameServer
                         #endregion
 
                         // schedule next update
-                        nextSendUpdates += (1.0 / 30.0);
+                        nextSendUpdates += (1.0 / 60.0);
                     }
 
                     // sleep to allow other processes to run smoothly
@@ -154,10 +154,8 @@ namespace XnaGameServer
                 }
             }
 
-
             server.Shutdown("app exiting");
         }
-
 
     }
     enum PacketTypes
