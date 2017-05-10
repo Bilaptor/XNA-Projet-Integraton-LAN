@@ -24,16 +24,21 @@ namespace XnaGameClient
 
         Random générateurAléatoire = new Random();
         Vector3 Dimension { get; set; }
+        public Vector3 PositionCheckpoint { get; set; }
+        Vector3 PositionCaméra { get; set; }
         Color Couleur { get; set; }
         VertexPositionColor[] Sommets { get; set; }
         Vector3 Origine { get; set; }
         float DeltaX { get; set; }
         float DeltaY { get; set; }
         float DeltaZ { get; set; }
+        float IntervalleMAJ { get; set; }
+        float TempsÉcouléDepuisMAJ { get; set; }
         BasicEffect EffetDeBase { get; set; }
         int IndiceTypePlateforme { get; set; }
         int IndicePositionsPlateforme { get; set; }
         
+        //Tableaux des positions des différents types de positions
         Vector3[][] TableauPositionPlateformes { get; set; }
         Vector3[] TableauPositionsPlateformesHorizontales { get; set; }
         Vector3[] TableauPositionsPlateformesVerticales { get; set; }
@@ -41,14 +46,7 @@ namespace XnaGameClient
         int[] TableauCoordonnéesX_Spline { get; set; }
         int[] TableauCoordonnéesZ_Spline { get; set; }
 
-        public Vector3 PositionCheckpoint { get; set; }
-        Vector3 PositionCaméra { get; set; }
-
         Plateforme Plateforme { get; set; }
-        
-        float IntervalleMAJ { get; set; }
-        float TempsÉcouléDepuisMAJ { get; set; }
-
         BoundingBox ZoneDeCollisionCheckPoint { get; set; }
         BoundingBox ZoneModel { get; set; }
 
