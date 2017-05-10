@@ -118,8 +118,9 @@ namespace XnaGameClient
         Vector3[] Tuile2 { get; set; }
         Vector3[] Tuile3 { get; set; }
         Vector3[] Tuile4 { get; set; }
-        public Vector3[] TableauPositionPlateformesHorizontales { get; set; }
-        public Vector3[] TableauPositionPlateformesVerticales { get; set; }
+
+        Vector3[] TableauPositionPlateformesHorizontales { get; set; }
+        Vector3[] TableauPositionPlateformesVerticales { get; set; }
 
         Vector3 DimensionCheckpoint { get; set; }
         Vector3 DimensionModel { get; set; }
@@ -471,12 +472,6 @@ namespace XnaGameClient
                 PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], POSITION_Y_PLATEFORMES, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, MathHelper.Pi / 360, "SplineX.txt", "SplineZ.txt");
                 Components.Add(PlateSpline);
             }
-
-            //for (int cpt = 0; cpt<ListeDeCoordonnées.Count; ++cpt)
-            //{
-            //    PlateSpline = new PlateformeSuivantUneSpline(this, 1f, Vector3.Zero, new Vector3(TableauCoordonnéesX_Spline[cpt], 23, TableauCoordonnéesZ_Spline[cpt]), Color.GreenYellow, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), INTERVALLE_MAJ_STANDARD, ANGLE_DE_FLOTTAISON, 0, ListeDeCoordonnées);
-            //    Components.Add(PlateSpline);
-            //}
         }
 
         void GérerPositionCheckpoint()
