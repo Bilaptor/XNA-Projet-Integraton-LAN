@@ -21,7 +21,6 @@ namespace XnaGameClient
         const int POSITION_Y_PLATEFORMES = 45;
         const int NB_SOMMETS = 18;
         const int NB_TRIANGLES = 6;
-        
 
         Random générateurAléatoire = new Random();
         Vector3 Dimension { get; set; }
@@ -34,7 +33,6 @@ namespace XnaGameClient
         BasicEffect EffetDeBase { get; set; }
         int IndiceTypePlateforme { get; set; }
         int IndicePositionsPlateforme { get; set; }
-
         
         Vector3[][] TableauPositionPlateformes { get; set; }
         Vector3[] TableauPositionsPlateformesHorizontales { get; set; }
@@ -70,7 +68,7 @@ namespace XnaGameClient
         public override void Initialize()
         {
             Dimension = new Vector3(2.5f, 2.5f, 2.5f);
-            InitialiserTableauxDesDifférentesPlateformes();
+            InitialiserTableauxPositionsDesDifférentesPlateformes();
             Sommets = new VertexPositionColor[NB_SOMMETS];
             InitiliserZonesCollisions();
             base.Initialize();
@@ -83,7 +81,7 @@ namespace XnaGameClient
             base.LoadContent();
         }
 
-        void InitialiserTableauxDesDifférentesPlateformes()
+        void InitialiserTableauxPositionsDesDifférentesPlateformes()
         {
             TableauPositionsPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
             TableauPositionsPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
@@ -103,6 +101,7 @@ namespace XnaGameClient
             ZoneModel = new BoundingBox(PositionCaméra - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCaméra + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
         }
 
+        //Initialise les sommets qui définissent le checkpoint
         protected override void InitialiserSommets()
         {
             Vector3[] points = new Vector3[5];
@@ -137,7 +136,6 @@ namespace XnaGameClient
             Sommets[17] = new VertexPositionColor(points[3], Couleur);
 
         }
-
 
         void GérerDisparitionEtNouvelleApparitionCheckpoint()
         {
