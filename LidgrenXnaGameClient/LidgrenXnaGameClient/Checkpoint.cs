@@ -18,9 +18,11 @@ namespace XnaGameClient
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         const int LARGEUR_PLATEFORME = 6;
         const int DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES = 5;
+        const int POSITION_Y_PLATEFORMES = 45;
         const int NB_SOMMETS = 18;
         const int NB_TRIANGLES = 6;
         
+
         Random générateurAléatoire = new Random();
         Vector3 Dimension { get; set; }
         Color Couleur { get; set; }
@@ -30,10 +32,16 @@ namespace XnaGameClient
         float DeltaY { get; set; }
         float DeltaZ { get; set; }
         BasicEffect EffetDeBase { get; set; }
+        int IndiceTypePlateforme { get; set; }
+        int IndicePositionsPlateforme { get; set; }
 
+        
         Vector3[][] TableauPositionPlateformes { get; set; }
-        Vector3[] TableauPositionsPlateformesHorizontales { get; set;}
+        Vector3[] TableauPositionsPlateformesHorizontales { get; set; }
         Vector3[] TableauPositionsPlateformesVerticales { get; set; }
+        Vector3[] TableauPositionsPlateformesSpline { get; set; }
+        int[] TableauCoordonnéesX_Spline { get; set; }
+        int[] TableauCoordonnéesZ_Spline { get; set; }
 
         public Vector3 PositionCheckpoint { get; set; }
         Vector3 PositionCaméra { get; set; }
@@ -62,11 +70,9 @@ namespace XnaGameClient
         public override void Initialize()
         {
             Dimension = new Vector3(2.5f, 2.5f, 2.5f);
-            TableauPositionsPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
-            TableauPositionsPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
+            InitialiserTableauxDesDifférentesPlateformes();
             Sommets = new VertexPositionColor[NB_SOMMETS];
-            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
-            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCaméra + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
+            InitiliserZonesCollisions();
             base.Initialize();
         }
 
@@ -75,6 +81,26 @@ namespace XnaGameClient
             EffetDeBase = new BasicEffect(GraphicsDevice);
             EffetDeBase.VertexColorEnabled = true;
             base.LoadContent();
+        }
+
+        void InitialiserTableauxDesDifférentesPlateformes()
+        {
+            TableauPositionsPlateformesHorizontales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
+            TableauPositionsPlateformesVerticales = new Vector3[NB_DE_PLATEFORMES_UN_TYPE];
+            TableauCoordonnéesX_Spline = new int[] { 40, 70, 100, 120, 110, 130, 160, 190, 210, 230, 210, 220, 220, 210, 180, 150, 110, 70 };
+            TableauCoordonnéesZ_Spline = new int[] { -50, -90, -110, -160, -210, -240, -230, -200, -170, -130, -100, -70, -40, -30, -40, -30, -20, -30 };
+            TableauPositionsPlateformesSpline = new Vector3[TableauCoordonnéesX_Spline.Count()];
+
+            for (int cpt = 0; cpt < TableauCoordonnéesX_Spline.Length - 1; ++cpt)
+            {
+                TableauPositionsPlateformesSpline[cpt] = new Vector3(TableauCoordonnéesX_Spline[cpt], POSITION_Y_PLATEFORMES, TableauCoordonnéesZ_Spline[cpt]);
+            }
+        }
+
+        void InitiliserZonesCollisions()
+        {
+            ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
+            ZoneModel = new BoundingBox(PositionCaméra - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCaméra + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
         }
 
         protected override void InitialiserSommets()
@@ -133,8 +159,11 @@ namespace XnaGameClient
         {
             ChercherPositionsDesPlateformes();
 
-            TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales };
-            PositionCheckpoint = TableauPositionPlateformes[générateurAléatoire.Next(0, 2)][générateurAléatoire.Next(0, NB_DE_PLATEFORMES_UN_TYPE)] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
+            TableauPositionPlateformes = new Vector3[][] { TableauPositionsPlateformesHorizontales, TableauPositionsPlateformesVerticales, TableauPositionsPlateformesSpline };
+            IndiceTypePlateforme = générateurAléatoire.Next(0, TableauPositionPlateformes.Count());
+            IndicePositionsPlateforme = générateurAléatoire.Next(0, TableauPositionPlateformes[IndiceTypePlateforme].Count());
+
+            PositionCheckpoint = TableauPositionPlateformes[IndiceTypePlateforme][IndicePositionsPlateforme] + new Vector3(LARGEUR_PLATEFORME, DIFFÉRENCE_ENTRE_HAUTEUR_CHECKPOINT_ET_HAUTEUR_PLATEFORMES, LARGEUR_PLATEFORME);
             ZoneDeCollisionCheckPoint = new BoundingBox(PositionCheckpoint - new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2), PositionCheckpoint + new Vector3(LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2, LARGEUR_PLATEFORME / 2));
         }
 
@@ -147,7 +176,6 @@ namespace XnaGameClient
                     TableauPositionsPlateformesHorizontales[cpt] = T.PositionsPlateformesHorizontales;
                 }
             }
-
             foreach (PlateformeVerticaleFlottante T in Game.Components.Where(c => c is PlateformeVerticaleFlottante))
             {
                 for (int cpt = 0; cpt < NB_DE_PLATEFORMES_UN_TYPE; ++cpt)
