@@ -17,6 +17,7 @@ namespace XnaGameClient
         const float INTERVALLE_UPDATE = 1f / 60f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         const float INTERVALLE_CALCUL_STANDARD = 1f / 60f;
+        const int NB_PLATEFORMES = 50;
 
         const float ÉCHELLE_OBJET = 1f;
 
@@ -139,10 +140,12 @@ namespace XnaGameClient
 
         ControllerNet controleurNet;
 
-        
+
 
         //position de l'adversaire qui vas etre modifié par le serveur
         public Vector3 PositionAdversaireSelonServeur { get; set; }
+
+        Vector3[] PositionDesPlateformes = new Vector3[NB_PLATEFORMES];
 
         Menu2 LeMenu { get; set; }
 
@@ -166,7 +169,7 @@ namespace XnaGameClient
 
         protected override void Initialize()
         {
-          
+
             Pause = true;
             DimensionCheckpoint = new Vector3(2.5f, 2.5f, 2.5f);
             DimensionModel = new Vector3(1, 1, 1);
@@ -231,7 +234,7 @@ namespace XnaGameClient
             //Components.Add(ObjDemo);
             AutreJoueur = new Adversaire(this, "bonhommeFinal", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_CALCUL_STANDARD);
             Components.Add(AutreJoueur);
-           
+
 
             LeMenu = new Menu2(this, PériphériqueGraphique, Pause);
 
@@ -275,7 +278,7 @@ namespace XnaGameClient
                         }
 
                 KeyboardState keyState = Keyboard.GetState();
-                
+
                 if (keyState.IsKeyDown(Keys.Escape) || GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                     this.Exit();
 
@@ -285,7 +288,7 @@ namespace XnaGameClient
 
             base.Update(gameTime);
         }
-        
+
         Vector3 Position;
         int Identifiant = 0;
         public void LireMessages()
@@ -334,14 +337,13 @@ namespace XnaGameClient
                         AutreJoueur.SetPosition(Position);
                         hasBeenRead = true;
                         break;
+                    case PacketTypes.POSITIONMAP:
+                        for(int i = 0; i < NB_PLATEFORMES; ++i)
+                        {
+                            PositionDesPlateformes[i] = LireVector3(msg);
+                        }
+                        break;
 
-                    //case PacketTypes.POSITIONJEU2D:
-                    //    if (msg.ReadInt32() != Identifiant)
-                    //    {
-                    //        Position2D = LireVector2(msg);
-                    //        hasBeenRead = true;
-                    //    }
-                    //    break;
                 }
             }
         }
@@ -486,8 +488,8 @@ namespace XnaGameClient
             Position_X_checkpoint = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][0], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][1] + 1);
             Position_Z_checkpoint = GénérateurAléatoire.Next(LimitesAireDeJeu[IndiceTableauLimitesAireJeu][2], LimitesAireDeJeu[IndiceTableauLimitesAireJeu][3] + 1);
 
-            Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint , POSITION_Y_PLATEFORMES, Position_Z_checkpoint), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
-            Components.Add(new CheckpointAnimé(this, 1f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + LARGEUR_PLATEFORME , POSITION_Y_CHECKPOINT, Position_Z_checkpoint + LARGEUR_PLATEFORME), Color.Yellow, DimensionCheckpoint, INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
+            Components.Add(new Plateforme(this, 1f, Vector3.Zero, new Vector3(Position_X_checkpoint, POSITION_Y_PLATEFORMES, Position_Z_checkpoint), Color.WhiteSmoke, new Vector3(LARGEUR_PLATEFORME, ÉPAISSEUR_PLATEFORME, LARGEUR_PLATEFORME), ANGLE_DE_FLOTTAISON, 0, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new CheckpointAnimé(this, 1f, new Vector3(MathHelper.Pi, 0, 0), new Vector3(Position_X_checkpoint + LARGEUR_PLATEFORME, POSITION_Y_CHECKPOINT, Position_Z_checkpoint + LARGEUR_PLATEFORME), Color.Yellow, DimensionCheckpoint, INTERVALLE_MAJ_STANDARD, CaméraJeu.Position));
 
         }
 
@@ -520,7 +522,7 @@ namespace XnaGameClient
             for (int cpt = 0; cpt < NB_CANONS_PAR_MURS; ++cpt)
             {
                 Position_X_canons = GénérateurAléatoire.Next(LIMITE_POSITION_X_GAUCHE_CANONS, LIMITE_POSITION_X_DROITE_CANONS);
-                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0,MathHelper.PiOver2,0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
             }
         }
 
@@ -531,7 +533,7 @@ namespace XnaGameClient
             for (int cpt = 0; cpt < NB_CANONS_PAR_MURS; ++cpt)
             {
                 Position_X_canons = GénérateurAléatoire.Next(LIMITE_POSITION_X_GAUCHE_CANONS, LIMITE_POSITION_X_DROITE_CANONS);
-                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0, -MathHelper.PiOver2 , 0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
+                Components.Add(new Canon(this, "canon", ÉCHELLE_CANONS, new Vector3(0, -MathHelper.PiOver2, 0), new Vector3(Position_X_canons, POSITION_Y_CANONS, Position_Z_canons)));
             }
         }
 
@@ -575,6 +577,6 @@ namespace XnaGameClient
     {
         CONNECTIONNUMBER,
         POSITION,
-        POSITIONJEU2D
+        POSITIONMAP
     }
 }

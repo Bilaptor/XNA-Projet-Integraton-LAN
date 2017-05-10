@@ -28,19 +28,19 @@ namespace XnaGameServer
             const int LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES = -230;
             const int LIMITE_POSITION_Z_AVANT_PLATEFORMES = -30;
             const int POSITION_Y_PLATEFORMES = 45;
+            const int NB_PLATEFORMES = 50;
 
-            List<Vector3> PositionPlateformes = new List<Vector3>();
+            Vector3[] PositionPlateformes = new Vector3[NB_PLATEFORMES];
             Random r = new Random();
-
+       
             // create and start server
             NetServer server = new NetServer(config);
             server.Start();
 
-            for (int i = 0; i < 50; ++i)
+            for (int i = 0; i < NB_PLATEFORMES; ++i)
             {
-                PositionPlateformes.Add(new Vector3(r.Next(LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_POSITION_X_DROITE_PLATEFORMES), POSITION_Y_PLATEFORMES, r.Next(LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_POSITION_Z_AVANT_PLATEFORMES)));
+                PositionPlateformes[i] = (new Vector3(r.Next(LIMITE_POSITION_X_GAUCHE_PLATEFORMES, LIMITE_POSITION_X_DROITE_PLATEFORMES), POSITION_Y_PLATEFORMES, r.Next(LIMITE_POSITION_Z_ARRIÈRE_PLATEFORMES, LIMITE_POSITION_Z_AVANT_PLATEFORMES)));
             }
-
 
             // schedule initial sending of position updates
             double nextSendUpdates = NetTime.Now;
@@ -89,6 +89,14 @@ namespace XnaGameServer
 
                                     NetOutgoingMessage omPositionMap = server.CreateMessage();
                                     omPositionMap.Write((byte)PacketTypes.POSITIONMAP);
+                                    omPositionMap.Write(player.RemoteUniqueIdentifier);
+                                    for (int i=0; i< PositionPlateformes.Length; ++i)
+                                    {
+                                        omPositionMap.Write(PositionPlateformes[i].X);
+                                        omPositionMap.Write(PositionPlateformes[i].Y);
+                                        omPositionMap.Write(PositionPlateformes[i].Z);
+                                    }
+                                    server.SendMessage(omPositionMap, player, NetDeliveryMethod.ReliableOrdered);
                                 }
                             }
                             break;
