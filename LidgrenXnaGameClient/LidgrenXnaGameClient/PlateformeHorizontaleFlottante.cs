@@ -29,19 +29,8 @@ namespace XnaGameClient
         void GérerTranslationHorizontalePlateforme()
         {
             Translation = true;
-
-            //if (AngleDeFlottaison < LIMITE_ANGLE_FLOTTAISON)
-            //{
-            //   Position += Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
-            //   AngleDeFlottaison += IncrémentAngleDeFlottaison;
-            //}
-            //else
-            //{
-            //   Position -= Vector3.Transform(Position, Matrix.CreateTranslation((float)Math.Sin(AngleDeFlottaison), 0, 0));
-            //   AngleDeFlottaison += IncrémentAngleDeFlottaison;
-            //}
-
-            Position = PositionInitiale + new Vector3((float)Math.Cos(AngleDeFlottaison), 0, (float)Math.Sin(AngleDeFlottaison));
+           
+            Position = PositionInitiale + new Vector3((float)Math.Sin(AngleDeFlottaison), 0, 0);
             AngleDeFlottaison += IncrémentAngleDeFlottaison;
             AngleDeFlottaison %= 2 * (float)Math.PI;
         }
