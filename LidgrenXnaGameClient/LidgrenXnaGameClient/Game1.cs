@@ -128,6 +128,8 @@ namespace XnaGameClient
         BoundingBox ZoneDeCollisionModel { get; set; }
         BoundingBox ZoneDeCollisionCheckPoint { get; set; }
 
+        Vector3 PositionBalle { get; set; }
+
 
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
@@ -215,7 +217,7 @@ namespace XnaGameClient
             Components.Add(Lave);
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Gold, INTERVALLE_CALCUL_FPS));
             Components.Add(new Score(this, "Arial20", Color.Chartreuse, INTERVALLE_CALCUL_FPS, CamÈraJeu.Position));
-            Components.Add(new Balle(this, 1f, rotationObjet, CamÈraJeu.Position, INTERVALLE_MAJ_STANDARD, new Vector3(2, 2, 2), Color.Blue));
+            Components.Add(new Balle(this, 1f, rotationObjet, j.Position, INTERVALLE_MAJ_STANDARD, new Vector3(2, 2, 2), Color.Blue));
 
             GÈrerPositionsPlateformesHorizontales();
             GÈrerPositionsPlateformesVerticales();
@@ -261,16 +263,19 @@ namespace XnaGameClient
             float temps…coulÈ = (float)gameTime.ElapsedGameTime.TotalSeconds;
             ++CptFrames;
             Temps…coulÈDepuisMAJ += temps…coulÈ;
-
+            PositionBalle = CamÈraJeu.Position;
+           
 
             if (Temps…coulÈDepuisMAJ >= INTERVALLE_UPDATE)
             {
                 Temps…coulÈDepuisMAJ = 0;
-
+                
                 for (int i = 0; i < Components.Count; ++i)
                     for (int j = i + 1; j < Components.Count; ++j)
                         if (!LeMenu.Pause && Components[i] is IPhysique && Components[j] is IPhysique)
                         {
+                            
+                            
                             IPhysique A = Components[i] as IPhysique;
                             IPhysique B = Components[j] as IPhysique;
                             bool enCollision = A.GetVolume().Intersects(B.GetVolume());
@@ -289,6 +294,8 @@ namespace XnaGameClient
 
             base.Update(gameTime);
         }
+
+        
 
         Vector3 Position;
         int Identifiant = 0;

@@ -37,7 +37,7 @@ namespace XnaGameClient
         Game Jeu { get; set; }
         bool EstFeu { get; set; }
         Vector3 PositionBalle { get; set; }
-        Caméra CameraJeu { get; set; }
+        Caméra Camera { get; set; }
 
         public Balle(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Vector3 dimension, Color couleur)
             : base(jeu,  homothétieInitiale,  rotationInitiale,  positionInitiale,  intervalleMAJ)
@@ -49,6 +49,7 @@ namespace XnaGameClient
             DeltaY = dimension.Y;
             DeltaZ = dimension.Z;
             Origine = new Vector3(DeltaX / 2, DeltaY / 2, DeltaZ / 2);
+            PositionBalle = positionInitiale;
             // TODO: Construct any child components here
         }
 
@@ -70,7 +71,7 @@ namespace XnaGameClient
 
         protected override void LoadContent()
         {
-            CameraJeu = Game.Services.GetService(typeof(Caméra)) as Caméra;
+            Camera = Game.Services.GetService(typeof(Caméra)) as Caméra;
             EffetDeBase = new BasicEffect(GraphicsDevice);
             EffetDeBase.VertexColorEnabled = true;
             base.LoadContent();
@@ -83,23 +84,32 @@ namespace XnaGameClient
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                PositionBalle = CameraJeu.Position;
-                GérerClavier();
+                PositionBalle = Camera.Position;
                 EffectuerMiseÀJour();
                 TempsÉcouléDepuisMAJ -= IntervalleMAJ;
+                GererClavier();
+                Mouvement();
             }
             base.Update(gameTime);
         }
 
-        protected override void GérerClavier()
+        public void GererClavier()
         {
             if (GestionInput.EstEnfoncée(Keys.Q))
             {
                 EstFeu = true;
             }
-
         }
-       
+
+        public void Mouvement()
+        {
+            if (GestionInput.EstEnfoncée(Keys.Q))
+            {
+                PositionBalle = PositionBalle + new Vector3(1, 0, 0);
+            } 
+        }
+
+
 
         protected override void InitialiserSommets()
         {
