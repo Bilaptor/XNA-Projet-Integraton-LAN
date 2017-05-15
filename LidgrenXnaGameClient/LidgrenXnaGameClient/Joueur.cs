@@ -19,6 +19,11 @@ namespace XnaGameClient
     {
         const float VITESSE_DÉPLACEMENT = 50f;
         const float VITESSE_CHUTE_MAXIMALE = -87;
+        const float VITESSE_CHUTE = -65;
+        const float VITESSE_DE_SAUT = 32;
+        const int LIMITE_X = 250;
+        const int LIMITE_Z = -250;
+        const int HAUTEUR_LAVE = 10;
         float TempsDepuisDerniereMAJ;
 
         bool EnCollision { get; set; }
@@ -61,9 +66,9 @@ namespace XnaGameClient
             Game.Window.Title = this.Position.ToString();
 
             GérerSouris((float)TempsDepuisDerniereMAJ);
-            if (TempsDepuisDerniereMAJ >= 1/60f)
+            if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
             {
-                Vitesse += new Vector3(0, -65, 0) * (float)TempsDepuisDerniereMAJ;
+                Vitesse += new Vector3(0, VITESSE_CHUTE, 0) * (float)TempsDepuisDerniereMAJ;
                 if (Vitesse.Y < VITESSE_CHUTE_MAXIMALE)
                 {
                     Vitesse = new Vector3(Vitesse.X, VITESSE_CHUTE_MAXIMALE, Vitesse.Z);
@@ -83,7 +88,7 @@ namespace XnaGameClient
                 }
 
                 TempsDepuisDerniereMAJ = 0;
-                if (Position.Y <= 10)
+                if (Position.Y <= HAUTEUR_LAVE)
                 {
                     Position = PositionInitial;
                 }
@@ -102,23 +107,23 @@ namespace XnaGameClient
 
             Vector3 dir = controller.GetDirection();
 
-            if (TempsDepuisDerniereMAJ >= 1 / 60f)
+            if (TempsDepuisDerniereMAJ >= IntervalleMAJ)
             {
                 Position += dir.X * new Vector3(d.X, 0, d.Y) * VITESSE_DÉPLACEMENT * deltaT;
                 Position += dir.Z * new Vector3(l.X, 0, l.Y) * VITESSE_DÉPLACEMENT * deltaT;
             }
             if (Position.X < 0)
                 Position = new Vector3(0, Position.Y, Position.Z);
-            if (Position.X > 250)
-                Position = new Vector3(250, Position.Y, Position.Z);
+            if (Position.X > LIMITE_X)
+                Position = new Vector3(LIMITE_X, Position.Y, Position.Z);
             if (Position.Z > 0)
                 Position = new Vector3(Position.X, Position.Y, 0);
-            if (Position.Z < -250)
-                Position = new Vector3(Position.X, Position.Y, -250);
+            if (Position.Z < LIMITE_Z)
+                Position = new Vector3(Position.X, Position.Y, LIMITE_Z);
 
             //fait en sorte que le joueur ne puisse pa sauter plein de fois dans les airs
             if (Vitesse.Y > -4 && Vitesse.Y < 2)
-                Vitesse += new Vector3(0, 32 * dir.Y, 0);
+                Vitesse += new Vector3(0, VITESSE_DE_SAUT * dir.Y, 0);
         }
 
         public bool EstEnCollision(BoundingSphere autreZoneCollison)
@@ -127,8 +132,7 @@ namespace XnaGameClient
         }
         //Modifie la position du volume en modifiant les deux coins le définissant en fonction de la position envoyé
         private void SetPositionVolume(Vector3 position)
-        {                                                                                                                                                // -2.5 car on ne veut pas que le modelle remonte sur 
-                                                                                                                                                         //  la plateforme quand la plateforme est à la hauteur de sa tete
+        {                                                                                                                                                 //  la plateforme quand la plateforme est à la hauteur de sa tete
             ZoneDeCollisionModel = new BoundingBox(new Vector3(position.X, position.Y, position.Z) - DimensionModel / 2, new Vector3(position.X, position.Y - 2.5f, position.Z) + DimensionModel / 2);
         }
 
