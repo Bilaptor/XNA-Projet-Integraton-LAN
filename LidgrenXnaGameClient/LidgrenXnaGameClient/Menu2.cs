@@ -17,22 +17,28 @@ namespace XnaGameClient
     /// </summary>
     public class Menu2 : Microsoft.Xna.Framework.DrawableGameComponent
     {
-
+        //instanciation des constantes
         public bool Pause { get; private set; }
         bool accepte = true;
+        int HAUTEURPLAYBUTTON = 125;
+        int HAUTEURCOMMANDESBUTTON = 225;
+        int HAUTEUREXITBUTTON = 325;
+        int HAUTEURANNULERBUTTON = 400;
+        int CENTRERBUTTON1 = 2;
+        int CENTRERBUTTON2 = 10;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputManager GestionInput { get; set; }
         Game Jeu { get; set; }
 
-
+        //Instanciation des boutons
         cButton btnExit;
         cButton btnAnnuler;
         cButton btnCommandes;
         cButton btnPlay;
 
-
+        //Instanciation des Gamestats
         enum GameStat
         {
             Mainmenu,
@@ -45,12 +51,17 @@ namespace XnaGameClient
         int screenHeight = 480;
         
 
-
-        public Menu2(Game game, GraphicsDeviceManager pere, bool pause)
+        /// <summary>
+        /// Le constructeur de la classe
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="pere"></param>
+        /// <param name="pause"></param>
+        public Menu2(Game game, GraphicsDeviceManager graphicd, bool pause)
             : base(game)
         {
             Jeu = game;
-            graphics = pere;
+            graphics = graphicd;
             graphics.IsFullScreen = false;
             Jeu.Content.RootDirectory = "Content";
             Pause = pause;
@@ -80,22 +91,22 @@ namespace XnaGameClient
             
             //Création du bouton Play
             btnPlay = new cButton(Jeu.Content.Load<Texture2D>("button model Play"), graphics.GraphicsDevice);
-            btnPlay.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 125));
+            btnPlay.setPosition(new Vector2((screenWidth / CENTRERBUTTON1) - (screenWidth / CENTRERBUTTON2), HAUTEURPLAYBUTTON));
 
 
             //Création du bouton Exit
             btnExit = new cButton(Jeu.Content.Load<Texture2D>("button model EXIT"), graphics.GraphicsDevice);
-            btnExit.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 325));
+            btnExit.setPosition(new Vector2((screenWidth / CENTRERBUTTON1) - (screenWidth / CENTRERBUTTON2), HAUTEUREXITBUTTON));
 
 
             //Création du bouton Annuler
             btnAnnuler = new cButton(Jeu.Content.Load<Texture2D>("button model ANNULER"), graphics.GraphicsDevice);
-            btnAnnuler.setPosition(new Vector2(10, 400));
+            btnAnnuler.setPosition(new Vector2(CENTRERBUTTON2, HAUTEURANNULERBUTTON));
 
 
             //Création du bouton Commandes
             btnCommandes = new cButton(Jeu.Content.Load<Texture2D>("button model COMMANDES"), graphics.GraphicsDevice);
-            btnCommandes.setPosition(new Vector2((screenWidth / 2) - (screenWidth / 10), 225));
+            btnCommandes.setPosition(new Vector2((screenWidth / CENTRERBUTTON1) - (screenWidth / CENTRERBUTTON2), HAUTEURCOMMANDESBUTTON));
         }
        
 
@@ -165,6 +176,7 @@ namespace XnaGameClient
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Draw(GameTime gameTime)
         {
+            //le if décide se qui s'affiche ou non
             if (accepte == true)
             {
                 GraphicsDevice.Clear(Color.CornflowerBlue);
