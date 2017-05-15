@@ -100,7 +100,6 @@ namespace XnaGameClient
         float TempsÉcouléDepuisMAJ { get; set; }
         int CptFrames { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
-        SpriteBatch spriteBatch;
         SpriteBatch GestionSprites { get; set; }
         InputManager GestionInput { get; set; }
         Caméra CaméraJeu { get; set; }
@@ -134,8 +133,7 @@ namespace XnaGameClient
         RessourcesManager<SpriteFont> GestionnaireDeFonts { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
-
-        Texture2D[] Textures;
+        
         Dictionary<long, Vector2> Positions = new Dictionary<long, Vector2>();
         public NetClient client;
         bool Pause { get; set; }
@@ -250,11 +248,6 @@ namespace XnaGameClient
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            Textures = new Texture2D[5];
-            for (int i = 0; i < 5; i++)
-                Textures[i] = Content.Load<Texture2D>("c" + (i + 1));
-            //base.LoadContent();
         }
 
 
@@ -298,7 +291,6 @@ namespace XnaGameClient
         
 
         Vector3 Position;
-        int Identifiant = 0;
         public void LireMessages()
         {
             // read messages
@@ -552,19 +544,6 @@ namespace XnaGameClient
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
-
-            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.AlphaBlend);
-
-            // draw all players
-            foreach (var kvp in Positions)
-            {
-                // use player unique identifier to choose an image
-                int num = Math.Abs((int)kvp.Key) % Textures.Length;
-
-                // draw player
-                spriteBatch.Draw(Textures[num], kvp.Value, Color.White);
-            }
-            spriteBatch.End();
         }
 
         protected override void OnExiting(object sender, EventArgs args)

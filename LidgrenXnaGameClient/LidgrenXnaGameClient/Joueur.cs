@@ -12,9 +12,6 @@ using Lidgren.Network;
 
 namespace XnaGameClient
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class Joueur : CaméraSubjective, IPhysique
     {
         const float VITESSE_DÉPLACEMENT = 50f;
